@@ -153,13 +153,4 @@
       <text x="0" y="10" class="legend">Solid bars = Retained Skills | Semi-transparent = Forgotten Skills</text>
     </g>
   </g>
-
-  <!-- Key Finding -->
-  <g transform="translate(100, 590)">
-    <text x="0" y="0" class="tick" fill="#e53e3e">
-      <tspan font-weight="bold">Key Finding:</tspan>
-      <tspan dx="5">Clear separation between retained and forgotten skills demonstrates controllable selective forgetting.</tspan>
-      <tspan x="0" dy="12">Forgetting is localized to specified skills, confirming structured behavioral control rather than general performance decline.</tspan>
-    </text>
-  </g>
 </svg>

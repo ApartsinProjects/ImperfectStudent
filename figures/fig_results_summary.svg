@@ -1,17 +1,17 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 400">
   <defs>
     <style>
       .title { font-family: 'Times New Roman', serif; font-size: 20px; font-weight: bold; fill: #1a365d; }
-      .subtitle { font-family: 'Arial', sans-serif; font-size: 12px; fill: #718096; }
-      .label { font-family: 'Arial', sans-serif; font-size: 11px; fill: #2d3748; }
-      .small { font-family: 'Arial', sans-serif; font-size: 9px; }
-      .tick { font-family: 'Arial', sans-serif; font-size: 8px; }
+      .subtitle { font-family: 'Arial', sans-serif; font-size: 14px; fill: #718096; }
+      .label { font-family: 'Arial', sans-serif; font-size: 14px; fill: #2d3748; }
+      .small { font-family: 'Arial', sans-serif; font-size: 12px; }
+      .tick { font-family: 'Arial', sans-serif; font-size: 12px; }
       .bold { font-weight: bold; }
     </style>
   </defs>
 
   <!-- Background -->
-  <rect width="1200" height="800" fill="white"/>
+  <rect width="1200" height="400" fill="white"/>
 
   <!-- Title -->
   <text x="600" y="35" text-anchor="middle" class="title">Key Results Summary: Controllability Benchmark</text>
@@ -174,94 +174,4 @@
       <text x="15" y="245" class="small">PS ≈ 0: Good | PS &lt; 0: Degradation</text>
     </g>
   </g>
-
-  <!-- Bottom Section: Key Findings -->
-  <g transform="translate(40, 410)">
-    <rect x="0" y="0" width="1120" height="180" fill="#ebf8ff" stroke="#2c5282" rx="8"/>
-    <text x="560" y="30" text-anchor="middle" class="label bold" font-size="14">Key Empirical Findings</text>
-    
-    <g transform="translate(30, 50)">
-      <!-- Finding 1 -->
-      <g transform="translate(0, 0)">
-        <circle cx="12" cy="12" r="12" fill="#2c5282"/>
-        <text x="12" y="16" text-anchor="middle" fill="white" class="small bold">1</text>
-        <text x="35" y="10" class="small bold">Selective Forgetting Achievable</text>
-        <text x="35" y="25" class="small">All models demonstrated controllable skill suppression</text>
-      </g>
-      
-      <!-- Finding 2 -->
-      <g transform="translate(280, 0)">
-        <circle cx="12" cy="12" r="12" fill="#2c5282"/>
-        <text x="12" y="16" text-anchor="middle" fill="white" class="small bold">2</text>
-        <text x="35" y="10" class="small bold">Retention Remains Stable</text>
-        <text x="35" y="25" class="small">Retained skills maintained 85-92% accuracy</text>
-      </g>
-      
-      <!-- Finding 3 -->
-      <g transform="translate(560, 0)">
-        <circle cx="12" cy="12" r="12" fill="#2c5282"/>
-        <text x="12" y="16" text-anchor="middle" fill="white" class="small bold">3</text>
-        <text x="35" y="10" class="small bold">Skills Are Independent</text>
-        <text x="35" y="25" class="small">Weak correlations (ρ ≈ -0.1) enable localized control</text>
-      </g>
-      
-      <!-- Finding 4 -->
-      <g transform="translate(830, 0)">
-        <circle cx="12" cy="12" r="12" fill="#2c5282"/>
-        <text x="12" y="16" text-anchor="middle" fill="white" class="small bold">4</text>
-        <text x="35" y="10" class="small bold">Model Architecture Matters</text>
-        <text x="35" y="25" class="small">Claude &gt; GPT-4o &gt; DeepSeek for controllability</text>
-      </g>
-      
-      <!-- Finding 5 -->
-      <g transform="translate(0, 55)">
-        <circle cx="12" cy="12" r="12" fill="#2c5282"/>
-        <text x="12" y="16" text-anchor="middle" fill="white" class="small bold">5</text>
-        <text x="35" y="10" class="small bold">Combined Prompting Best</text>
-        <text x="35" y="25" class="small">Rules + Examples &gt; Either alone</text>
-      </g>
-      
-      <!-- Finding 6 -->
-      <g transform="translate(280, 55)">
-        <circle cx="12" cy="12" r="12" fill="#2c5282"/>
-        <text x="12" y="16" text-anchor="middle" fill="white" class="small bold">6</text>
-        <text x="35" y="10" class="small bold">Forgetting Is Localized</text>
-        <text x="35" y="25" class="small">Degradation limited to specified skills</text>
-      </g>
-      
-      <!-- Finding 7 -->
-      <g transform="translate(560, 55)">
-        <circle cx="12" cy="12" r="12" fill="#2c5282"/>
-        <text x="12" y="16" text-anchor="middle" fill="white" class="small bold">7</text>
-        <text x="35" y="10" class="small bold">Claude Most Reliable</text>
-        <text x="35" y="25" class="small">Best forgetting + minimal interference</text>
-      </g>
-    </g>
-  </g>
-
-  <!-- Dataset Info -->
-  <g transform="translate(40, 620)">
-    <rect x="0" y="0" width="1120" height="100" fill="#f7fafc" stroke="#e2e8f0" rx="8"/>
-    <text x="560" y="25" text-anchor="middle" class="label bold">Experimental Setup</text>
-    
-    <g transform="translate(30, 40)">
-      <text x="0" y="0" class="small"><tspan font-weight="bold">Dataset:</tspan> MathCAMPS (Grades 4-5, 100 questions each)</text>
-      <text x="0" y="15" class="small"><tspan font-weight="bold">Models:</tspan> Claude (Anthropic), DeepSeek, GPT-4o (OpenAI)</text>
-      <text x="0" y="30" class="small"><tspan font-weight="bold">Strategies:</tspan> Rule-Based, Few-Shot, Combined (Rules + Examples)</text>
-      
-      <text x="400" y="0" class="small"><tspan font-weight="bold">Configurations:</tspan> 2^K exhaustive skill vector enumeration</text>
-      <text x="400" y="15" class="small"><tspan font-weight="bold">Temperature:</tspan> 0 (deterministic)</text>
-      <text x="400" y="30" class="small"><tspan font-weight="bold">Quality Control:</tspan> Ambiguous items replaced while preserving balance</text>
-    </g>
-  </g>
-
-  <!-- Comparison with Prior Work -->
-  <g transform="translate(40, 740)">
-    <rect x="0" y="0" width="1120" height="50" fill="#fef3c7" stroke="#d69e2e" rx="4"/>
-    <text x="30" y="25" class="small bold" fill="#975a16">Novelty:</text>
-    <text x="120" y="25" class="small" fill="#975a16">First systematic benchmark for skill-level controllability | Distinguishes from fact forgetting | Novel metrics beyond accuracy</text>
-  </g>
-
-  <!-- Footer -->
-  <text x="600" y="795" text-anchor="middle" class="small" fill="#718096">Figure: Comprehensive Results Summary - Controllable Skill Forgetting Benchmark</text>
 </svg>

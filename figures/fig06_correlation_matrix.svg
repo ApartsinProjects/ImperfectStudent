@@ -251,13 +251,4 @@
     <rect x="270" y="10" width="30" height="20" fill="#fed7d7"/>
     <text x="310" y="24" class="tick">ρ ≈ -0.2 (Weak)</text>
   </g>
-
-  <!-- Key Finding -->
-  <g transform="translate(80, 530)">
-    <text x="0" y="0" class="small" fill="#2b6cb0">
-      <tspan font-weight="bold">Key Finding:</tspan>
-      <tspan dx="5">Weak correlations across both grades confirm that skills can be controlled independently.</tspan>
-      <tspan x="0" y="12">This validates the core assumption enabling selective forgetting without widespread degradation.</tspan>
-    </text>
-  </g>
 </svg>

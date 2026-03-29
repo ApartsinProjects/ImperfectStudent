@@ -1,118 +1,90 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 500">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 380">
   <defs>
     <style>
       .title { font-family: 'Times New Roman', serif; font-size: 16px; font-weight: bold; fill: #1a365d; }
-      .subtitle { font-family: 'Arial', sans-serif; font-size: 13px; fill: #718096; }
-      .label { font-family: 'Arial', sans-serif; font-size: 14px; fill: #2d3748; }
-      .small { font-family: 'Arial', sans-serif; font-size: 12px; }
+      .label { font-family: 'Arial', sans-serif: font-size: 13px; fill: #2d3748; }
+      .small { font-family: 'Arial', sans-serif; font-size: 11px; }
     </style>
   </defs>
 
   <!-- Background -->
-  <rect width="900" height="500" fill="white"/>
-
-  <!-- Title -->
-  <text x="450" y="30" text-anchor="middle" class="title">Prediction Score Analysis by Model and Grade</text>
-  <text x="450" y="48" text-anchor="middle" class="subtitle">Actual minus expected retained-skill accuracy | Positive = Better than expected | Negative = Under-performance</text>
+  <rect width="900" height="380" fill="white"/>
 
   <!-- Chart Area -->
-  <g transform="translate(100, 70)">
+  <g transform="translate(80, 30)">
     <!-- Y-axis -->
-    <line x1="0" y1="0" x2="0" y2="300" stroke="#2d3748" stroke-width="1"/>
-    <text x="-30" y="150" transform="rotate(-90, -30, 150)" text-anchor="middle" class="small">Prediction Score</text>
+    <line x1="0" y1="0" x2="0" y2="250" stroke="#2d3748" stroke-width="1"/>
+    <text x="-25" y="125" transform="rotate(-90, -25, 125)" text-anchor="middle" class="small">Prediction Score</text>
     
     <!-- Y-axis labels -->
-    <line x1="-5" y1="0" x2="0" y2="0" stroke="#2d3748"/>
-    <text x="-10" y="4" text-anchor="end" class="small">+0.15</text>
+    <text x="-8" y="4" text-anchor="end" class="small">+0.15</text>
+    <text x="-8" y="62" text-anchor="end" class="small">+0.10</text>
+    <text x="-8" y="125" text-anchor="end" class="small">0.00</text>
+    <text x="-8" y="187" text-anchor="end" class="small">-0.10</text>
+    <text x="-8" y="254" text-anchor="end" class="small">-0.20</text>
     
-    <line x1="-5" y1="75" x2="0" y2="75" stroke="#2d3748"/>
-    <text x="-10" y="79" text-anchor="end" class="small">+0.10</text>
-    
-    <line x1="-5" y1="150" x2="0" y2="150" stroke="#2d3748"/>
-    <text x="-10" y="154" text-anchor="end" class="small">0.00</text>
-    
-    <line x1="-5" y1="225" x2="0" y2="225" stroke="#2d3748"/>
-    <text x="-10" y="229" text-anchor="end" class="small">-0.10</text>
-    
-    <line x1="-5" y1="300" x2="0" y2="300" stroke="#2d3748"/>
-    <text x="-10" y="304" text-anchor="end" class="small">-0.20</text>
+    <!-- Zero line -->
+    <line x1="0" y1="125" x2="750" y2="125" stroke="#38a169" stroke-width="2" stroke-dasharray="4,2"/>
     
     <!-- Grid lines -->
-    <g stroke="#e2e8f0" stroke-dasharray="4,2">
-      <line x1="0" y1="75" x2="700" y2="75"/>
-      <line x1="0" y1="150" x2="700" y2="150" stroke="#48bb78" stroke-width="2"/>
-      <line x1="0" y1="225" x2="700" y2="225"/>
+    <g stroke="#e2e8f0" stroke-dasharray="3,2">
+      <line x1="0" y1="62" x2="750" y2="62"/>
+      <line x1="0" y1="187" x2="750" y2="187"/>
     </g>
     
     <!-- X-axis -->
-    <line x1="0" y1="300" x2="700" y2="300" stroke="#2d3748"/>
+    <line x1="0" y1="250" x2="750" y2="250" stroke="#2d3748"/>
 
-    <!-- Grade 4 Data -->
-    <g transform="translate(50, 0)">
-      <!-- Claude (positive) -->
-      <rect x="0" y="50" width="80" height="100" fill="#48bb78" rx="4"/>
-      <text x="40" y="40" text-anchor="middle" class="small bold" fill="#276749">+0.12</text>
-      
-      <!-- DeepSeek (moderate positive) -->
-      <rect x="100" y="100" width="80" height="50" fill="#48bb78" rx="4"/>
-      <text x="140" y="90" text-anchor="middle" class="small bold" fill="#276749">+0.05</text>
-      
-      <!-- GPT-4o (negative!) -->
-      <rect x="200" y="270" width="80" height="30" fill="#fc8181" rx="4"/>
-      <text x="240" y="260" text-anchor="middle" class="small bold" fill="#c53030">-0.08</text>
+    <!-- Grade 4 -->
+    <g transform="translate(40, 0)">
+      <text x="70" y="270" text-anchor="middle" class="small" font-weight="bold">Grade 4</text>
+      <!-- Claude -->
+      <rect x="10" y="42" width="35" height="83" fill="#dd6b20" rx="2"/>
+      <text x="27" y="35" text-anchor="middle" class="small" fill="#dd6b20" font-weight="bold">+0.12</text>
+      <!-- DeepSeek -->
+      <rect x="55" y="83" width="35" height="42" fill="#38a169" rx="2"/>
+      <text x="72" y="76" text-anchor="middle" class="small" fill="#38a169" font-weight="bold">+0.05</text>
+      <!-- GPT-4o -->
+      <rect x="100" y="200" width="35" height="50" fill="#3182ce" rx="2"/>
+      <text x="117" y="193" text-anchor="middle" class="small" fill="#3182ce" font-weight="bold">-0.08</text>
     </g>
     
-    <!-- Grade 5 Data -->
-    <g transform="translate(400, 0)">
-      <!-- Claude (positive) -->
-      <rect x="0" y="30" width="80" height="120" fill="#48bb78" rx="4"/>
-      <text x="40" y="20" text-anchor="middle" class="small bold" fill="#276749">+0.15</text>
-      
-      <!-- DeepSeek (moderate positive) -->
-      <rect x="100" y="90" width="80" height="60" fill="#48bb78" rx="4"/>
-      <text x="140" y="80" text-anchor="middle" class="small bold" fill="#276749">+0.06</text>
-      
-      <!-- GPT-4o (marginal positive) -->
-      <rect x="200" y="130" width="80" height="20" fill="#f6e05e" rx="4"/>
-      <text x="240" y="120" text-anchor="middle" class="small bold" fill="#975a16">+0.02</text>
+    <!-- Grade 5 -->
+    <g transform="translate(350, 0)">
+      <text x="70" y="270" text-anchor="middle" class="small" font-weight="bold">Grade 5</text>
+      <!-- Claude -->
+      <rect x="10" y="25" width="35" height="100" fill="#dd6b20" rx="2"/>
+      <text x="27" y="18" text-anchor="middle" class="small" fill="#dd6b20" font-weight="bold">+0.15</text>
+      <!-- DeepSeek -->
+      <rect x="55" y="75" width="35" height="50" fill="#38a169" rx="2"/>
+      <text x="72" y="68" text-anchor="middle" class="small" fill="#38a169" font-weight="bold">+0.06</text>
+      <!-- GPT-4o -->
+      <rect x="100" y="108" width="35" height="17" fill="#3182ce" rx="2"/>
+      <text x="117" y="101" text-anchor="middle" class="small" fill="#3182ce" font-weight="bold">+0.02</text>
     </g>
     
-    <!-- X-axis labels -->
-    <text x="90" y="325" text-anchor="middle" class="label bold">Grade 4</text>
-    <text x="440" y="325" text-anchor="middle" class="label bold">Grade 5</text>
-    
-    <!-- X-axis sublabels -->
-    <text x="90" y="340" text-anchor="middle" class="small" fill="#718096">Claude | DeepSeek | GPT-4o</text>
-    <text x="440" y="340" text-anchor="middle" class="small" fill="#718096">Claude | DeepSeek | GPT-4o</text>
-  </g>
-
-  <!-- Interpretation Box -->
-  <g transform="translate(50, 430)">
-    <rect x="0" y="0" width="800" height="55" fill="#f7fafc" stroke="#e2e8f0" rx="6"/>
-    
-    <g transform="translate(20, 15)">
-      <rect x="0" y="0" width="15" height="15" fill="#48bb78" rx="2"/>
-      <text x="25" y="12" class="small bold">Claude:</text>
-      <text x="80" y="12" class="small">Consistently positive - best alignment with expected behavior</text>
+    <!-- Model labels under bars -->
+    <g transform="translate(40, 285)">
+      <text x="27" y="0" text-anchor="middle" class="small">Claude</text>
+      <text x="72" y="0" text-anchor="middle" class="small">Deep</text>
+      <text x="117" y="0" text-anchor="middle" class="small">GPT-4o</text>
     </g>
-    
-    <g transform="translate(20, 38)">
-      <rect x="0" y="0" width="15" height="15" fill="#48bb78" rx="2"/>
-      <text x="25" y="12" class="small bold">DeepSeek:</text>
-      <text x="85" y="12" class="small">Moderate positive - partial alignment with theoretical model</text>
-    </g>
-    
-    <g transform="translate(450, 15)">
-      <rect x="0" y="0" width="15" height="15" fill="#fc8181" rx="2"/>
-      <text x="25" y="12" class="small bold">GPT-4o:</text>
-      <text x="80" y="12" class="small">Negative in G4 - systematic under-performance</text>
-    </g>
-    
-    <g transform="translate(450, 38)">
-      <text x="0" y="12" class="small">Note: Prediction Score = Actual - Expected retained accuracy</text>
+    <g transform="translate(350, 285)">
+      <text x="27" y="0" text-anchor="middle" class="small">Claude</text>
+      <text x="72" y="0" text-anchor="middle" class="small">Deep</text>
+      <text x="117" y="0" text-anchor="middle" class="small">GPT-4o</text>
     </g>
   </g>
 
-  <!-- Footer -->
-  <text x="450" y="495" text-anchor="middle" class="small" fill="#718096">Figure: Prediction Score Analysis - GPT-4o exhibits consistent under-performance relative to theoretical expectations</text>
+  <!-- Compact Legend -->
+  <g transform="translate(80, 340)">
+    <rect x="0" y="0" width="12" height="12" fill="#dd6b20" rx="2"/>
+    <text x="18" y="10" class="small">Claude</text>
+    <rect x="80" y="0" width="12" height="12" fill="#38a169" rx="2"/>
+    <text x="98" y="10" class="small">DeepSeek</text>
+    <rect x="170" y="0" width="12" height="12" fill="#3182ce" rx="2"/>
+    <text x="188" y="10" class="small">GPT-4o</text>
+    <text x="280" y="10" class="small" fill="#38a169">Positive = Better than expected</text>
+    <text x="480" y="10" class="small" fill="#3182ce">Negative = Under-performance</text>
+  </g>
 </svg>

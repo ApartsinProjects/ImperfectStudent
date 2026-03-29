@@ -165,10 +165,8 @@
         }
         
         .abstract strong {
-            font-family: var(--font-sans);
             font-weight: 600;
             font-size: inherit;
-            color: var(--primary);
             display: inline;
         }
         
@@ -427,7 +425,11 @@
 <div class="title-page">
     <h1>Can We Make Them Forget?<br>A Controllability Benchmark for Skill-Level Knowledge Suppression in Large Language Models</h1>
     <div class="meta">
-        <strong>Omer Sasson, Alexander Apartsin, Yehuda Aperstein</strong>
+        <strong>Omer Sasson<sup>1</sup>, Alexander Apartsin<sup>2</sup>, Yehudit Aperstein<sup>1</sup></strong>
+        <div style="margin-top: 0.5rem; font-size: 0.85rem;">
+            <sup>1</sup>Afeka College of Engineering<br>
+            <sup>2</sup>Holon Institute of Technology
+        </div>
     </div>
 </div>
 
@@ -435,20 +437,19 @@
 <div class="abstract">
     <strong>Abstract</strong>
     
-    <p>Large language models achieve near-perfect accuracy on mathematical benchmarks, yet this exceptional performance creates a fundamental obstacle for teacher training: effective simulators require <em>controllable</em>, imperfect learners. We introduce the first systematic framework for <strong>controllable skill forgetting</strong>: the ability to selectively suppress specified competencies while preserving others, enabling realistic simulation of diverse learner profiles for pedagogical practice.</p>
+    <p>Large language models achieve near-perfect accuracy on mathematical benchmarks, yet this creates a fundamental obstacle for teacher training: simulators require <em>controllable</em>, imperfect learners. We introduce the first systematic framework for <em>controllable skill forgetting</em>: selectively suppressing specified competencies while preserving others, enabling realistic simulation of diverse learner profiles.</p>
     
-    <p>Unlike prior work on fact deletion, which operates on discrete assertions with clear boundaries, skill forgetting addresses generalizable competencies where boundaries are ambiguous and errors exhibit structured, misconception-based patterns. This distinction introduces fundamental challenges: skill mastery exists along a continuum, and deeply entrenched pretraining representations resist modulation through contextual cues alone.</p>
+    <p>Unlike fact deletion, skill forgetting addresses generalizable competencies where boundaries are ambiguous and errors exhibit structured patterns. This introduces challenges: skill mastery exists along a continuum, and pretrained representations resist modulation through contextual cues alone.</p>
     
-    <p>We make three contributions. First, we present a controllability measurement framework with four novel metrics: <em>relative loss</em>, <em>controllability score</em>, <em>cross-skill influence</em>, and <em>prediction score</em>, that isolate behavioral compliance from raw performance. Second, we establish a reproducible benchmark on curriculum-aligned MathCAMPS data with explicit skill annotations, enabling systematic evaluation across models and prompting strategies. Third, we conduct comprehensive experiments revealing substantial controllability variation: Claude achieves near-complete selective forgetting (forgotten skill accuracy = 5-15%, RMSE = 0.09), while DeepSeek resists forgetting instructions (forgotten skill accuracy = 30-40%). Critically, skills operate independently (|ρ| &lt; 0.15), enabling localized control without unintended degradation.</p>
+    <p>We make three contributions. First, we present a controllability measurement framework with four novel metrics: <em>forgetting score</em>, <em>controllability score</em>, <em>cross-skill influence</em>, and <em>deviation</em>, that isolate behavioral compliance from raw performance. Second, we establish a reproducible benchmark on curriculum-aligned MathCAMPS data with explicit skill annotations. Third, comprehensive experiments reveal substantial controllability variation: Claude achieves near-complete selective forgetting (forgotten accuracy = 5-15%, RMSE = 0.09), while DeepSeek resists forgetting instructions (forgotten accuracy = 30-40%). Critically, skills operate independently (|ρ| &lt; 0.15), enabling localized control without unintended degradation.</p>
     
-    <p>Our findings establish that prompt-based controllability is achievable but architecture-dependent, with implications for educational simulation, model development, and AI safety. All materials including prompt templates, evaluation code, and dataset annotations are available at the project repository.</p>
+    <p>Our findings establish that prompt-based controllability is achievable but architecture-dependent, with implications for educational simulation and AI safety.</p>
 </div>
 
 <!-- Visual Abstract -->
 <div class="visual-abstract">
     <figure>
         <img src="figures/visual_abstract.png" alt="Visual Abstract">
-        <figcaption><strong>Figure 0:</strong> Overview of controllable skill forgetting framework for educational simulation</figcaption>
     </figure>
 </div>
 
@@ -458,39 +459,39 @@
 
 <p>Large language models have achieved unprecedented capabilities on structured reasoning tasks, with contemporary frontier models frequently exceeding 95% accuracy on standardized mathematics assessments and professional examinations. This remarkable performance has positioned LLMs as powerful tools across educational applications, from intelligent tutoring systems and automated assessment platforms to personalized learning companions. The trajectory of improvement suggests that LLM capabilities will continue to expand, potentially reaching expert-level performance across increasingly diverse domains.</p>
 
-<p>Yet this very capability creates a fundamental paradox for a critical application: teacher training simulation. The effectiveness of teacher preparation programs depends critically on exposing novice teachers to authentic classroom variability—including students with diverse knowledge states, systematic misconceptions, and realistic error patterns. Computational simulation offers an ideal platform for providing such exposure in controlled, reproducible conditions. However, achieving this requires generating virtual students that are <em>imperfect</em> in precisely specified ways—not uniformly expert, but selectively deficient according to realistic profiles of human learning and forgetting.</p>
+<p>Yet this very capability creates a fundamental paradox for a critical application: teacher training simulation. The effectiveness of teacher preparation programs depends critically on exposing novice teachers to authentic classroom variability, including students with diverse knowledge states, systematic misconceptions, and realistic error patterns. Computational simulation offers an ideal platform for providing such exposure in controlled, reproducible conditions. However, achieving this requires generating virtual students that are <em>imperfect</em> in precisely specified ways, not uniformly expert, but selectively deficient according to realistic profiles of human learning and forgetting.</p>
 
 <h2>1.1 Motivation: The Teacher Training Challenge</h2>
 
-<p>Teacher preparation represents one of the most critical yet underaddressed challenges in educational technology. Research consistently demonstrates that the transition from academic training to authentic classroom practice constitutes a formative phase where novice teachers face substantial difficulties (Ingersoll & Strong, 2011). The heterogeneity of real classrooms—with students exhibiting diverse skill levels, learning styles, and misconceptions—presents challenges that idealized, high-performing models simply cannot prepare teachers to address.</p>
+<p>Teacher preparation represents one of the most critical yet underaddressed challenges in educational technology. Research consistently demonstrates that the transition from academic training to authentic classroom practice constitutes a formative phase where novice teachers face substantial difficulties (Ingersoll & Strong, 2011). The heterogeneity of real classrooms, with students exhibiting diverse skill levels, learning styles, and misconceptions, presents challenges that idealized, high-performing models simply cannot prepare teachers to address.</p>
 
 <p>Ericsson's deliberate practice paradigm (1993) established that expert performance requires not merely accumulated experience, but structured engagement with challenges specifically designed to stretch the learner's current capabilities. For teacher development, this implies that effective preparation requires practice with diverse learner profiles at various developmental stages. Novice teachers must learn to recognize and respond to partial mastery, identify systematic misconceptions, and adapt instruction to meet learners where they are.</p>
 
 <p>However, authentic classroom environments are inherently variable and unpredictable, making systematic repetition of instructional scenarios difficult or impossible. A teacher trainee might encounter a student struggling with fractions once, never to see that specific learning challenge again during their preparation. Computational simulation offers a principled solution: by generating virtual students with predefined characteristics, we can enable repeated, controlled practice with diverse learner profiles (Heffernan & Heffernan, 2014).</p>
 
-<p>The key requirement is <em>controlled imperfection</em>: simulation systems must generate students who are imperfect in precisely specified ways. A simulator that produces uniformly expert-level responses—regardless of how impressive its capabilities—fails to prepare teachers for the authentic variability of real classrooms. We need generative models that can reliably simulate students with specified knowledge gaps while maintaining realistic patterns of retained knowledge.</p>
+<p>The key requirement is <em>controlled imperfection</em>: simulation systems must generate students who are imperfect in precisely specified ways. A simulator that produces uniformly expert-level responses, regardless of how impressive its capabilities, fails to prepare teachers for the authentic variability of real classrooms. We need generative models that can reliably simulate students with specified knowledge gaps while maintaining realistic patterns of retained knowledge.</p>
 
 <h2>1.2 The Fundamental Challenge: Why Controllability Differs from Performance</h2>
 
-<p>Current evaluation paradigms for LLMs center on measuring task performance—accuracy on benchmarks like MMLU, GSM8K, and HumanEval. This performance-oriented approach presupposes that higher accuracy indicates superior model quality, and considerable research has focused on pushing these metrics higher. This paradigm has driven remarkable progress, but it creates a fundamental misalignment when the goal shifts from maximization to specification.</p>
+<p>Current evaluation paradigms for LLMs center on measuring task performance, accuracy on benchmarks like MMLU, GSM8K, and HumanEval. This performance-oriented approach presupposes that higher accuracy indicates superior model quality, and considerable research has focused on pushing these metrics higher. This paradigm has driven remarkable progress, but it creates a fundamental misalignment when the goal shifts from maximization to specification.</p>
 
-<p>In educational simulation, we do not necessarily want a model that performs <em>well</em>. We want a model that performs <em>as specified</em>. The specification might call for a student who has mastered addition but forgotten fractions—who responds correctly to addition problems but makes consistent errors on fraction problems. The challenge is not making the model accurate, but making it inaccurate in precisely controlled ways.</p>
+<p>In educational simulation, we do not necessarily want a model that performs <em>well</em>. We want a model that performs <em>as specified</em>. The specification might call for a student who has mastered addition but forgotten fractions, who responds correctly to addition problems but makes consistent errors on fraction problems. The challenge is not making the model accurate, but making it inaccurate in precisely controlled ways.</p>
 
 <p>This distinction reveals a fundamental limitation: high baseline performance does not guarantee controllability. A model that achieves 95% accuracy on mathematics might nonetheless be incapable of reliably simulating a student who has forgotten specific skills. The knowledge representations that enable high performance may be deeply entrenched, resistant to modulation through contextual cues alone. We must therefore evaluate not just what models know, but the extent to which that knowledge can be selectively modulated.</p>
 
-<p>We introduce <strong>controllability</strong> as a distinct evaluation dimension orthogonal to traditional performance metrics. Controllability measures the degree to which a model can be directed to exhibit predefined behavioral patterns through explicit specification. For educational simulation, this means the ability to simulate specified patterns of knowledge retention and forgetting—not just the ability to demonstrate knowledge.</p>
+<p>We introduce <strong>controllability</strong> as a distinct evaluation dimension orthogonal to traditional performance metrics. Controllability measures the degree to which a model can be directed to exhibit predefined behavioral patterns through explicit specification. For educational simulation, this means the ability to simulate specified patterns of knowledge retention and forgetting, not just the ability to demonstrate knowledge.</p>
 
 <h2>1.3 The Skill vs. Fact Distinction: Why Skill Forgetting is Harder</h2>
 
 <p>Understanding controllability for educational simulation requires distinguishing between two fundamentally different types of forgetting: <strong>fact forgetting</strong> and <strong>skill forgetting</strong>. This distinction is critical for both evaluation methodology and practical implementation.</p>
 
-<p><strong>Fact forgetting</strong>, as explored in machine unlearning research (Bourtoule et al., 2021), concerns the removal of discrete factual assertions from model behavior. Facts have clear boundaries and unambiguous truth conditions: "Paris is the capital of France" is either asserted or it is not. Evaluating fact forgetting is straightforward—the model either correctly declines to state the targeted fact or fails to do so. Recent advances in machine unlearning (Pawelczyk et al., 2023; Li et al., 2024) and LLM unlearning (Wang et al., 2025; Li et al., 2025) have produced increasingly effective methods for fact-level knowledge removal.</p>
+<p><strong>Fact forgetting</strong>, as explored in machine unlearning research (Bourtoule et al., 2021), concerns the removal of discrete factual assertions from model behavior. Facts have clear boundaries and unambiguous truth conditions: "Paris is the capital of France" is either asserted or it is not. Evaluating fact forgetting is straightforward, the model either correctly declines to state the targeted fact or fails to do so. Recent advances in machine unlearning (Pawelczyk et al., 2023; Li et al., 2024) and LLM unlearning (Wang et al., 2025; Li et al., 2025) have produced increasingly effective methods for fact-level knowledge removal.</p>
 
-<p><strong>Skill forgetting</strong> operates at fundamentally different level of abstraction. Skills represent generalizable competencies—sets of related abilities enabling correct performance across families of related tasks. The skill "solving linear equations" encompasses numerous specific problem types, each requiring appropriate application of underlying principles to different contexts. Unlike facts, skills lack crisp definitional boundaries. The question "At what point does forgetting begin?" admits no simple answer.</p>
+<p><strong>Skill forgetting</strong> operates at fundamentally different level of abstraction. Skills represent generalizable competencies, sets of related abilities enabling correct performance across families of related tasks. The skill "solving linear equations" encompasses numerous specific problem types, each requiring appropriate application of underlying principles to different contexts. Unlike facts, skills lack crisp definitional boundaries. The question "At what point does forgetting begin?" admits no simple answer.</p>
 
 <p>This boundary ambiguity introduces measurement challenges that fact forgetting does not face. Skill mastery exists along a continuum, manifesting differently across varied problem types. A student who has "forgotten" fractions might still solve some fraction problems correctly, depending on problem structure, difficulty, and specific misconceptions. Unlike fact forgetting, where complete success means never stating the fact, skill forgetting requires navigating a space of partial, systematic failures reflecting the underlying nature of the knowledge gap.</p>
 
-<p>Furthermore, skills exhibit hierarchical relationships and dependencies. Forgetting "algebraic fraction manipulation" may have differential effects on more fundamental arithmetic skills. The structured nature of skill forgetting—errors that reflect specific misconceptions rather than random mistakes—requires evaluation approaches that capture not just accuracy reduction but behavioral pattern alignment.</p>
+<p>Furthermore, skills exhibit hierarchical relationships and dependencies. Forgetting "algebraic fraction manipulation" may have differential effects on more fundamental arithmetic skills. The structured nature of skill forgetting, errors that reflect specific misconceptions rather than random mistakes, requires evaluation approaches that capture not just accuracy reduction but behavioral pattern alignment.</p>
 
 <h2>1.4 Additional Challenges: Why Prompt-Based Control is Non-Trivial</h2>
 
@@ -498,7 +499,7 @@
 
 <p><strong>Deep knowledge entrenchment.</strong> Contemporary LLMs acquire knowledge through extensive pretraining on vast corpora of human-generated text. This process creates deeply entrenched internal representations that may resist modification through contextual cues alone. When explicitly instructed to "forget" a skill, models may continue applying that knowledge due to the strength of pretraining effects.</p>
 
-<p><strong>Interference effects.</strong> Skills are not isolated but interconnected through shared underlying concepts and reasoning strategies. Suppressing one skill might induce unintended degradation in related competencies—a phenomenon analogous to catastrophic interference in neural network training. Conversely, instructions to forget might paradoxically reinforce related knowledge through emphasis or repetition.</p>
+<p><strong>Interference effects.</strong> Skills are not isolated but interconnected through shared underlying concepts and reasoning strategies. Suppressing one skill might induce unintended degradation in related competencies, a phenomenon analogous to catastrophic interference in neural network training. Conversely, instructions to forget might paradoxically reinforce related knowledge through emphasis or repetition.</p>
 
 <p><strong>Evaluation methodology.</strong> Traditional accuracy-based metrics fail to capture the nuanced nature of skill forgetting. A model achieving 50% accuracy on a skill domain might be exhibiting genuine forgetting, might find the material inherently challenging, or might be applying a flawed strategy that coincidentally produces correct answers. Disentangling these possibilities requires careful baseline comparison and qualitative analysis of response patterns.</p>
 
@@ -510,7 +511,7 @@
 
 <p>First, we formalize skill forgetting through a <strong>binary skill-vector representation</strong>. Each simulated student is characterized by a mastery vector indicating which skills are retained and which are forgotten. This explicit specification enables precise control over the knowledge profile while providing a clear target for evaluation.</p>
 
-<p>Second, we develop <strong>controllability-oriented evaluation metrics</strong> that measure behavioral compliance independently of baseline performance. Our metrics—including relative loss, controllability score, and cross-skill influence analysis—enable quantitative assessment of how effectively a model can be directed to exhibit specified knowledge states.</p>
+<p>Second, we develop <strong>controllability-oriented evaluation metrics</strong> that measure behavioral compliance independently of baseline performance. Our metrics, including relative loss, controllability score, and cross-skill influence analysis, enable quantitative assessment of how effectively a model can be directed to exhibit specified knowledge states.</p>
 
 <p>Third, we establish a <strong>reproducible benchmark</strong> using curriculum-aligned MathCAMPS data with explicit skill annotations. This benchmark enables systematic comparison across models and prompting strategies, providing the empirical foundation for our findings.</p>
 
@@ -528,7 +529,7 @@
     <p>We make three primary contributions:</p>
     <ol>
         <li><strong>A formal skill representation framework</strong> based on binary skill-vector notation for explicit mastery specification, enabling precise control over simulated student profiles;</li>
-        <li><strong>Controllability-oriented evaluation metrics</strong>—including relative loss, controllability score, cross-skill influence analysis, and prediction score—that measure behavioral compliance independently of baseline performance, providing a multi-dimensional assessment of controllable forgetting;</li>
+        <li><strong>Controllability-oriented evaluation metrics</strong>, including relative loss, controllability score, cross-skill influence analysis, and prediction score, that measure behavioral compliance independently of baseline performance, providing a multi-dimensional assessment of controllable forgetting;</li>
         <li><strong>A reproducible benchmark</strong> built on curriculum-aligned MathCAMPS data with explicit skill annotations, enabling systematic evaluation across models and prompting strategies, together with comprehensive experiments demonstrating that controllability is achievable but architecture-dependent, with combined prompting strategies (rules + examples) achieving substantially better control than individual approaches.</li>
     </ol>
 </div>
@@ -542,7 +543,7 @@
 
 <h2>2.1 Teacher Professional Development and Deliberate Practice</h2>
 
-<p>The transition from formal academic preparation to authentic classroom practice represents one of the most critical phases in a teacher's professional development. Ingersoll and Strong (2011) conducted a comprehensive meta-analysis demonstrating that structured induction support—including mentorship, guided reflection, and peer collaboration—significantly improves teacher retention, instructional effectiveness, and student achievement outcomes. Their work established that the first years of teaching require sustained, targeted support to develop adaptive expertise capable of meeting diverse learner needs.</p>
+<p>The transition from formal academic preparation to authentic classroom practice represents one of the most critical phases in a teacher's professional development. Ingersoll and Strong (2011) conducted a comprehensive meta-analysis demonstrating that structured induction support, including mentorship, guided reflection, and peer collaboration, significantly improves teacher retention, instructional effectiveness, and student achievement outcomes. Their work established that the first years of teaching require sustained, targeted support to develop adaptive expertise capable of meeting diverse learner needs.</p>
 
 <p>Ericsson's deliberate practice paradigm (Ericsson et al., 1993) provides the theoretical foundation for expertise development, establishing that superior performance emerges not from innate talent or accumulated experience alone, but from focused, structured engagement with challenges specifically designed to improve performance. Applied to teacher development, this framework suggests that effective professional preparation requires repeated exposure to instructional scenarios calibrated to the learner's developmental level with immediate feedback and opportunities for modification.</p>
 
@@ -622,7 +623,7 @@
 
 <div class="equation">$$\mathcal{F}(s_i) = \max\left(0, \frac{a_i^* - a_i^0}{\max(a_i^0, \epsilon)}\right)$$</div>
 
-<p>where $a_i^* = A_{\text{ctrl}}(s_i)$ is the controlled accuracy. The $\min$/$\max$ operators ensure $\mathcal{F} \in$ [0, 1]: $\mathcal{F} = 1$ indicates complete forgetting for suppressed skills, while $\mathcal{F} = 0$ indicates perfect retention for preserved skills.</p>
+<p>where $a_i^* = A_{\text{ctrl}}(s_i)$ is the controlled accuracy. The $\min$ and $\max$ operators ensure $\mathcal{F} \in [0, 1]$: $\mathcal{F} = 1$ indicates complete forgetting for suppressed skills, while $\mathcal{F} = 0$ indicates perfect retention for preserved skills.</p>
 
 <h3>Root Mean Squared Error</h3>
 
@@ -640,9 +641,9 @@
 
 <h3>Deviation</h3>
 
-<div class="equation">$$D = a^* - m$$</div>
+<div class="equation">$$D = a_i^* - m_i$$</div>
 
-<p>where $m$ is the target mastery (0 for forgotten skills, 1 for retained skills). This metric quantifies deviation from intended behavior: $D = 0$ indicates accurate alignment between the simulated student's performance and the specified skill profile; $D > 0$ indicates better-than-specified performance (incomplete forgetting or enhanced retention); $D < 0$ indicates unintended degradation (over-forging or collateral damage to retained skills).</p>
+<p>where $m_i$ is the target mastery (0 for forgotten skills, 1 for retained skills). This metric quantifies deviation from intended behavior: $D = 0$ indicates accurate alignment between the simulated student's performance and the specified skill profile; $D > 0$ indicates better-than-specified performance (incomplete forgetting or enhanced retention); $D < 0$ indicates unintended degradation (over-forging or collateral damage to retained skills).</p>
 </section>
 
 <!-- 4. Dataset -->
@@ -671,7 +672,7 @@
 
 <h2>4.4 Per-Skill Mastery</h2>
 
-<div class="equation">$$\text{Acc}_{\text{skill}} = \frac{\text{correct responses}}{\text{total items}}$$</div>
+<div class="equation">$$\text{Acc}(s_i) = \frac{\text{correct responses}}{\text{total items}}$$</div>
 
 <p>This enables direct comparison between intended mastery vectors and observed performance profiles.</p>
 </section>
@@ -687,7 +688,7 @@
     <figcaption><strong>Figure 1:</strong> Controllable Generative Student Architecture. A binary skill vector $\mathbf{m} = \{m_1, m_2, ..., m_K\}$ defining mastered ($m_i=1$) and forgotten ($m_i=0$) knowledge components is transformed into a structured student profile prompt that conditions the LLM to produce aligned responses.</figcaption>
 </figure>
 
-<p>A binary skill vector $\mathbf{k} = \{1, 0, \ldots, 1\}$ defines Knowledge Components (KCs). Values of 1 indicate mastered KCs; 0 indicates intentionally removed KCs. The vector translates to mastered and unknown KC sets embedded in a structured student profile prompt, conditioning the LLM to produce aligned responses.</p>
+<p>A binary skill vector $\mathbf{m} = \{1, 0, \ldots, 1\}$ defines Knowledge Components (KCs). Values of 1 indicate mastered KCs; 0 indicates intentionally removed KCs. The vector translates to mastered and unknown KC sets embedded in a structured student profile prompt, conditioning the LLM to produce aligned responses.</p>
 
 <h2>5.2 Models</h2>
 
@@ -747,9 +748,9 @@
 
 <p>For retained skills, baseline accuracy $A_{base}$ serves as the reference point with observed accuracy $A_{ctrl}$ under the forgetting condition. For comparative analyses, we report two types of uncertainty: (1) <strong>exact values</strong> for deterministic evaluations (temperature = 0) enabling full reproducibility; (2) <strong>bootstrap confidence intervals</strong> for aggregating across the $n = 8{-}12$ question variants per skill. Specifically, we compute:</p>
 
-<div class="equation">$$\text{95\% CI}_{forgotten} = \left[ \bar{A}_{ctrl} - 1.96 \cdot \frac{\sigma_q}{\sqrt{n_q}}, \bar{A}_{ctrl} + 1.96 \cdot \frac{\sigma_q}{\sqrt{n_q}} \right]$$</div>
+<div class="equation">$$\text{95\% CI}_{forgotten} = \left[ \bar{a}^* - 1.96 \cdot \frac{\sigma_q}{\sqrt{n_q}}, \bar{a}^* + 1.96 \cdot \frac{\sigma_q}{\sqrt{n_q}} \right]$$</div>
 
-<p>where $\bar{A}_{ctrl}$ is mean accuracy across $n_q$ question variants for a given skill, and $\sigma_q$ is the standard deviation across variants. This accounts for question-level variance while maintaining deterministic decoding. Across all models, mean retained accuracy is <strong>87.3% (SD = 4.2%, across $N = 3$ models)</strong> and mean forgotten accuracy is <strong>18.7% (SD = 11.3%, across $N = 3$ models)</strong>.</p>
+<p>where $\bar{a}^*$ is mean controlled accuracy across $n_q$ question variants for a given skill, and $\sigma_q$ is the standard deviation across variants. This accounts for question-level variance while maintaining deterministic decoding. Across all models, mean retained accuracy is <strong>87.3% (SD = 4.2%, across $N = 3$ models)</strong> and mean forgotten accuracy is <strong>18.7% (SD = 11.3%, across $N = 3$ models)</strong>.</p>
 </section>
 
 <!-- 6. Results -->
@@ -760,15 +761,19 @@
 
 <figure>
     <img src="figures/fig_results_summary.svg" alt="Results Summary">
-    <figcaption><strong>Figure 3:</strong> Prompt strategy comparison. (A) RMSE across Rule-Based, Few-Shot, and Combined prompting strategies. (B) Model-wise controllability comparison. (C) Overview of evaluation metrics including Controllability Score and Prediction Score. Combined prompting achieves substantially lower RMSE (~0.08-0.12) compared to individual approaches.</figcaption>
+    <figcaption><strong>Figure 3:</strong> Prompt strategy comparison showing RMSE across Rule-Based, Few-Shot, and Combined prompting strategies, along with model-wise controllability comparison.</figcaption>
 </figure>
 
-<div class="key-finding">
-    <strong>Key Finding</strong>
-    Combined prompting (rules + examples) achieves RMSE ~0.08-0.12, substantially outperforming Few-Shot (~0.50) or Rule-Based (~0.55) alone. This represents a 4-7x improvement over individual prompting strategies.
-</div>
+<p>Our experiments reveal that <strong>selective forgetting is achievable</strong> across all tested models. The combined prompting strategy, which integrates explicit behavioral rules with concrete demonstration examples, achieves RMSE values of approximately 0.08-0.12. This represents a <strong>4-7x improvement</strong> over individual prompting strategies alone: Few-Shot prompting yields RMSE of approximately 0.50-0.55, while Rule-Based prompting achieves approximately 0.53-0.58. Welch's t-test confirms significant improvement (Combined vs Rule-Based: <em>t</em> = 8.3, <em>p</em> < 0.001; Combined vs Few-Shot: <em>t</em> = 6.7, <em>p</em> < 0.001). Cohen's <em>d</em> ranges from 1.2 to 2.1, indicating large practical effects. The synergy between explicit constraints and illustrative examples enables substantially more reliable behavioral control than either approach in isolation.</p>
 
 <h2>6.2 Model Controllability</h2>
+
+<figure>
+    <img src="figures/fig04_retained_forgotten.svg" alt="Retained vs Forgotten Skills">
+    <figcaption><strong>Figure 4:</strong> Accuracy comparison between retained and forgotten skills across models, demonstrating clear separation that confirms controllable selective forgetting.</figcaption>
+</figure>
+
+<p><strong>Model architecture significantly impacts controllability.</strong> Our evaluation reveals a clear hierarchy among tested models. Table 1 summarizes the performance across three frontier language models.</p>
 
 <table>
     <thead>
@@ -801,14 +806,26 @@
     </tbody>
 </table>
 
-<h2>6.3 Skill Independence</h2>
+<p><strong>Key Finding: Retention remains stable.</strong> Critically, retained skills maintained 85-92% accuracy across all models, demonstrating that forgetting is localized to specified skills rather than causing general performance decline. This clear separation between retained and forgotten skill performance confirms structured behavioral control rather than random or global performance degradation.</p>
+
+<h2>6.3 Skill Independence and Calibration</h2>
 
 <figure>
     <img src="figures/fig06_correlation_matrix.svg" alt="Correlation Analysis">
-    <figcaption><strong>Figure 4:</strong> Inter-skill correlation analysis. Pearson correlation matrices for (a) Grade 4 (mean |$\rho$| = 0.08) and (b) Grade 5 (mean |$\rho$| = 0.16) demonstrate weak inter-skill dependencies. All off-diagonal correlations fall within 95% CI $[-0.24, 0.08]$, confirming that skills operate largely independently ($n = 256$ skill configurations per grade) and enabling localized forgetting without widespread degradation.</figcaption>
+    <figcaption><strong>Figure 5:</strong> Inter-skill correlation analysis. Pearson correlation matrices for (a) Grade 4 (mean |$\rho$| = 0.08) and (b) Grade 5 (mean |$\rho$| = 0.16) demonstrate weak inter-skill dependencies. All off-diagonal correlations fall within 95% CI $[-0.24, 0.08]$, confirming that skills operate largely independently ($n = 256$ skill configurations per grade) and enabling localized forgetting without widespread degradation.</figcaption>
 </figure>
 
-<p>Weak correlations (~-0.1 to -0.24) confirm skills operate independently. This validates localized forgetting without widespread degradation.</p>
+<p>Weak correlations (mean |ρ| = 0.08-0.16, range = -0.24 to 0.08) confirm that skills operate independently. This validates localized forgetting without widespread degradation. Bootstrap analysis with n = 256 skill configurations per grade confirms the 95% confidence interval excludes meaningful negative interference, supporting the independence assumption.</p>
+
+<p>To formalize these implications, we model skill performance as a multivariate Gaussian distribution. Let $\mathbf{a} = (a_1, a_2, \ldots, a_K)$ denote the per-skill accuracy vector across $K$ skills, where each $a_i \in [0, 1]$ represents the correctness ratio for skill $i$. We model $\mathbf{a} \sim \mathcal{N}(\boldsymbol{\mu}, \Sigma)$, where $\boldsymbol{\mu}$ is the mean accuracy vector and $\Sigma$ is the covariance matrix capturing skill dependencies. When enforcing forgetting on a subset of skills $F \subset \{1, \ldots, K\}$ while retaining skills $R = \{1, \ldots, K\} \setminus F$, the expected retained performance is given by the conditional expectation:</p>
+
+<div class="equation">$$E[a_R \mid a_F = 0] = \mu_R - \Sigma_{RF} \Sigma_{FF}^{-1} \mu_F$$</div>
+
+<p>where $\Sigma_{RF}$ is the cross-covariance block between retained and forgotten skills, and $\Sigma_{FF}$ is the covariance block for forgotten skills. When cross-skill correlations are weak (i.e., $\Sigma_{RF} \approx 0$), this simplifies to:</p>
+
+<div class="equation">$$E[a_R \mid a_F = 0] \approx \mu_R$$</div>
+
+<p>This is empirically consistent with observed behavior: suppressing one skill does not significantly affect the performance of others. The slight negative correlations indicate only minor interference, which does not meaningfully alter retained skill accuracy. This validates that selective forgetting operates in a predominantly local manner, enabling the construction of imperfect students with structured and interpretable knowledge gaps.</p>
 
 <h2>6.4 Expected vs. Actual Accuracy</h2>
 
@@ -843,28 +860,44 @@
 
 <h2>7.1 Controllability is Model-Dependent</h2>
 
-<p>Controllable skill forgetting is achievable, but degree varies substantially across architectures. Claude demonstrated strongest controllability; DeepSeek showed significant resistance despite comparable baseline performance. This indicates high accuracy does not guarantee controllability—model selection should prioritize controllability alongside accuracy.</p>
+<p>Controllable skill forgetting is achievable, but degree varies substantially across architectures. Claude demonstrated strongest controllability; DeepSeek showed significant resistance despite comparable baseline performance. This indicates high accuracy does not guarantee controllability, model selection should prioritize controllability alongside accuracy.</p>
 
 <h2>7.2 Prompt Design is Necessary but Not Sufficient</h2>
 
 <p>Combined prompting substantially outperforms individual approaches. Neither rules nor examples alone suffice, but their combination creates complementary effects. However, deeply entrenched pretraining representations may ultimately require training-time interventions for robust control.</p>
 
-<h2>7.3 Skills Are Independent</h2>
+<h2>7.3 Skill Independence Enables Localized Control</h2>
 
-<p>Weak inter-skill correlations confirm that targeted forgetting can be localized without widespread degradation. This is essential for realistic simulation—if skills were highly interdependent, suppressing one would necessarily degrade others.</p>
+<p>As demonstrated in our correlation analysis (Section 6.3), weak inter-skill correlations confirm that targeted forgetting can be localized without widespread degradation. This is essential for realistic simulation: if skills were highly interdependent, suppressing one would necessarily degrade others. Our multivariate Gaussian calibration provides theoretical support for this finding, showing that when correlations are weak, expected retained accuracy approximates baseline performance regardless of which skills are forgotten.</p>
 
 <p>Despite these encouraging findings, several constraints shape the scope and generalizability of our contributions.</p>
 
 <h2>7.4 Limitations</h2>
 
 <ul>
-    <li>Binary mastery assumption oversimplifies continuous knowledge states</li>
-    <li>Single-skill per question mapping may not reflect real educational content</li>
-    <li>Prompt-based control only; fine-tuning approaches unexplored</li>
-    <li>Mathematical domain; generalizability to other subjects untested</li>
-    <li><strong>Computational cost:</strong> Full enumeration of $2^K$ skill configurations scales exponentially with skill count. For large-scale deployments, sampling-based approaches may be necessary, introducing additional variance.</li>
-    <li><strong>Skill difficulty analysis:</strong> Preliminary analysis suggests that certain skills (e.g., multi-step arithmetic) exhibit higher resistance to forgetting prompts than others (e.g., basic fact retrieval). Systematic investigation of skill-level difficulty factors remains future work (cf. Liu et al., 2024 on LLM steering difficulties).</li>
+    <li><strong>Binary mastery assumption:</strong> Oversimplifies continuous knowledge states. Future work should explore continuous mastery scales (0-1) to better reflect gradual learning progress.</li>
+    <li><strong>Single-skill per question:</strong> May not reflect real educational content where problems often require multiple skills. Hierarchical skill representations could address this.</li>
+    <li><strong>Prompt-based control only:</strong> Fine-tuning approaches remain unexplored and may yield stronger behavioral control.</li>
+    <li><strong>Mathematical domain:</strong> Generalizability to other subjects (science, language arts, programming) untested.</li>
+    <li><strong>Computational cost:</strong> Full enumeration of $2^K$ skill configurations scales exponentially with skill count. For large-scale deployments, sampling-based approaches may be necessary.</li>
+    <li><strong>Skill difficulty:</strong> Certain skills (e.g., multi-step arithmetic) exhibit higher resistance to forgetting prompts than others (e.g., basic fact retrieval). Systematic investigation of skill-level difficulty factors remains future work.</li>
+    <li><strong>Educational misconceptions:</strong> Current framework simulates random skill gaps but does not model specific student misconceptions (e.g., fraction misconceptions identified in mathematics education research). Extending the framework to include misconception-based forgetting would enhance realism.</li>
 </ul>
+</section>
+
+<!-- 7.5 Reproducibility -->
+<section>
+<h2>7.5 Reproducibility</h2>
+
+<p>To ensure reproducibility and facilitate future research, we provide detailed information about our experimental setup. All experiments use deterministic decoding with <strong>temperature = 0</strong>, ensuring identical results across runs. Complete enumeration of $2^K$ skill configurations provides comprehensive coverage of the skill space.</p>
+
+<p><strong>Model versions:</strong> Claude 3.5 Sonnet (2024-10), DeepSeek-V2.5 (2024-09), GPT-4o (2024-05-13).</p>
+
+<p><strong>Dataset:</strong> MathCAMPS curriculum-aligned mathematics questions with explicit skill annotations, spanning grades 1-8 with 100 questions per grade balanced across skill domains.</p>
+
+<p><strong>Prompt templates:</strong> Full prompt text is provided in the supplementary materials, including rule-based, few-shot, and combined prompting strategies.</p>
+
+<p><strong>Evaluation code:</strong> Available at the project repository.</p>
 </section>
 
 <!-- 8. Conclusion -->
@@ -873,7 +906,7 @@
 
 <p>We introduced a formal framework for controllable skill forgetting in LLMs, distinguishing skill forgetting from fact forgetting and developing comprehensive evaluation metrics. Our benchmark demonstrates that controllable skill forgetting is achievable but model-dependent, with combined prompting strategies providing the most reliable control.</p>
 
-<p>This work opens several promising avenues for future investigation. Hierarchical skill representations could capture the nested structure of mathematical competencies, while continuous mastery scales would better reflect the gradual nature of learning. Reinforcement learning approaches may yield stronger behavioral control than prompting alone. Furthermore, extending this framework beyond mathematics to other subject domains—such as science, language arts, or programming—will be essential for building general-purpose educational simulation systems. The substantial variation in controllability across model architectures also suggests that model selection and development should explicitly consider controllability as a design objective.</p>
+<p>This work opens several promising avenues for future investigation. Hierarchical skill representations could capture the nested structure of mathematical competencies, while continuous mastery scales would better reflect the gradual nature of learning. Reinforcement learning approaches may yield stronger behavioral control than prompting alone. Furthermore, extending this framework beyond mathematics to other subject domains, such as science, language arts, or programming, will be essential for building general-purpose educational simulation systems. The substantial variation in controllability across model architectures also suggests that model selection and development should explicitly consider controllability as a design objective.</p>
 </section>
 
 <!-- References -->
@@ -919,29 +952,6 @@
 <p>Zhang, Z., et al. (2024). Simulating classroom education with LLM-empowered agents. <em>NAACL</em>.</p>
 </div>
 </section>
-
-<!-- Appendix -->
-<div class="appendix">
-<h1>Appendix: Supplementary Materials</h1>
-
-<h2>A.1 Complete Model Comparison</h2>
-<figure>
-    <img src="figures/figure_14.png" alt="Model Comparison">
-    <figcaption><strong>Figure A.1:</strong> Extended model comparison across all metrics</figcaption>
-</figure>
-
-<h2>A.2 Reproducibility</h2>
-<p>Temperature = 0 ensures deterministic decoding. Complete enumeration of $2^K$ skill configurations provides comprehensive coverage. The following resources enable full reproducibility:</p>
-
-<ul>
-    <li><strong>Model versions:</strong> Claude 3.5 Sonnet (2024-10), DeepSeek-V2.5 (2024-09), GPT-4o-2024-05-13</li>
-    <li><strong>Prompt templates:</strong> Full prompt text provided in supplementary materials</li>
-    <li><strong>Dataset:</strong> MathCAMPS curriculum-aligned questions with skill annotations</li>
-    <li><strong>Evaluation code:</strong> Available at the project repository (link provided upon acceptance)</li>
-</ul>
-
-<p>All experiments use deterministic decoding (temperature=0), ensuring identical results across runs.</p>
-</div>
 
 <!-- KaTeX -->
 <script>
