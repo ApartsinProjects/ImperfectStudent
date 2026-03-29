@@ -511,7 +511,7 @@
 
 <p>First, we formalize skill forgetting through a <strong>binary skill-vector representation</strong>. Each simulated student is characterized by a mastery vector indicating which skills are retained and which are forgotten. This explicit specification enables precise control over the knowledge profile while providing a clear target for evaluation.</p>
 
-<p>Second, we develop <strong>controllability-oriented evaluation metrics</strong> that measure behavioral compliance independently of baseline performance. Our metrics, including relative loss, controllability score, and cross-skill influence analysis, enable quantitative assessment of how effectively a model can be directed to exhibit specified knowledge states.</p>
+<p>Second, we develop <strong>controllability-oriented evaluation metrics</strong> that measure behavioral compliance independently of baseline performance. Our metrics, including forgetting score, controllability score, and cross-skill influence analysis, enable quantitative assessment of how effectively a model can be directed to exhibit specified knowledge states.</p>
 
 <p>Third, we establish a <strong>reproducible benchmark</strong> using curriculum-aligned MathCAMPS data with explicit skill annotations. This benchmark enables systematic comparison across models and prompting strategies, providing the empirical foundation for our findings.</p>
 
@@ -529,7 +529,7 @@
     <p>We make three primary contributions:</p>
     <ol>
         <li><strong>A formal skill representation framework</strong> based on binary skill-vector notation for explicit mastery specification, enabling precise control over simulated student profiles;</li>
-        <li><strong>Controllability-oriented evaluation metrics</strong>, including relative loss, controllability score, cross-skill influence analysis, and prediction score, that measure behavioral compliance independently of baseline performance, providing a multi-dimensional assessment of controllable forgetting;</li>
+        <li><strong>Controllability-oriented evaluation metrics</strong>, including forgetting score, controllability score, cross-skill influence analysis, and prediction score, that measure behavioral compliance independently of baseline performance, providing a multi-dimensional assessment of controllable forgetting;</li>
         <li><strong>A reproducible benchmark</strong> built on curriculum-aligned MathCAMPS data with explicit skill annotations, enabling systematic evaluation across models and prompting strategies, together with comprehensive experiments demonstrating that controllability is achievable but architecture-dependent, with combined prompting strategies (rules + examples) achieving substantially better control than individual approaches.</li>
     </ol>
 </div>
@@ -643,7 +643,13 @@
 
 <div class="equation">$$D = a_i^* - m_i$$</div>
 
-<p>where $m_i$ is the target mastery (0 for forgotten skills, 1 for retained skills). This metric quantifies deviation from intended behavior: $D = 0$ indicates accurate alignment between the simulated student's performance and the specified skill profile; $D > 0$ indicates better-than-specified performance (incomplete forgetting or enhanced retention); $D < 0$ indicates unintended degradation (over-forging or collateral damage to retained skills).</p>
+<p>where $m_i$ is the target mastery (0 for forgotten skills, 1 for retained skills). This metric quantifies deviation from intended behavior: $D = 0$ indicates accurate alignment; $D > 0$ indicates better-than-specified performance; $D < 0$ indicates unintended degradation.</p>
+
+<h3>Prediction Score</h3>
+
+<div class="equation">$$\text{PS} = a_{\text{actual}} - a_{\text{expected}}$$</div>
+
+<p>where $a_{\text{expected}}$ is derived from the correlation-based framework (Section 6.4) and $a_{\text{actual}}$ is the observed retained-skill accuracy. This metric captures alignment with theoretical predictions: PS = 0 indicates accurate retention, PS > 0 indicates better-than-expected retention, PS < 0 indicates under-performance.</p>
 </section>
 
 <!-- 4. Dataset -->
@@ -833,14 +839,14 @@
 
 <figure>
     <img src="figures/fig08_expected_vs_actual.svg" alt="Expected vs Actual">
-    <figcaption><strong>Figure 5:</strong> Expected vs. Actual accuracy for each model. Points near the diagonal indicate accurate alignment between intended and observed behavior. Claude and DeepSeek cluster near the diagonal, while GPT-4o shows systematic under-performance (points below diagonal).</figcaption>
+    <figcaption><strong>Figure 6:</strong> Expected vs. Actual accuracy for each model. Points near the diagonal indicate accurate alignment between intended and observed behavior. Claude and DeepSeek cluster near the diagonal, while GPT-4o shows systematic under-performance (points below diagonal).</figcaption>
 </figure>
 
 <h2>6.5 Prediction Score</h2>
 
 <figure>
     <img src="figures/fig07_prediction_score.svg" alt="Prediction Scores">
-    <figcaption><strong>Figure 6:</strong> Prediction Score distribution across skill configurations for Grade 4. Claude (blue) demonstrates consistently positive prediction scores indicating better-than-expected performance, while GPT-4o (green) shows negative scores indicating systematic under-performance relative to expectations.</figcaption>
+    <figcaption><strong>Figure 7:</strong> Prediction Score distribution across skill configurations for Grade 4. Claude demonstrates consistently positive prediction scores indicating better-than-expected performance, while GPT-4o shows negative scores indicating systematic under-performance relative to expectations.</figcaption>
 </figure>
 
 <h2>6.6 Summary of Findings</h2>
