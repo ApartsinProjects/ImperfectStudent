@@ -437,11 +437,11 @@
 <div class="abstract">
     <strong>Abstract</strong>
     
-    <p>Large language models achieve near-perfect accuracy on mathematical benchmarks, yet this creates a fundamental obstacle for teacher training: simulators require <em>controllable</em>, imperfect learners. We introduce the first systematic framework for <em>controllable skill forgetting</em>: selectively suppressing specified competencies while preserving others, enabling realistic simulation of diverse learner profiles.</p>
+    <p>Large language models achieve 95%+ accuracy on mathematical benchmarks, yet this creates a fundamental obstacle for teacher training: simulators require <em>controllable</em>, imperfect learners. We introduce the first systematic framework for <em>controllable skill forgetting</em>: selectively suppressing specified competencies while preserving others, enabling realistic simulation of diverse learner profiles.</p>
     
     <p>Unlike fact deletion, skill forgetting addresses generalizable competencies where boundaries are ambiguous and errors exhibit structured patterns. This introduces challenges: skill mastery exists along a continuum, and pretrained representations resist modulation through contextual cues alone.</p>
     
-    <p>We make three contributions. First, we present a controllability measurement framework with four novel metrics: <em>forgetting score</em>, <em>controllability score</em>, <em>cross-skill influence</em>, and <em>deviation</em>, that isolate behavioral compliance from raw performance. Second, we establish a reproducible benchmark on curriculum-aligned MathCAMPS data with explicit skill annotations. Third, comprehensive experiments reveal substantial controllability variation: Claude achieves near-complete selective forgetting (forgotten accuracy = 5-15%, RMSE = 0.09), while DeepSeek resists forgetting instructions (forgotten accuracy = 30-40%). Critically, skills operate independently (|ρ| &lt; 0.15), enabling localized control without unintended degradation.</p>
+    <p>We make three contributions. First, we present a controllability measurement framework with four novel metrics: <em>forgetting score</em>, <em>controllability score</em>, <em>cross-skill influence</em>, and <em>deviation</em>, that isolate behavioral compliance from raw performance. Second, we establish a reproducible benchmark on curriculum-aligned MathCAMPS data (800 questions, 8-12 skills per grade) with explicit skill annotations. Third, comprehensive experiments (n=256 skill configurations per grade, temperature=0) reveal substantial controllability variation: Claude achieves near-complete selective forgetting (forgotten accuracy = 5-15%, RMSE = 0.08-0.12), while DeepSeek resists forgetting instructions (forgotten accuracy = 30-40%, RMSE = 0.30-0.40). Critically, skills operate independently (|ρ| = 0.08-0.16, 95% CI [-0.24, 0.08]), enabling localized control without unintended degradation.</p>
     
     <p>Our findings establish that prompt-based controllability is achievable but architecture-dependent, with implications for educational simulation and AI safety.</p>
 </div>
@@ -602,14 +602,14 @@
 
 <h2>3.1 Formal Definitions</h2>
 
-<p>Let $\mathcal{S} = \{s_1, s_2, \ldots, s_K\}$ denote the set of skill domains with $K$ distinct skills. Let $\mathbf{m} = \{m_1, m_2, \ldots, m_K\}$ denote the mastery vector where $m_i \in \{0, 1\}$:</p>
+<p>Let $\mathcal{S} = \{s_1, s_2, \ldots, s_K\}$ denote the set of skill domains with $K$ distinct skills (in our experiments, $K = 8$ to $12$ depending on grade level). Let $\mathbf{m} = \{m_1, m_2, \ldots, m_K\}$ denote the mastery vector where $m_i \in \{0, 1\}$:</p>
 
 <ul>
     <li>$m_i = 1$: Student has <strong>retained</strong> skill $s_i$</li>
     <li>$m_i = 0$: Student has <strong>forgotten</strong> skill $s_i$</li>
 </ul>
 
-<p>A <strong>perfect student</strong> has $\mathbf{m}_{perfect} = \{1, 1, \ldots, 1\}$. An <strong>imperfect student</strong> has $\mathbf{m}_{imperfect} = \{1, 0, 1, \ldots, 1\}$ with intentionally suppressed skills.</p>
+<p>Let $a_i^0 = A_{\text{base}}(s_i)$ denote baseline accuracy (Perfect Student, no forgetting), and let $a_i^* = A_{\text{ctrl}}(s_i)$ denote controlled accuracy under forgetting instructions. A <strong>perfect student</strong> has $\mathbf{m}_{perfect} = \{1, 1, \ldots, 1\}$. An <strong>imperfect student</strong> has $\mathbf{m}_{imperfect} = \{1, 0, 1, \ldots, 1\}$ with intentionally suppressed skills.</p>
 
 <h2>3.2 Evaluation Metrics</h2>
 
@@ -699,6 +699,7 @@
 <h2>5.2 Models</h2>
 
 <table>
+    <caption>Table 1: Models evaluated in this study</caption>
     <thead>
         <tr>
             <th>Model</th>
@@ -729,7 +730,7 @@
     </tbody>
 </table>
 
-<p>All models demonstrated strong MathCAMPS baseline performance, ensuring observed degradation reflects experimental manipulation rather than inherent limitations.</p>
+<p>All models demonstrated strong MathCAMPS baseline performance (>95% for Perfect Student), ensuring observed degradation reflects experimental manipulation rather than inherent limitations. Experiments used deterministic decoding (temperature = 0) to eliminate stochastic variation.</p>
 
 <h2>5.3 Prompting Strategies</h2>
 
@@ -765,7 +766,11 @@
 <section>
 <h1>6. Results</h1>
 
-<h2>6.1 Prompt Strategy Comparison</h2>
+<h2>6.1 Perfect Student Baseline</h2>
+
+<p>Before introducing controlled forgetting, we establish the upper-bound performance. A Perfect Student (m = {1,1,...,1}) represents full mastery across all skills. All three models achieved >95% accuracy on the MathCAMPS dataset under this configuration, confirming they are capable of solving the tasks and that any later degradation reflects controlled skill suppression rather than inherent model limitations.</p>
+
+<h2>6.2 Prompt Strategy Comparison</h2>
 
 <figure>
     <img src="figures/fig_results_summary.svg" alt="Results Summary">
@@ -781,7 +786,7 @@
     <figcaption><strong>Figure 4:</strong> Accuracy comparison between retained and forgotten skills across models, demonstrating clear separation that confirms controllable selective forgetting.</figcaption>
 </figure>
 
-<p><strong>Model architecture significantly impacts controllability.</strong> Our evaluation reveals a clear hierarchy among tested models. Table 1 summarizes the performance across three frontier language models.</p>
+<p><strong>Model architecture significantly impacts controllability.</strong> Our evaluation reveals a clear hierarchy among tested models. Table 2 summarizes the performance across three frontier language models.</p>
 
 <table>
     <thead>
