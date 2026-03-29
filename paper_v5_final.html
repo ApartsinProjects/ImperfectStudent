@@ -729,9 +729,11 @@
 
 <ol>
     <li><strong>Rule-Based:</strong> Explicit behavioral constraints instructing correct responses for mastered skills and consistent mistakes for forgotten skills.</li>
-    <li><strong>Few-Shot:</strong> Demonstration examples illustrating both correct and incorrect behavior, retrieved from files separated from evaluation datasets.</li>
-    <li><strong>Combined:</strong> Integration of explicit rules with concrete demonstrations.</li>
+    <li><strong>Few-Shot:</strong> Demonstration examples illustrating both correct and incorrect behavior. Critically, examples are retrieved from an external file fully separated from evaluation datasets to prevent data leakage.</li>
+    <li><strong>Combined:</strong> Integration of explicit rules with concrete demonstrations for maximum controllability.</li>
 </ol>
+
+<p>Each prompt follows a consistent architecture containing: (1) student's mastered and missing skills description, (2) behavioral instructions and/or examples, and (3) the multiple-choice question. Crucially, the model is instructed to <em>return exactly one answer option without explanation</em>, ensuring standardized output suitable for quantitative analysis. Prompts are dynamically injected using programmatic formatting, enabling scalable generation of diverse student populations.</p>
 
 <h2>5.4 Experimental Protocol</h2>
 
