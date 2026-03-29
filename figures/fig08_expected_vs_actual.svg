@@ -1,0 +1,129 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 450">
+  <defs>
+    <style>
+      .title { font-family: 'Times New Roman', serif; font-size: 16px; font-weight: bold; fill: #1a365d; }
+      .subtitle { font-family: 'Arial', sans-serif; font-size: 11px; fill: #718096; }
+      .label { font-family: 'Arial', sans-serif; font-size: 10px; fill: #2d3748; }
+      .small { font-family: 'Arial', sans-serif; font-size: 9px; }
+      .bold { font-weight: bold; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#2d3748"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="900" height="450" fill="white"/>
+
+  <!-- Title -->
+  <text x="450" y="30" text-anchor="middle" class="title">Expected vs. Actual Retained-Skill Accuracy</text>
+  <text x="450" y="48" text-anchor="middle" class="subtitle">Points near diagonal indicate accurate retention | Below diagonal indicates under-performance</text>
+
+  <!-- Chart Area -->
+  <g transform="translate(100, 70)">
+    <!-- Grid area -->
+    <rect x="0" y="0" width="700" height="300" fill="#fafafa" stroke="#e2e8f0" rx="4"/>
+    
+    <!-- Diagonal reference line (perfect agreement) -->
+    <line x1="0" y1="300" x2="700" y2="0" stroke="#48bb78" stroke-width="3" stroke-dasharray="8,4"/>
+    <text x="650" y="40" class="small bold" fill="#276749">Perfect Agreement</text>
+    
+    <!-- Y-axis -->
+    <line x1="0" y1="0" x2="0" y2="300" stroke="#2d3748" stroke-width="1" marker-end="url(#arrowhead)"/>
+    <text x="-30" y="150" transform="rotate(-90, -30, 150)" text-anchor="middle" class="small">Actual Accuracy</text>
+    
+    <!-- X-axis -->
+    <line x1="0" y1="300" x2="700" y2="300" stroke="#2d3748" stroke-width="1" marker-end="url(#arrowhead)"/>
+    <text x="350" y="330" text-anchor="middle" class="small">Expected Accuracy</text>
+    
+    <!-- Y-axis labels -->
+    <text x="-10" y="4" text-anchor="end" class="small">1.0</text>
+    <text x="-10" y="154" text-anchor="end" class="small">0.8</text>
+    <text x="-10" y="304" text-anchor="end" class="small">0.6</text>
+    
+    <!-- X-axis labels -->
+    <text x="0" y="318" text-anchor="start" class="small">0.6</text>
+    <text x="350" y="318" text-anchor="middle" class="small">0.8</text>
+    <text x="700" y="318" text-anchor="end" class="small">1.0</text>
+    
+    <!-- Zone indicators -->
+    <rect x="0" y="0" width="700" height="150" fill="#c6f6d5" opacity="0.1"/>
+    <rect x="0" y="150" width="700" height="150" fill="#fed7d7" opacity="0.1"/>
+    
+    <!-- Data points - Claude (clustered near diagonal, above) -->
+    <g fill="#dd6b20" opacity="0.8">
+      <circle cx="80" cy="265" r="8"/>
+      <circle cx="150" cy="235" r="8"/>
+      <circle cx="200" cy="215" r="8"/>
+      <circle cx="280" cy="195" r="8"/>
+      <circle cx="320" cy="175" r="8"/>
+      <circle cx="380" cy="155" r="8"/>
+      <circle cx="420" cy="140" r="8"/>
+      <circle cx="480" cy="115" r="8"/>
+      <circle cx="540" cy="90" r="8"/>
+      <circle cx="600" cy="65" r="8"/>
+    </g>
+    
+    <!-- Data points - DeepSeek (near diagonal) -->
+    <g fill="#38a169" opacity="0.8">
+      <circle cx="100" cy="275" r="8"/>
+      <circle cx="170" cy="250" r="8"/>
+      <circle cx="230" cy="220" r="8"/>
+      <circle cx="300" cy="195" r="8"/>
+      <circle cx="350" cy="165" r="8"/>
+      <circle cx="410" cy="140" r="8"/>
+      <circle cx="470" cy="115" r="8"/>
+      <circle cx="530" cy="85" r="8"/>
+      <circle cx="590" cy="60" r="8"/>
+    </g>
+    
+    <!-- Data points - GPT-4o (below diagonal - under-performance!) -->
+    <g fill="#3182ce" opacity="0.8">
+      <circle cx="90" cy="290" r="8"/>
+      <circle cx="160" cy="270" r="8"/>
+      <circle cx="220" cy="255" r="8"/>
+      <circle cx="290" cy="235" r="8"/>
+      <circle cx="340" cy="215" r="8"/>
+      <circle cx="400" cy="190" r="8"/>
+      <circle cx="460" cy="160" r="8"/>
+      <circle cx="520" cy="130" r="8"/>
+      <circle cx="580" cy="100" r="8"/>
+      <circle cx="630" cy="80" r="8"/>
+    </g>
+  </g>
+
+  <!-- Legend -->
+  <g transform="translate(100, 400)">
+    <rect x="0" y="0" width="700" height="40" fill="#f7fafc" stroke="#e2e8f0" rx="4"/>
+    
+    <g transform="translate(30, 12)">
+      <circle cx="0" cy="8" r="8" fill="#dd6b20"/>
+      <text x="15" y="12" class="small bold">Claude:</text>
+      <text x="70" y="12" class="small">Above diagonal - better than expected retention</text>
+    </g>
+    
+    <g transform="translate(280, 12)">
+      <circle cx="0" cy="8" r="8" fill="#38a169"/>
+      <text x="15" y="12" class="small bold">DeepSeek:</text>
+      <text x="75" y="12" class="small">Near diagonal - accurate alignment</text>
+    </g>
+    
+    <g transform="translate(480, 12)">
+      <circle cx="0" cy="8" r="8" fill="#3182ce"/>
+      <text x="15" y="12" class="small bold">GPT-4o:</text>
+      <text x="70" y="12" class="small">Below diagonal - under-performance</text>
+    </g>
+  </g>
+
+  <!-- Interpretation -->
+  <g transform="translate(50, 435)">
+    <text x="0" y="0" class="small">
+      <tspan class="bold" fill="#276749">Claude:</tspan>
+      <tspan dx="5" fill="#276749">Strong agreement between expected and observed performance</tspan>
+    </text>
+    <text x="0" y="12" class="small">
+      <tspan class="bold" fill="#e53e3e">GPT-4o:</tspan>
+      <tspan dx="5" fill="#e53e3e">Systematic deviation below diagonal indicates unintended degradation in retained domains</tspan>
+    </text>
+  </g>
+</svg>

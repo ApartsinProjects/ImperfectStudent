@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "workspace": {
+    "name": "ImperfectStudent",
+    "createdAt": 1774791113891,
+    "preset": "minimal"
+  },
+  "authorizedRoots": [
+    "E:\\Projects\\ImperfectStudent"
+  ]
+}

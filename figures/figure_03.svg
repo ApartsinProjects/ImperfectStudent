@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450">
+  <defs>
+    <style>
+      .title { font-family: 'Times New Roman', serif; font-size: 16px; font-weight: bold; }
+      .subtitle { font-family: 'Times New Roman', serif; font-size: 12px; }
+      .axis-label { font-family: 'Arial', sans-serif; font-size: 13px; }
+      .tick { font-family: 'Arial', sans-serif; font-size: 12px; }
+      .legend { font-family: 'Arial', sans-serif; font-size: 12px; }
+    </style>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="800" height="450" fill="white"/>
+  
+  <!-- Y-axis -->
+  <line x1="80" y1="50" x2="80" y2="380" stroke="black" stroke-width="1"/>
+  <text x="35" y="215" text-anchor="middle" transform="rotate(-90, 35, 215)" class="axis-label">RMSE</text>
+  
+  <!-- Y-axis ticks and labels -->
+  <g class="tick">
+    <line x1="75" y1="380" x2="80" y2="380" stroke="black"/>
+    <text x="70" y="384" text-anchor="end">0.0</text>
+    
+    <line x1="75" y1="304" x2="80" y2="304" stroke="black"/>
+    <text x="70" y="308" text-anchor="end">0.2</text>
+    
+    <line x1="75" y1="228" x2="80" y2="228" stroke="black"/>
+    <text x="70" y="232" text-anchor="end">0.4</text>
+    
+    <line x1="75" y1="152" x2="80" y2="152" stroke="black"/>
+    <text x="70" y="156" text-anchor="end">0.6</text>
+    
+    <line x1="75" y1="76" x2="80" y2="76" stroke="black"/>
+    <text x="70" y="80" text-anchor="end">0.8</text>
+  </g>
+  
+  <!-- X-axis -->
+  <line x1="80" y1="380" x2="760" y2="380" stroke="black" stroke-width="1"/>
+  
+  <!-- Grid lines -->
+  <g stroke="#e0e0e0" stroke-dasharray="2,2">
+    <line x1="80" y1="304" x2="760" y2="304"/>
+    <line x1="80" y1="228" x2="760" y2="228"/>
+    <line x1="80" y1="152" x2="760" y2="152"/>
+    <line x1="80" y1="76" x2="760" y2="76"/>
+  </g>
+  
+  <!-- Bar chart - Grade 4 -->
+  <g>
+    <!-- Combined strategy - Grade 4 -->
+    <rect x="120" y="270" width="70" height="110" fill="#2E86AB" rx="3"/>
+    <text x="155" y="264" text-anchor="middle" class="tick" fill="#2E86AB" font-weight="bold">0.09</text>
+    
+    <!-- Few-Shot - Grade 4 -->
+    <rect x="210" y="114" width="70" height="266" fill="#E94F37" rx="3"/>
+    <text x="245" y="108" text-anchor="middle" class="tick" fill="#E94F37" font-weight="bold">0.50</text>
+    
+    <!-- Rule-Based - Grade 4 -->
+    <rect x="300" y="99" width="70" height="281" fill="#F39C12" rx="3"/>
+    <text x="335" y="93" text-anchor="middle" class="tick" fill="#F39C12" font-weight="bold">0.53</text>
+  </g>
+  
+  <!-- Bar chart - Grade 5 -->
+  <g>
+    <!-- Combined strategy - Grade 5 -->
+    <rect x="420" y="250" width="70" height="130" fill="#2E86AB" rx="3"/>
+    <text x="455" y="244" text-anchor="middle" class="tick" fill="#2E86AB" font-weight="bold">0.11</text>
+    
+    <!-- Few-Shot - Grade 5 -->
+    <rect x="510" y="84" width="70" height="296" fill="#E94F37" rx="3"/>
+    <text x="545" y="78" text-anchor="middle" class="tick" fill="#E94F37" font-weight="bold">0.55</text>
+    
+    <!-- Rule-Based - Grade 5 -->
+    <rect x="600" y="68" width="70" height="312" fill="#F39C12" rx="3"/>
+    <text x="635" y="62" text-anchor="middle" class="tick" fill="#F39C12" font-weight="bold">0.58</text>
+  </g>
+  
+  <!-- X-axis labels -->
+  <g class="axis-label" font-weight="bold">
+    <text x="255" y="410" text-anchor="middle">Grade 4</text>
+    <text x="555" y="410" text-anchor="middle">Grade 5</text>
+  </g>
+  
+  <!-- Legend -->
+  <g transform="translate(640, 30)">
+    <rect x="0" y="0" width="20" height="14" fill="#2E86AB" rx="2"/>
+    <text x="28" y="11" class="legend">Combined</text>
+    
+    <rect x="0" y="25" width="20" height="14" fill="#E94F37" rx="2"/>
+    <text x="28" y="36" class="legend">Few-Shot</text>
+    
+    <rect x="0" y="50" width="20" height="14" fill="#F39C12" rx="2"/>
+    <text x="28" y="61" class="legend">Rule-Based</text>
+  </g>
+</svg>

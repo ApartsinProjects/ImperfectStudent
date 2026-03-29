@@ -1,0 +1,261 @@
+
+
+School of Software Engineering: Intelligent Systems
+Toward Controllable Imperfect Student Simulation with Large Language Models
+לקראת סימולציה נשלטת של סטודנטים עם ליקויים ממוקדים באמצעות מודלי שפה גדולים
+
+Final Report
+
+
+
+
+
+
+
+Report Student name: Omri Sason
+Supervisor: Yehudit Aperstein
+Advisor: Alexander Apartsin
+Date: 1/4/26
+Table Of Contents
+
+
+Abstract
+Large Language Models (LLMs) achieve near-expert performance on structured mathematical benchmarks, frequently exceeding 95% accuracy across grade-level assessments. While such performance is advantageous for reasoning applications, it poses a challenge for teacher preparation simulators. The transition from academic training to real classroom practice is a critical phase in novice teachers’ professional development, requiring exposure to heterogeneous classrooms, partial student mastery, and authentic error patterns that are rarely reflected in high-performing models. A classroom simulation environment designed for early-career teachers, therefore, requires controllable, imperfect learners that reflect differentiated skill profiles rather than uniformly high accuracy.
+This master’s project introduces a formal framework for controllable generative students — LLM-based agents that simulate predefined patterns of skill retention and forgetting. We represent student knowledge using explicit binary skill vectors and design prompt-based control mechanisms to enforce selective mastery constraints. Unlike traditional evaluation paradigms that emphasize correctness, we propose controllability-oriented metrics that quantify whether a model forgets when instructed and retains when required, independently of its baseline performance. More specifically, we measure the extent to which the model can faithfully reflect the behavior of a student with learning gaps — not merely by lowering accuracy, but by exhibiting structured, skill-aligned deficiencies consistent with the predefined mastery vector.
+Using structured MathCAMPS multi-grade datasets with explicit skill tagging, we conduct controlled experiments across multiple LLMs under different prompting strategies (rule-based, few-shot, and hybrid). We introduce a relative loss metric and a skill-level controllability score that capture selective compliance fidelity.
+Results demonstrate that controllability is achievable and can be reliably induced, though its magnitude varies across prompting strategies and model architectures. The proposed framework establishes a reproducible methodology for evaluating skill-aware behavioral control in LLM-based educational simulations.
+
+Introduction
+Large Language Models have rapidly reached state-of-the-art performance across reasoning-intensive tasks, including structured mathematical assessments. Recent evaluations demonstrate that frontier models frequently achieve accuracy levels comparable to high-performing students.
+However, high accuracy alone is insufficient for educational simulation.
+Teacher-training systems require simulated learners who exhibit structured misconceptions, demonstrate partial mastery, make systematic domain-specific errors, and fail selectively and predictably. In addition, a computational simulation system enables precise repetition and replay of instructional sequences — a capability that is difficult to achieve in current human-based simulation settings — thereby supporting systematic reflection and controlled pedagogical experimentation.
+In contrast, modern LLMs exhibit strong global competence. When instructed to “forget” a concept, they often continue to solve related problems correctly due to deeply internalized representations acquired during large-scale pretraining.
+This mismatch exposes a fundamental gap: Accuracy is not equivalent to controllability.
+This master’s project investigates the following central research question:
+Can we configure a prompted LLM to selectively forget certain skills and knowledge while reliably retaining others?
+To address this, we introduce the concept of a controllable generative student — an LLM agent governed by an explicit skill mastery profile that constrains its generative behavior.
+1.1 Contributions
+This work makes four primary contributions. First, it introduces a formal skill representation based on a binary skill-vector framework for explicit mastery specification. Second, it develops prompt-based control mechanisms that enforce selective retention and forgetting. Third, it proposes controllability-oriented metrics, including a relative loss formulation that separates compliance from baseline performance. Fourth, it defines a reproducible evaluation methodology across prompting strategies and models.
+
+
+2. Theoretical Background and Literature Review
+2.1 Induction of Novice Teachers and Opportunities for LLM Integration
+The transition from academic preparation to real classroom teaching is widely recognized as a critical stage in novice teachers’ professional development. Research on induction programs highlights the importance of structured mentoring, guided reflection, peer collaboration, and emotional support in strengthening professional identity and reducing burnout (Ingersoll & Strong, 2011; Goldberg & Orland-Barak, 2016). Deliberate practice theory further emphasizes the need for repeated, structured engagement with targeted challenges under controlled conditions in order to refine expertise (Ericsson, Krampe, & Tesch-Römer, 1993). However, authentic classroom environments are inherently variable, limiting the ability to recreate identical instructional situations for repeated practice (Heffernan & Heffernan, 2014). This creates an opportunity for computational simulation environments that enable controlled repetition of pedagogical scenarios while maintaining curricular alignment.
+2.2 LLM-Driven Simulations in Teacher Training
+Recent advances in large language models have enabled the development of simulation environments in which virtual students respond according to predefined characteristics. Zhang et al. (2024) demonstrated that LLM-empowered classroom agents can simulate differentiated student behavior, including intentional errors and varying engagement levels. Similarly, Sun et al. (2024) highlighted the potential of LLM-driven educational simulations for scalable and personalized learning environments. These studies show qualitative alignment between predefined profiles and generated behavior, yet they do not systematically quantify the degree of behavioral adherence to a formally specified mastery structure.
+2.3 Embedding Profiles and Personas in LLMs
+Research on persona conditioning demonstrates that LLMs can adopt predefined behavioral traits through prompt design. PersonaLLM (Feng et al., 2023) showed that models can maintain stylistic and personality consistency across interactions, although perfect coherence remains challenging. In the educational domain, Lu and Wang (2024) introduced the concept of Generative Students, in which LLMs simulate learners with explicit skill profiles represented as binary mastery vectors. Their framework demonstrated that LLMs can condition responses on predefined knowledge states. Building on this foundation, the present project focuses specifically on controlled skill suppression and formal measurement of selective forgetting.
+2.4 Knowledge Tracing and Skill Gap Identification
+Knowledge Tracing models provide a probabilistic framework for estimating learner mastery over time. Bayesian Knowledge Tracing and its extensions model transitions between known and unknown states, while deep learning approaches such as Deep Knowledge Tracing (Piech et al., 2015), Dynamic Key-Value Memory Networks (Zhang et al., 2017), and Self-Attentive Knowledge Tracing (Pandey & Karypis, 2019) update skill states based on sequential interactions. Gervet et al. (2020) evaluated when deep models outperform classical approaches in diagnosing learner knowledge. More recently, SkillGapGPT (2025) leveraged LLMs to identify skill gaps directly from student responses, reporting strong alignment with expert annotations. These approaches focus on detecting or predicting knowledge states, whereas the present work focuses on deliberately inducing predefined knowledge gaps in a controlled simulation context.
+2.5 Evaluation of Generative Student Behavior
+Evaluation in educational modeling commonly relies on quantitative metrics such as accuracy, RMSE, AUC, precision, recall, and F1 score (Gervet et al., 2020; SkillGapGPT, 2025). These metrics assess predictive performance or alignment between inferred and true skill states. However, traditional evaluation paradigms emphasize correctness rather than controllability. The current project extends these quantitative evaluation principles by introducing a controllability-oriented formulation that measures the degree to which generated responses align with a predefined mastery vector, thereby distinguishing between raw performance and structured behavioral compliance.
+
+3. Problem Formulation
+Let:	     be the set of skill domains.
+Let :	  be the mastery vector where  denotes a retained skill and denotes a forgotten skill.
+
+This formulation allows us to simulate students with controlled learning gaps through selective subtraction of skills. A “perfect” student is represented by a full mastery vector:
+K = {1,1,...,1}
+In contrast, an “imperfect” student with learning gaps is represented by a partially deactivated vector, for example:
+K = {1,0,...,1}
+where specific skills are intentionally suppressed. The objective of the project is therefore not to reduce global performance, but to induce structured, domain-specific deficiencies that reflect realistic student profiles.
+For each skill  ,  denotes the baseline accuracy without forgetting constraints and  denotes the accuracy under the controlled prompt.
+3.1 Relative Loss
+
+Interpretation:
+If  = 0 : 	→ 1   desirable   ;  	If = 1 : 	→ 0   desirable
+3.2 Controllability Score
+
+Overall:              
+This formulation ensures reward for correct forgetting, penalty for unintended degradation, and independence from absolute baseline performance.
+
+
+
+
+
+
+
+4. Data Description
+The empirical framework is built upon the MathCAMPS dataset, which contains curriculum-aligned mathematics problems tagged according to U.S. Common Core standards. Each educational standard is mapped to a Domain, and in the context of this project, each Domain is treated as a distinct Skill. This mapping enables a direct transformation from educational standards to a structured skill taxonomy suitable for controllable simulation.
+To ensure fine-grained control and fair evaluation, the dataset was reorganized into eight separate grade-level datasets corresponding to grades 1 through 8. Each grade-specific dataset contains 100 multiple-choice questions, balanced across the relevant skill domains for that grade. Every question was artificially converted into a four-option multiple-choice format (A–D), where distractors were either numerically close to the correct answer or conceptually plausible alternatives. The balanced distribution across skills ensures that per-skill evaluation is statistically stable and that no single skill disproportionately influences aggregate metrics.
+During preprocessing and evaluation, certain items were identified as systematically ambiguous or poorly constructed due to repeated cross-model errors potentially stemming from the limited mathematical reasoning capabilities of current LLMs rather than the intended skill gap. These items were replaced with alternatives from the same educational standard while preserving skill balance. This quality-control stage ensured that subsequent forgetting behavior could be attributed to controlled skill manipulation rather than dataset artifacts.
+Per-skill mastery is computed using the accuracy per skill vector, defined as the number of correct responses associated with a skill divided by the number of items tagged with that skill. This representation enables direct comparison between the intended binary mastery vector and the observed performance profile.
+
+5. Methodology
+5.0 Baseline: The Perfect Student Upper Bound
+Before introducing controlled forgetting, it is necessary to establish whether modern language models can reliably simulate a perfect student. A Perfect Student is defined as a generative agent whose mastery vector is K = {1,1,1,...,1}, implying full mastery across all skills. This configuration serves as an upper performance bound and validates that any later degradation in accuracy originates from deliberate skill suppression rather than inherent model incapacity.
+Multiple state-of-the-art language models were evaluated under this full-mastery configuration. Across grade-level datasets, several frontier models achieved performance exceeding 95% accuracy, demonstrating that near-perfect curriculum-aligned behavior is attainable. This baseline provides both a performance ceiling and methodological confidence that subsequent errors in imperfect configurations reflect controlled knowledge gaps rather than systemic failure.
+
+5.1 Generative Student Definition
+The overall architecture of the controllable generative student framework is illustrated in Figure 1, which summarizes the full pipeline from skill-vector specification to LLM answer generation. The figure presents the pipeline that transforms a predefined skill vector into a structured prompt used to condition the language model. The process begins with a binary skill vector k = {1,0,...,1}, where each position corresponds to a Knowledge Component (KC). A value of 1 indicates that the student has mastered the KC, while 0 indicates that the KC is intentionally removed in order to simulate a knowledge gap. The vector is translated into explicit skill categories and embedded into a structured student profile prompt that instructs the large language model to behave according to the specified knowledge state. The prompt is then provided to the LLM, which generates an answer prediction for the given question, simulating the behavior of a student with the defined skill profile.
+Figure 1. Controllable Generative Student Architecture. The diagram illustrates the pipeline used to generate controllable student behavior with a large language model. A simulated student is defined by a binary skill vector k = {1,0,...,1}, where each element corresponds to a Knowledge Component (KC). Values of 1 represent mastered KCs and values of 0 represent intentionally removed KCs used to simulate knowledge gaps. The vector is translated into mastered and unknown KC sets and embedded into a structured student profile prompt that conditions the LLM to produce responses aligned with the intended pattern of skill retention and forgetting.
+Each simulated student is defined by a binary skill vector k, a structured textual description of mastered and missing skills, and fixed decoding parameters. The student profile is dynamically injected into the prompt template using programmatic formatting, enabling scalable generation of diverse student populations with reproducible knowledge configurations.
+A perfect student corresponds to a fully activated vector, whereas imperfect students are generated by selectively deactivating one or more skills. This controlled subtraction mechanism enables systematic study of how models respond when specific competencies are intentionally removed.
+5.2 Model Selection
+This study evaluates three state-of-the-art large language models representing different architectural and training characteristics:
+Claude (Anthropic) is a safety-aligned model known for strong instruction-following capabilities and stable reasoning behavior.
+DeepSeek is a high-performance model optimized for reasoning tasks, often demonstrating strong mathematical capabilities but reduced compliance with behavioral constraints.
+GPT-4o (OpenAI) is a widely used general-purpose model with strong overall performance, but known to exhibit trade-offs between instruction following and reasoning robustness.
+The selection of these models enables comparison across different design philosophies, including alignment strength, reasoning capacity, and susceptibility to prompt-based behavioral control.
+Importantly, all selected models were evaluated on the MathCAMPS dataset and were chosen only after demonstrating strong baseline performance. This ensures that each model is capable of accurately solving the tasks prior to introducing controlled skill suppression, and that any observed performance degradation is a result of the experimental manipulation rather than inherent model limitations.
+5.3 Prompting Strategies
+Three prompting strategies were implemented within a unified prompt structure. The rule-based strategy provides explicit behavioral constraints instructing the model to answer correctly when a skill is mastered and to produce consistent mistakes when the skill is missing. The few-shot strategy supplies skill-aligned demonstration examples that illustrate both correct and incorrect behavior patterns. To prevent data leakage, few-shot examples are retrieved from an external file fully separated from the evaluation datasets. The combined strategy integrates explicit behavioral rules with concrete demonstrations to reinforce consistency and realism.
+Each generated prompt follows a consistent architecture that includes the student’s mastered and missing skills, behavioral instructions and/or examples, and the current multiple-choice question. The model is instructed to return exactly one answer option without explanation, ensuring standardized output suitable for quantitative analysis.
+5.4 Experimental Protocol
+The overall experimental pipeline is illustrated in Figure 2. The experiment begins with the construction of a set of simulated students, each defined by a distinct mastery vector. These students represent different combinations of retained and removed skills and therefore correspond to different learning-gap profiles. Each simulated student is evaluated on a test composed of skill-tagged questions drawn from the grade-specific datasets.
+For every student profile, the full question set is presented to multiple language models. Each model receives the student-specific prompt that encodes the corresponding mastery vector and generates answer predictions for all questions. The outputs are then collected and passed to the evaluation stage, where performance is aggregated by skill domain and compared with the intended mastery vector.
+This pipeline allows systematic comparison across three dimensions: student profiles (1…n), skill-tagged questions (1…m), and language models (1…i). The resulting responses form the basis for controllability evaluation, including per-skill accuracy, relative loss, RMSE, and cross-skill influence analysis.
+
+Figure 1. Main Experiment Pipeline. The diagram illustrates the full experimental workflow used in this project. An experiment generates multiple simulated students, each defined by a different skill vector. These students answer a collection of skill-tagged questions, and their responses are produced by multiple LLMs. The generated answers are then aggregated and analyzed to evaluate controllability, skill-level accuracy, and cross-skill influence.
+5.5 Evaluation Metrics
+Evaluation operates at the student–model pair level, aggregated across all test items. Per-skill accuracy is computed and compared to the original binary mastery vector. Relative loss and the controllability score quantify selective forgetting and retention behavior, while RMSE measures overall deviation between intended and observed skill profiles.
+In addition to these scalar metrics, the framework incorporates a Cross-Skill Influence Matrix. For each simulated configuration in which a specific skill is deactivated, performance changes are measured not only on the targeted skill (diagonal elements) but also on all other skills (off-diagonal elements). The diagonal entries quantify direct forgetting effectiveness, whereas off-diagonal entries capture unintended cross-skill interference. A robust prompting mechanism should localize performance degradation to the intentionally removed skill while minimizing collateral impact on retained competencies. This matrix therefore provides a structural evaluation of whether the model simulates independent competencies or exhibits entangled knowledge representations.
+Together, these metrics measure how accurately the model reflects the intended student profile, how effectively prompting enforces selective forgetting, and whether induced knowledge gaps remain isolated at the skill level rather than propagating across unrelated domains.
+
+6. Experiments
+The experimental pipeline consists of four stages. First, the Perfect Student configuration establishes the upper-bound performance for each grade-level dataset, ensuring that the evaluated models are capable of solving the tasks when no skill constraints are applied. Second, controlled skill forgetting experiments systematically deactivate selected skills in order to evaluate the model’s ability to suppress specific knowledge while retaining others. Third, prompt ablation experiments compare rule-based, few-shot, and combined prompting strategies under identical student profiles, isolating the effect of prompt design on controllability. Fourth, variance analysis examines stability across repeated executions.
+To ensure comprehensive coverage of possible student knowledge states, we simulate all possible combinations of skill mastery profiles. For a given grade with K skills, this results in  distinct student configurations, where each configuration is represented as a binary skill vector , with 1 indicating a mastered skill and 0 indicating a forgotten skill. This exhaustive enumeration enables systematic evaluation of controllability across the full space of possible imperfect students.
+All experiments are conducted with temperature set to 0, ensuring deterministic model behavior and eliminating stochastic variation due to sampling. This allows us to attribute differences in performance directly to prompt design and model characteristics rather than randomness.
+The experimental evaluation is performed on two grade-level datasets, Grade 4 and Grade 5, each containing a fixed set of skill domains and a balanced distribution of questions per skill. Experiments are executed independently for each grade to preserve internal consistency in skill definitions and difficulty levels.
+All experiments are conducted across three different large language models—Anthropic’s Claude, DeepSeek, and OpenAI’s GPT-4o—in order to compare controllability across different architectures, training regimes, and alignment characteristics.
+Results are aggregated at multiple levels: per skill, per student profile, and per model. This multi-level aggregation enables both fine-grained analysis of individual skill behavior and higher-level comparisons across models and prompting strategies. This exhaustive setup ensures that the evaluation captures both best-case and worst-case controllability scenarios.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+7. Results
+This section integrates the full set of experimental plots, including retained vs. forgotten comparisons, per-skill controllability grids, correlation matrices, and expected–actual alignment analyses.
+7.1 Prompt Strategy Comparison
+Before analyzing model behavior in terms of controllability, it is essential to evaluate the effectiveness of the prompting strategies used to impose the intended skill profiles. As the entire framework relies on the model’s ability to follow a predefined mastery vector, prompt design becomes a critical factor in determining whether selective forgetting can be achieved in practice.  To quantify this, we measure the Root Mean Squared Error (RMSE) between the intended skill vector and the observed per-skill accuracy. Lower RMSE indicates better alignment between the desired and actual behavior.  The results show a clear and consistent pattern across both Grade 4 and Grade 5. The combined prompting strategy (rules + few-shot examples) significantly outperforms both the rule-based and few-shot approaches. Specifically, the combined strategy achieves low RMSE values (≈0.08–0.12), indicating strong alignment with the intended mastery vector and accurate simulation of the desired student profile.   In contrast, the few-shot strategy alone results in substantially higher RMSE (≈0.45–0.60), suggesting that examples without explicit constraints are insufficient to enforce structured forgetting. Similarly, the rule-based strategy also exhibits high RMSE (≈0.50–0.60), indicating that instructions alone are not robust enough to override the model’s internal knowledge.   These findings highlight a key insight: neither explicit instructions nor examples alone are sufficient to control model behavior reliably. Instead, their combination creates a complementary effect—rules define the desired behavior explicitly, while examples demonstrate how this behavior should manifest in practice. This synergy enables the model to better internalize and apply the intended skll constraints.  Overall, this analysis establishes that prompt design is a necessary condition for controllability. The combined strategy provides a stable and effective mechanism for enforcing selective forgetting, and therefore serves as the foundation for all subsequent experiments presented in this section.
+
+
+7.2 Per-Skill Behavior -Fine-Grained Control
+The per-skill accuracy grids provide a detailed view of how well the model adheres to the imposed student profile at the level of individual skills. In the strongest configurations, the model demonstrates near-zero accuracy on explicitly forgotten skills (≈0.03–0.09), while maintaining high accuracy on retained skills (≈0.85–0.94). This clear separation suggests that the model is capable of selectively modulating its knowledge in response to the prompt.
+However, this behavior is not uniform across all skills. A consistent asymmetry is observed: certain skills are easier for the model to suppress, while others exhibit residual performance even when marked as “missing.” This indicates that controllability is inherently skill-dependent. The variation may stem from differences in intrinsic task difficulty, the structure of the questions, or biases in the model’s pretraining that make some reasoning patterns harder to override.
+A key observation emerges when comparing the binary skill vector that defines the student profile (e.g., k=[0,1,0,1]k = [0,1,0,1]k=[0,1,0,1]) with the resulting per-skill accuracy vector. Empirically, the accuracy vector tends to approximate a continuous relaxation of the binary profile: skills marked as 1 (mastered) correspond to high accuracy values, while skills marked as 0 (forgotten) correspond to low accuracy values.
+In other words, there exists a strong alignment between the intended knowledge state and the observed performance:
+
+This relationship can be interpreted as the model translating a discrete control signal (the skill vector) into a continuous behavioral response (accuracy per skill). Importantly, this mapping is not perfect: deviations from the ideal binary pattern reflect partial controllability and highlight which skills resist suppression or retention.   This alignment supports the central hypothesis of the project: LLMs can be guided to simulate structured knowledge states, but the fidelity of this simulation depends on the specific skills involved. Consequently, evaluating controllability requires moving beyond aggregate accuracy and examining fine-grained, per-skill behavior.
+7.3 Retained vs. Forgotten 
+Across both Grade 4 and Grade 5, a clear and consistent separation emerges between retained and forgotten skills. For retained skills, the imperfect student maintains accuracy levels close to the perfect student (≈0.85–0.92), indicating that knowledge is largely preserved when required. This behavior is consistent across all models, including OpenAI’s GPT-4o, which demonstrates stable retention comparable to Anthropic’s Claude and DeepSeek. In contrast, for forgotten skills, accuracy drops substantially, but with notable differences across models: Claude exhibits the strongest forgetting effect (≈0.05–0.15), achieving near-complete suppression of the targeted skills; DeepSeek shows weaker forgetting (≈0.30–0.40), indicating partial resistance to the imposed constraints; and GPT-4o falls in between, demonstrating clear and consistent forgetting (≈0.20–0.35), but not to the same extent as Claude, suggesting moderate controllability. Importantly, this degradation is not global but highly localized to the specified skills, confirming that the behavior reflects controlled and selective forgetting rather than general performance decline. The magnitude and consistency of the gap between retained and forgotten skills indicate that this effect is not due to random variation or prompt instability, but rather a structured and reproducible response to the imposed skill constraints. This separation is also visually evident in the per-skill comparison plots, where retained skills cluster near the perfect-student baseline, while forgotten skills form a distinct low-accuracy regime. Together, these findings provide strong empirical evidence that LLMs can be controlled at the level of individual skills, enabling the generation of imperfect students with targeted and interpretable knowledge gaps.;
+GPT-4o: moderate but less stable.
+
+Description: This figure compares accuracy between imperfect students (IS) and perfect students (PS) across retained and forgotten skills, aggregated over models and grades. The percentage values annotated on the bars represent relative accuracy (IS / PS), providing a normalized comparison with respect to the perfect student baseline. It highlights the separation between retained and forgotten performance.
+
+
+
+7.4 Skill Correlation Analysis
+
+To evaluate whether skill suppression propagates across domains, we analyze the correlation structure between skills using per-skill accuracy measured over nnn simulated students. Each student is represented by a performance vector   , where ​ denotes the correctness ratio for skill . Aggregating across students, we compute the Pearson correlation matrix  , capturing the
+dependency between skill performances.
+The results reveal that correlations are consistently weak across both grades. In Grade 4, correlations are approximately uniform and near zero (≈ −0.1), indicating strong independence between skill domains. In Grade 5, slightly stronger negative correlations are observed (≈ −0.1 to −0.24), suggesting mild interference effects, where performance in one skill may weakly decrease as another increases. However, the magnitude of these correlations remains small, indicating that such dependencies are limited.
+To formalize the implication of this structure, we model the skill performance distribution as a multivariate Gaussian  , and analyze the effect of enforcing forgetting on a subset of skills ​, while retaining the remaining skills ​. The expected retained performance is given by the conditional expectation:
+
+When cross-skill correlations are weak (i.e., ), this reduces to:
+
+Empirically, this is consistent with the observed behavior: suppressing one skill does not significantly affect the performance of others. The slight negative correlations indicate only minor interference, which does not meaningfully alter retained skill accuracy. Therefore, the results support the conclusion that skill dependencies are weak and that controllability operates in a predominantly local manner. This validates a core assumption of the study—namely, that selective forgetting can be applied independently across skills—enabling the construction of imperfect students with structured and interpretable knowledge gaps.
+Description
+Description: The figure shows Pearson correlation matrices between skills for Grades 4 and 5, computed over nnn simulated students using per-skill accuracy vectors. Values near zero (≈ −0.1) indicate independence between skills (Grade 4), while slightly stronger negative values (≈ −0.1 to −0.24 in Grade 5) indicate weak interference. Overall, the low magnitude of correlations supports the conclusion that skill dependencies are minimal, aligning with the observed ability to control and suppress skills independently.
+
+7.5 Expected vs. Actual Accuracy
+
+As presented in Section 7.3, the correlation analysis showed that skill dependencies are weak, implying that retained-skill performance should remain close to its baseline even when other skills are suppressed. Based on this result, we obtain a theoretical expectation for retained-skill accuracy under selective forgetting.
+In this section, we empirically validate this prediction by comparing expected retained accuracy with actual measured accuracy across nnn simulated students. The scatter plots for both Grade 4 and Grade 5 reveal clear differences between models. Points corresponding to Anthropic’s Claude and DeepSeek cluster closely around the diagonal, indicating strong agreement between expected and observed performance. This suggests that these models successfully preserve retained skills in accordance with the theoretical expectation derived in Section 7.3.   In contrast, OpenAI’s GPT-4o consistently deviates below the diagonal, indicating that actual performance is lower than expected. This implies that, despite the weak correlation structure identified earlier, the model does not fully maintain independence between skills and exhibits unintended degradation in retained domains.   Overall, the results show that while weak skill correlations enable the possibility of localized controllability, the extent to which this is realized depends on the model. Claude demonstrates the highest fidelity to the expected behavior, DeepSeek shows moderate alignment, and GPT-4o exhibits weaker controllability due to residual cross-skill interference.
+
+
+Description: The figure compares expected retained-skill accuracy (derived from the correlation analysis in Section 7.3) with actual accuracy measured from LLM outputs, across nnn simulated students for Grades 4 and 5. The diagonal represents perfect agreement between expected and observed performance. Points close to the diagonal (Claude, DeepSeek) indicate accurate preservation of retained skills, while systematic deviations below the diagonal (GPT-4o) indicate under-performance and incomplete controllability.
+
+
+7.6 Prediction Score
+
+Following the comparison between expected and actual retained-skill accuracy in Section 7.4, we introduce a quantitative measure to summarize the alignment between theoretical predictions and observed model behavior. The prediction score is defined as:
+
+This metric captures whether a model preserves retained skills as predicted by the correlation-based framework (Section 7.3). A score close to zero indicates accurate alignment with the expected behavior, a positive score indicates better-than-expected retention, and a negative score indicates under-performance and unintended degradation of retained skills.	The results reveal clear differences between models across both Grade 4 and Grade 5. Anthropic’s Claude consistently achieves positive prediction scores, indicating strong alignment with the expected retained-skill performance and confirming high controllability. DeepSeek shows moderate positive scores, suggesting partial alignment with the theoretical model, though with some variability across runs. In contrast, OpenAI’s GPT-4o exhibits negative prediction scores in Grade 4 and only marginal improvement in Grade 5, indicating systematic under-performance relative to expectations.	These results reinforce the observations from the previous sections. While Section 7.3 established that skill correlations are weak—implying that retained skills should remain unaffected—and Section 7.4 showed that not all models achieve this behavior in practice, the prediction score provides a concise quantitative summary of this gap. Claude demonstrates the highest fidelity to the expected behavior, DeepSeek shows moderate controllability, and GPT-4o exhibits weaker controllability due to consistent degradation in retained skills.		Overall, the prediction score highlights that controllability is not only a function of the underlying correlation structure but also of the model’s ability to faithfully implement it. This metric therefore serves as a key indicator for evaluating how effectively an LLM can simulate an imperfect student with localized knowledge gaps.
+
+
+
+
+
+
+
+Description: The figure presents the mean prediction score (actual − expected retained-skill accuracy) for each model, aggregated over nnn simulated students, with error bars indicating variance across runs. Values near zero indicate accurate alignment with the expected behavior derived in Section 7.3, positive values indicate better-than-expected retention, and negative values indicate under-performance. The results show that Claude achieves the highest alignment, DeepSeek demonstrates moderate performance, and GPT-4o exhibits weaker controllability, particularly in Grade 4 where scores are negative.
+
+
+7.7 Forgotten Skill Heatmaps
+To further analyze the behavior of models under enforced forgetting, we examine per-skill accuracy on forgotten skills K=0 across all domains. While previous sections focused on aggregated metrics and expected behavior, this analysis provides a fine-grained view of how each model behaves at the level of individual skills.   The heatmaps for Grades 4 and 5 reveal clear and consistent patterns across models. Anthropic’s Claude demonstrates consistently low accuracy across all forgotten skills (typically ≈0.00–0.16 in Grade 4 and ≈0.09–0.20 in Grade 5), indicating effective and stable suppression of target skills. This aligns with earlier findings showing strong controllability and minimal cross-skill interference.
+In contrast, DeepSeek exhibits significantly higher residual accuracy on forgotten skills (≈0.10–0.39 in Grade 4 and ≈0.31–0.34 in Grade 5), suggesting that the model retains substantial knowledge even when explicitly instructed to forget. This behavior indicates weaker controllability and partial resistance to the imposed constraints.   OpenAI’s GPT-4o displays more variable behavior across skills. In some cases, it achieves relatively low accuracy (≈0.10–0.11), while in others it shows higher residual performance (up to ≈0.38), indicating inconsistent suppression. This variability suggests that forgetting is not uniformly applied across skills, and may depend on the inherent difficulty or representation of specific domains.   
+These findings complement the results of Sections 7.3–7.5. While correlation analysis suggested that skills are largely independent, and expected vs. actual comparisons evaluated retained-skill behavior, the heatmaps directly expose the effectiveness of forgetting itself. Together, they confirm that controllability must be evaluated along two dimensions: the ability to preserve retained skills and the ability to suppress forgotten ones.   Overall, Claude demonstrates the most reliable and consistent forgetting behavior, DeepSeek shows limited suppression, and GPT-4o exhibits unstable, skill-dependent forgetting. This reinforces the conclusion that successful simulation of imperfect students requires not only maintaining retained knowledge but also effectively eliminating access to forgotten skills.
+
+Description: The figures present heatmaps of imperfect-student (IS) accuracy on forgotten skills (K=0) across models and skill domains for Grades 4 and 5. Each cell represents the accuracy of a model on a specific skill when it is designated as forgotten. Lower values indicate more effective forgetting. The results show that Claude consistently achieves low accuracy (strong suppression), DeepSeek retains higher residual knowledge (weak forgetting), and GPT-4o exhibits variable, skill-dependent behavior.
+
+
+
+7.8 Key Empirical Findings
+Selective forgetting is achievable and measurable
+Retention remains stable under skill removal
+Skills are mostly independent - low correlation
+Model architecture strongly affects controllability
+Claude provides the most reliable controllable student simulation
+
+8. Discussion
+The results demonstrate that controllability is not an inherent property of LLMs, but rather an emergent behavior that arises from the interaction between prompting strategy and model architecture. In particular, effective control requires both a sufficiently expressive prompt design and a model that is capable of adhering to externally imposed constraints.
+The weak inter-skill correlations observed across grades support the core design assumption of independent skill units. This independence enables targeted manipulation of specific skills without inducing widespread degradation in others, which is essential for realistic educational simulation. In real learning scenarios, students typically exhibit localized misconceptions rather than uniform failure, and the results confirm that such behavior can be approximated within LLM-based systems.
+However, the variability across models highlights a key limitation. Strongly pretrained models may resist forgetting, even when explicitly instructed to do so. For example, DeepSeek consistently retains substantial residual knowledge, suggesting that prompt-based control alone may be insufficient to fully override internal representations. Similarly, the behavior observed in GPT-4o indicates a different limitation: partial compliance accompanied by unintended degradation of retained skills, reflecting a trade-off between instruction-following and stability.
+These findings suggest that controllability is constrained not only by prompt design but also by intrinsic model properties. As a result, achieving reliable and precise control requires alignment between the prompting strategy and the model’s internal behavior.
+From an analytical perspective, several key dimensions emerge: whether forgetting can be fully enforced or remains partially suppressed by pretraining, whether increased prompt structure improves compliance, whether certain skill domains are inherently more resistant to forgetting, and how controllability generalizes across grade levels and task distributions.
+Finally, this study is subject to several limitations. The framework relies exclusively on prompt-based control without incorporating fine-tuning or training-time interventions, assumes a binary mastery representation, and treats each question as associated with a single skill. These simplifications enable controlled experimentation but may limit the realism of the simulated students.
+.
+
+9. Future Work
+Future work will extend this framework in several directions. First, modeling skill dependencies using a hierarchical or graph-based representation could capture more realistic relationships between concepts. Second, replacing the binary mastery assumption with a continuous scale would allow for more nuanced student modeling. Third, reinforcement learning or fine-tuning approaches could be explored to improve alignment and achieve stronger and more reliable control beyond prompt-based methods.
+In addition, future work will expand the experimental setup to cover a broader range of grade levels, enabling analysis of how controllability scales across different levels of difficulty and cognitive complexity. This includes extending the framework to additional grades within the mathematics domain.
+Further directions include enabling dynamic forgetting during multi-step reasoning processes, and extending the framework to additional subject domains such as science, language, history, and social studies, in order to support more comprehensive educational simulations.
+
+10. Conclusion
+This master’s project demonstrates that structured, skill-level controllability in LLM-based student simulation is both measurable and achievable. The proposed framework provides a principled approach for evaluating selective compliance, enabling fine-grained analysis of how models retain and suppress knowledge at the level of individual skills.
+The results validate the feasibility of generating controllable imperfect students with interpretable knowledge gaps, supporting applications in teacher training and classroom simulation. At the same time, they highlight the importance of prompt design and model selection in achieving reliable control.
+Overall, this work establishes a foundational methodology for controlled deployment of LLMs in educational settings, and opens the door for future systems that combine prompting, training, and structured representations to achieve more robust and scalable controllability.
+
+
+11. References
+Ericsson, K. A., Krampe, R. T., & Tesch-Römer, C. (1993). The role of deliberate practice in the acquisition of expert performance. Psychological Review, 100(3), 363–406.
+Feng, S., et al. (2023). PersonaLLM: Investigating persona consistency in large language models. Proceedings of the ACL Conference.
+Gervet, T., Koedinger, K. R., Schneider, J., Mitchell, T., & Ritter, S. (2020). When is deep learning the best approach to knowledge tracing? Journal of Educational Data Mining, 12(3), 31–54.
+Goldberg, T., & Orland-Barak, L. (2016). The dynamic nature of teacher induction: Implications for policy and practice. Teaching and Teacher Education, 54, 1–10.
+Heffernan, N. T., & Heffernan, C. L. (2014). The ASSISTments ecosystem: Building a platform that brings scientists and teachers together for minimally invasive research on human learning and teaching. International Journal of Artificial Intelligence in Education, 24(4), 470–497.
+Ingersoll, R. M., & Strong, M. (2011). The impact of induction and mentoring programs for beginning teachers: A critical review of the research. Review of Educational Research, 81(2), 201–233.
+Lu, X., & Wang, Y. (2024). Generative students: Simulating learner behavior with large language models. arXiv preprint arXiv:2401.XXXXX.
+Pandey, S., & Karypis, G. (2019). A self-attentive model for knowledge tracing. Proceedings of the 12th International Conference on Educational Data Mining.
+Piech, C., et al. (2015). Deep knowledge tracing. Advances in Neural Information Processing Systems (NeurIPS).
+Sun, Z., et al. (2024). Large language models for educational simulation: Opportunities and challenges. Proceedings of the AAAI Conference on Artificial Intelligence.
+Zhang, J., et al. (2017). Dynamic key-value memory networks for knowledge tracing. Proceedings of the 26th International World Wide Web Conference (WWW).
+Zhang, X., et al. (2024). LLM-powered classroom simulation agents for teacher training. Proceedings of the Educational Data Mining Conference.
+SkillGapGPT (2025). Identifying student knowledge gaps using large language models. Preprint.
