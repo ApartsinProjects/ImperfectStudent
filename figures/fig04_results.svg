@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="18 10 390 210">
+  <defs>
+    <style>
+      .label { font-family: 'Arial', sans-serif; font-size: 12px; fill: #2d3748; font-weight: bold; }
+      .tick { font-family: 'Arial', sans-serif; font-size: 10px; fill: #718096; }
+      .small { font-family: 'Arial', sans-serif; font-size: 11px; fill: #2d3748; }
+    </style>
+  </defs>
+
+  <rect width="560" height="250" fill="white"/>
+
+  <g transform="translate(66, 24)">
+    <line x1="0" y1="0" x2="0" y2="160" stroke="#2d3748" stroke-width="1"/>
+    <line x1="0" y1="160" x2="330" y2="160" stroke="#2d3748" stroke-width="1"/>
+    <text x="-36" y="80" transform="rotate(-90, -36, 80)" text-anchor="middle" class="label">RMSE</text>
+
+    <g class="tick">
+      <text x="-8" y="164" text-anchor="end">0.00</text>
+      <text x="-8" y="124" text-anchor="end">0.15</text>
+      <text x="-8" y="84" text-anchor="end">0.30</text>
+      <text x="-8" y="44" text-anchor="end">0.45</text>
+      <text x="-8" y="4" text-anchor="end">0.60</text>
+    </g>
+
+    <g stroke="#e2e8f0" stroke-dasharray="3,3">
+      <line x1="0" y1="120" x2="330" y2="120"/>
+      <line x1="0" y1="80" x2="330" y2="80"/>
+      <line x1="0" y1="40" x2="330" y2="40"/>
+    </g>
+
+    <!-- Combined -->
+    <g>
+      <line x1="60" y1="128" x2="60" y2="138.7" stroke="#2f855a" stroke-width="1.6"/>
+      <line x1="48" y1="128" x2="72" y2="128" stroke="#2f855a" stroke-width="2"/>
+      <line x1="48" y1="138.7" x2="72" y2="138.7" stroke="#2f855a" stroke-width="2"/>
+      <rect x="40" y="130.7" width="40" height="5.3" fill="#48bb78" rx="3"/>
+      <line x1="40" y1="133.3" x2="80" y2="133.3" stroke="white" stroke-width="2"/>
+      <text x="60" y="184" text-anchor="middle" class="small">Combined</text>
+    </g>
+
+    <!-- Few-Shot -->
+    <g>
+      <line x1="165" y1="0" x2="165" y2="40" stroke="#2b6cb0" stroke-width="1.6"/>
+      <line x1="153" y1="0" x2="177" y2="0" stroke="#2b6cb0" stroke-width="2"/>
+      <line x1="153" y1="40" x2="177" y2="40" stroke="#2b6cb0" stroke-width="2"/>
+      <rect x="145" y="13.3" width="40" height="13.4" fill="#4299e1" rx="3"/>
+      <line x1="145" y1="20" x2="185" y2="20" stroke="white" stroke-width="2"/>
+      <text x="165" y="184" text-anchor="middle" class="small">Few-Shot</text>
+    </g>
+
+    <!-- Rule-Based -->
+    <g>
+      <line x1="270" y1="0" x2="270" y2="26.7" stroke="#c05621" stroke-width="1.6"/>
+      <line x1="258" y1="0" x2="282" y2="0" stroke="#c05621" stroke-width="2"/>
+      <line x1="258" y1="26.7" x2="282" y2="26.7" stroke="#c05621" stroke-width="2"/>
+      <rect x="250" y="5.3" width="40" height="13.4" fill="#ed8936" rx="3"/>
+      <line x1="250" y1="13.3" x2="290" y2="13.3" stroke="white" stroke-width="2"/>
+      <text x="270" y="184" text-anchor="middle" class="small">Rule-Based</text>
+    </g>
+
+  </g>
+</svg>
