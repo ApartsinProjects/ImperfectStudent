@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="18 14 652 382">
+  <defs>
+    <style>
+      .label { font-family: 'Arial', sans-serif; font-size: 12px; fill: #2d3748; font-weight: bold; }
+      .small { font-family: 'Arial', sans-serif; font-size: 10px; fill: #4a5568; }
+      .tick { font-family: 'Arial', sans-serif; font-size: 9px; fill: #718096; }
+    </style>
+  </defs>
+
+  <rect width="760" height="400" fill="white"/>
+
+  <g transform="translate(74, 32)">
+    <rect x="0" y="0" width="590" height="290" fill="#fafafa" stroke="#e2e8f0" rx="6"/>
+
+    <g stroke="#e2e8f0" stroke-dasharray="3,3">
+      <line x1="118" y1="0" x2="118" y2="290"/>
+      <line x1="236" y1="0" x2="236" y2="290"/>
+      <line x1="354" y1="0" x2="354" y2="290"/>
+      <line x1="472" y1="0" x2="472" y2="290"/>
+      <line x1="0" y1="58" x2="590" y2="58"/>
+      <line x1="0" y1="116" x2="590" y2="116"/>
+      <line x1="0" y1="174" x2="590" y2="174"/>
+      <line x1="0" y1="232" x2="590" y2="232"/>
+    </g>
+
+    <line x1="0" y1="290" x2="590" y2="290" stroke="#2d3748" stroke-width="1"/>
+    <line x1="0" y1="0" x2="0" y2="290" stroke="#2d3748" stroke-width="1"/>
+    <line x1="0" y1="290" x2="590" y2="0" stroke="#38a169" stroke-width="1.8" stroke-dasharray="6,3"/>
+
+    <g class="tick">
+      <text x="0" y="304" text-anchor="start">0.0</text>
+      <text x="118" y="304" text-anchor="middle">0.2</text>
+      <text x="236" y="304" text-anchor="middle">0.4</text>
+      <text x="354" y="304" text-anchor="middle">0.6</text>
+      <text x="472" y="304" text-anchor="middle">0.8</text>
+      <text x="590" y="304" text-anchor="end">1.0</text>
+
+      <text x="-8" y="294" text-anchor="end">0.0</text>
+      <text x="-8" y="236" text-anchor="end">0.2</text>
+      <text x="-8" y="178" text-anchor="end">0.4</text>
+      <text x="-8" y="120" text-anchor="end">0.6</text>
+      <text x="-8" y="62" text-anchor="end">0.8</text>
+      <text x="-8" y="4" text-anchor="end">1.0</text>
+    </g>
+
+    <!-- Claude -->
+    <g fill="#dd6b20" stroke="white" stroke-width="1.2" opacity="0.9">
+      <circle cx="100" cy="270" r="5.5"/>
+      <circle cx="180" cy="245" r="5.5"/>
+      <circle cx="250" cy="220" r="5.5"/>
+      <circle cx="320" cy="200" r="5.5"/>
+      <circle cx="390" cy="175" r="5.5"/>
+      <circle cx="460" cy="150" r="5.5"/>
+      <circle cx="530" cy="125" r="5.5"/>
+    </g>
+
+    <!-- DeepSeek -->
+    <g fill="#38a169" stroke="white" stroke-width="1.2" opacity="0.9">
+      <circle cx="110" cy="275" r="5.5"/>
+      <circle cx="190" cy="255" r="5.5"/>
+      <circle cx="260" cy="230" r="5.5"/>
+      <circle cx="330" cy="210" r="5.5"/>
+      <circle cx="400" cy="185" r="5.5"/>
+      <circle cx="470" cy="160" r="5.5"/>
+      <circle cx="540" cy="135" r="5.5"/>
+    </g>
+
+    <!-- GPT-4o -->
+    <g fill="#3182ce" stroke="white" stroke-width="1.2" opacity="0.9">
+      <circle cx="100" cy="275" r="5.5"/>
+      <circle cx="180" cy="265" r="5.5"/>
+      <circle cx="250" cy="250" r="5.5"/>
+      <circle cx="320" cy="235" r="5.5"/>
+      <circle cx="390" cy="220" r="5.5"/>
+      <circle cx="460" cy="200" r="5.5"/>
+      <circle cx="530" cy="180" r="5.5"/>
+    </g>
+
+    <g transform="translate(438, 14)">
+      <rect x="0" y="0" width="140" height="64" fill="white" stroke="#e2e8f0" rx="4" opacity="0.96"/>
+      <circle cx="14" cy="17" r="5" fill="#dd6b20"/>
+      <text x="26" y="20" class="small">Claude</text>
+      <circle cx="14" cy="34" r="5" fill="#38a169"/>
+      <text x="26" y="37" class="small">DeepSeek</text>
+      <circle cx="14" cy="51" r="5" fill="#3182ce"/>
+      <text x="26" y="54" class="small">GPT-4o</text>
+    </g>
+  </g>
+
+  <text x="36" y="178" transform="rotate(-90, 36, 178)" text-anchor="middle" class="label">Actual retained accuracy</text>
+  <text x="370" y="384" text-anchor="middle" class="label">Expected retained accuracy</text>
+</svg>

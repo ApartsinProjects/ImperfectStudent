@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="14 10 396 210">
+  <defs>
+    <style>
+      .label { font-family: 'Arial', sans-serif; font-size: 12px; fill: #2d3748; font-weight: bold; }
+      .tick { font-family: 'Arial', sans-serif; font-size: 10px; fill: #718096; }
+      .small { font-family: 'Arial', sans-serif; font-size: 11px; fill: #2d3748; }
+    </style>
+  </defs>
+
+  <rect width="440" height="250" fill="white"/>
+
+  <g transform="translate(64, 24)">
+    <line x1="0" y1="0" x2="0" y2="160" stroke="#2d3748" stroke-width="1"/>
+    <line x1="0" y1="160" x2="320" y2="160" stroke="#2d3748" stroke-width="1"/>
+    <text x="-40" y="80" transform="rotate(-90, -40, 80)" text-anchor="middle" class="label">Accuracy (%)</text>
+
+    <g class="tick">
+      <text x="-8" y="164" text-anchor="end">0</text>
+      <text x="-8" y="124" text-anchor="end">25</text>
+      <text x="-8" y="84" text-anchor="end">50</text>
+      <text x="-8" y="44" text-anchor="end">75</text>
+      <text x="-8" y="4" text-anchor="end">100</text>
+    </g>
+
+    <g stroke="#e2e8f0" stroke-dasharray="3,3">
+      <line x1="0" y1="120" x2="320" y2="120"/>
+      <line x1="0" y1="80" x2="320" y2="80"/>
+      <line x1="0" y1="40" x2="320" y2="40"/>
+    </g>
+
+    <line x1="0" y1="8" x2="320" y2="8" stroke="#38a169" stroke-width="1.5" stroke-dasharray="4,2"/>
+    <text x="324" y="12" class="tick" fill="#38a169">95%</text>
+
+    <g>
+      <rect x="34" y="6.4" width="56" height="153.6" fill="#dd6b20" rx="4"/>
+      <text x="62" y="184" text-anchor="middle" class="small">Claude</text>
+
+      <rect x="132" y="4.8" width="56" height="155.2" fill="#38a169" rx="4"/>
+      <text x="160" y="184" text-anchor="middle" class="small">DeepSeek</text>
+
+      <rect x="230" y="8.0" width="56" height="152.0" fill="#3182ce" rx="4"/>
+      <text x="258" y="184" text-anchor="middle" class="small">GPT-4o</text>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 320">
+  <defs>
+    <style>
+      .title { font-family: Arial, sans-serif; font-size: 14px; font-weight: bold; }
+      .section-title { font-family: Arial, sans-serif; font-size: 12px; font-weight: bold; }
+      .label { font-family: Arial, sans-serif; font-size: 10px; }
+      .value { font-family: Arial, sans-serif; font-size: 11px; font-weight: bold; text-anchor: middle; }
+    </style>
+    <linearGradient id="hmGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#2166ac"/>
+      <stop offset="30%" style="stop-color:#92c5de"/>
+      <stop offset="50%" style="stop-color:#f7f7f7"/>
+      <stop offset="80%" style="stop-color:#f4a582"/>
+      <stop offset="100%" style="stop-color:#b2182b"/>
+    </linearGradient>
+  </defs>
+  <rect width="700" height="320" fill="white"/>
+  
+  <!-- Title -->
+  <text x="350" y="20" class="title" text-anchor="middle">Forgotten-Skill Suppression Heatmaps</text>
+  
+  <!-- ========== GRADE 4 HEATMAP ========== -->
+  <text x="175" y="50" class="section-title" text-anchor="middle">Grade 4</text>
+  
+  <!-- Column headers -->
+  <text x="80" y="75" class="label" text-anchor="middle">M&amp;D</text>
+  <text x="160" y="75" class="label" text-anchor="middle">N&amp;O-B</text>
+  <text x="240" y="75" class="label" text-anchor="middle">N&amp;O-F</text>
+  <text x="320" y="75" class="label" text-anchor="middle">O&amp;ALG</text>
+  
+  <!-- Row headers and cells - Claude -->
+  <text x="45" y="108" class="label" text-anchor="end">Claude</text>
+  <rect x="50" y="95" width="50" height="25" fill="#d4e9fc" rx="2"/> <text x="75" y="113" class="value">0.04</text>
+  <rect x="110" y="95" width="50" height="25" fill="#c6dbef" rx="2"/> <text x="135" y="113" class="value">0.07</text>
+  <rect x="170" y="95" width="50" height="25" fill="#f7fbff" rx="2" stroke="#2166ac" stroke-width="2"/> <text x="195" y="113" class="value">0.00</text>
+  <rect x="230" y="95" width="50" height="25" fill="#c6dbef" rx="2"/> <text x="255" y="113" class="value">0.16</text>
+  
+  <!-- Row headers and cells - DeepSeek -->
+  <text x="45" y="140" class="label" text-anchor="end">DeepSeek</text>
+  <rect x="50" y="127" width="50" height="25" fill="#9ecae1" rx="2"/> <text x="75" y="145" class="value">0.17</text>
+  <rect x="110" y="127" width="50" height="25" fill="#6baed6" rx="2"/> <text x="135" y="145" class="value">0.39</text>
+  <rect x="170" y="127" width="50" height="25" fill="#c6dbef" rx="2"/> <text x="195" y="145" class="value">0.10</text>
+  <rect x="230" y="127" width="50" height="25" fill="#c6dbef" rx="2"/> <text x="255" y="145" class="value">0.11</text>
+  
+  <!-- Row headers and cells - GPT-4o -->
+  <text x="45" y="172" class="label" text-anchor="end">GPT-4o</text>
+  <rect x="50" y="159" width="50" height="25" fill="#9ecae1" rx="2"/> <text x="75" y="177" class="value">0.25</text>
+  <rect x="110" y="159" width="50" height="25" fill="#9ecae1" rx="2"/> <text x="135" y="177" class="value">0.20</text>
+  <rect x="170" y="159" width="50" height="25" fill="#6baed6" rx="2"/> <text x="195" y="177" class="value">0.38</text>
+  <rect x="230" y="159" width="50" height="25" fill="#c6dbef" rx="2"/> <text x="255" y="177" class="value">0.10</text>
+  
+  <!-- ========== GRADE 5 HEATMAP ========== -->
+  <text x="560" y="50" class="section-title" text-anchor="middle">Grade 5</text>
+  
+  <!-- Column headers -->
+  <text x="490" y="75" class="label" text-anchor="middle">N&amp;O-B</text>
+  <text x="570" y="75" class="label" text-anchor="middle">N&amp;O-F</text>
+  <text x="650" y="75" class="label" text-anchor="middle">O&amp;ALG</text>
+  
+  <!-- Row headers and cells - Claude -->
+  <text x="420" y="108" class="label" text-anchor="end">Claude</text>
+  <rect x="430" y="95" width="60" height="25" fill="#c6dbef" rx="2"/> <text x="460" y="113" class="value">0.09</text>
+  <rect x="500" y="95" width="60" height="25" fill="#c6dbef" rx="2"/> <text x="530" y="113" class="value">0.09</text>
+  <rect x="570" y="95" width="60" height="25" fill="#9ecae1" rx="2"/> <text x="600" y="113" class="value">0.20</text>
+  
+  <!-- Row headers and cells - DeepSeek -->
+  <text x="420" y="140" class="label" text-anchor="end">DeepSeek</text>
+  <rect x="430" y="127" width="60" height="25" fill="#6baed6" rx="2"/> <text x="460" y="145" class="value">0.34</text>
+  <rect x="500" y="127" width="60" height="25" fill="#6baed6" rx="2"/> <text x="530" y="145" class="value">0.31</text>
+  <rect x="570" y="127" width="60" height="25" fill="#6baed6" rx="2"/> <text x="600" y="145" class="value">0.32</text>
+  
+  <!-- Row headers and cells - GPT-4o -->
+  <text x="420" y="172" class="label" text-anchor="end">GPT-4o</text>
+  <rect x="430" y="159" width="60" height="25" fill="#c6dbef" rx="2"/> <text x="460" y="177" class="value">0.11</text>
+  <rect x="500" y="159" width="60" height="25" fill="#6baed6" rx="2"/> <text x="530" y="177" class="value">0.31</text>
+  <rect x="570" y="159" width="60" height="25" fill="#9ecae1" rx="2"/> <text x="600" y="177" class="value">0.23</text>
+  
+  <!-- Color scale -->
+  <text x="350" y="230" class="label" text-anchor="middle">Accuracy (lower = stronger forgetting)</text>
+  <rect x="200" y="240" width="300" height="15" fill="url(#hmGradient)" rx="2"/>
+  <text x="205" y="270" class="label" font-size="8">0.00</text>
+  <text x="350" y="270" class="label" font-size="8" text-anchor="middle">0.20</text>
+  <text x="495" y="270" class="label" font-size="8" text-anchor="middle">0.40</text>
+  <text x="500" y="270" class="label" font-size="8" text-anchor="end">0.50</text>
+  
+  <!-- Legend -->
+  <text x="350" y="300" class="label" text-anchor="middle">Blue = Strong suppression (low residual accuracy)</text>
+  <text x="350" y="312" class="label" text-anchor="middle">Red = Weak suppression (high residual accuracy)</text>
+</svg>

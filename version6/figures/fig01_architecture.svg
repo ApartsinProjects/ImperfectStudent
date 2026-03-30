@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="18 22 812 124">
+  <defs>
+    <style>
+      .label { font-family: 'Arial', sans-serif; font-size: 12px; fill: #2d3748; font-weight: bold; }
+      .small { font-family: 'Arial', sans-serif; font-size: 10px; fill: #4a5568; }
+    </style>
+    <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#4a5568"/>
+    </marker>
+  </defs>
+
+  <rect width="860" height="180" fill="white"/>
+
+  <g transform="translate(40, 40)">
+    <rect x="0" y="0" width="150" height="92" fill="#ebf8ff" stroke="#3182ce" stroke-width="1.5" rx="8"/>
+    <text x="75" y="30" text-anchor="middle" class="label">Skill Vector</text>
+    <text x="75" y="54" text-anchor="middle" class="small">k = {1, 0, 1, ..., 1}</text>
+    <text x="75" y="74" text-anchor="middle" class="small">retained and forgotten</text>
+
+    <line x1="162" y1="46" x2="205" y2="46" stroke="#4a5568" stroke-width="1.8" marker-end="url(#arrow)"/>
+
+    <rect x="217" y="0" width="150" height="92" fill="#fefcbf" stroke="#d69e2e" stroke-width="1.5" rx="8"/>
+    <text x="292" y="30" text-anchor="middle" class="label">Profile Prompt</text>
+    <text x="292" y="54" text-anchor="middle" class="small">mastered skills</text>
+    <text x="292" y="74" text-anchor="middle" class="small">missing skills</text>
+
+    <line x1="379" y1="46" x2="422" y2="46" stroke="#4a5568" stroke-width="1.8" marker-end="url(#arrow)"/>
+
+    <rect x="434" y="0" width="150" height="92" fill="#edf2f7" stroke="#718096" stroke-width="1.5" rx="8"/>
+    <text x="509" y="30" text-anchor="middle" class="label">Prompted LLM</text>
+    <text x="509" y="54" text-anchor="middle" class="small">student-conditioned</text>
+    <text x="509" y="74" text-anchor="middle" class="small">response generation</text>
+
+    <line x1="596" y1="46" x2="639" y2="46" stroke="#4a5568" stroke-width="1.8" marker-end="url(#arrow)"/>
+
+    <rect x="651" y="0" width="120" height="92" fill="#f0fff4" stroke="#38a169" stroke-width="1.5" rx="8"/>
+    <text x="711" y="30" text-anchor="middle" class="label">Output</text>
+    <text x="711" y="54" text-anchor="middle" class="small">skill-aligned</text>
+    <text x="711" y="74" text-anchor="middle" class="small">answer behavior</text>
+  </g>
+</svg>

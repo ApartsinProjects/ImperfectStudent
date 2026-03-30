@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supplementary Gap Notes</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 900px; margin: 2rem auto; padding: 0 1rem; color: #1f2937; line-height: 1.6; }
+        h1, h2 { color: #111827; }
+        .note { background: #f8fafc; border-left: 4px solid #3182ce; padding: 1rem; margin: 1rem 0; }
+        .warn { background: #fff7ed; border-left: 4px solid #dd6b20; padding: 1rem; margin: 1rem 0; }
+        table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+        th, td { border: 1px solid #e5e7eb; padding: 0.6rem; text-align: left; vertical-align: top; }
+        th { background: #f3f4f6; }
+        code { background: #f3f4f6; padding: 0.1rem 0.3rem; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <h1>Supplementary Gap Notes</h1>
+
+    <div class="note">
+        This note documents reconstruction gaps that remain after aligning the paper to the original report. For each gap, it states exactly what artifact or analysis is needed to resolve the issue in a submission-ready version. Unless explicitly stated otherwise, all statistical quantities discussed here are assumed to be recoverable from the saved original experiment outputs, meaning the archived LLM requests and responses, parsed answers, profile assignments, and evaluation tables, without issuing any new LLM calls.
+    </div>
+
+    <h2>1. Skill-source reconstruction gap</h2>
+
+    <p><strong>What is directly supported by the original report:</strong> the report states that MathCAMPS items are tagged according to U.S. Common Core standards; each educational standard is mapped to a <em>Domain</em>; and each Domain is treated as a distinct <em>Skill</em> for the purposes of controllable simulation.</p>
+
+    <p><strong>What could not be recovered from the current workspace:</strong> an explicit grade-by-grade table of formal skill labels, standard IDs, or a machine-readable mapping file linking item IDs to exact skill names.</p>
+
+    <p><strong>What must be added to resolve this gap:</strong></p>
+    <ol>
+        <li>Export the original item-to-skill mapping from the benchmark source files, ideally as CSV or JSON with columns such as <code>grade</code>, <code>item_id</code>, <code>standard_id</code>, <code>domain</code>, and <code>skill_label</code>.</li>
+        <li>Add a paper appendix table listing the exact skill labels used in each reported grade, at minimum for Grades 4 and 5.</li>
+        <li>Replace any representative or reconstructed skill-family tables in the main text with either exact archived labels or a clearly marked contextual table plus a link to the archival mapping file.</li>
+        <li>Archive the mapping file together with the benchmark release so that readers can reproduce the aggregation from items to skills.</li>
+    </ol>
+
+    <p><strong>Paper sections affected:</strong> Section 4.2, Table 1, Figure 1 terminology, and any passage that refers to domain-level skill labels.</p>
+
+    <div class="warn">
+        <strong>Best-effort hypothesis, not verified:</strong> the most likely skill source used in the original experiments is a grade-specific Common Core mathematics domain mapping extracted from MathCAMPS. Under this interpretation, the operational skill labels were probably domain-level curriculum labels rather than ad hoc manual skill names.
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Grade</th>
+                <th>Likely domain-level skill source</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Grade 4</td>
+                <td>Likely Common Core domain families such as Operations and Algebraic Thinking, Number and Operations in Base Ten, Number and Operations with Fractions, Measurement and Data, and Geometry, or domain-derived subskills within these families.</td>
+                <td>Hypothesis only</td>
+            </tr>
+            <tr>
+                <td>Grade 5</td>
+                <td>Likely Common Core domain families such as Operations and Algebraic Thinking, Number and Operations in Base Ten, Number and Operations with Fractions, Measurement and Data, and Geometry, again possibly subdivided into domain-derived operational skills.</td>
+                <td>Hypothesis only</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p>The paper therefore retains the report's supported claim that the skill taxonomy derives from Common Core standard-to-domain mappings, while avoiding unsupported reconstruction of exact formal labels. The gap is fully resolved only once the archived mapping file is restored and cited directly.</p>
+
+    <h2>1A. Example-item documentation gap</h2>
+
+    <p><strong>What appears in the main paper:</strong> Section 4.2 and Table 2 present example item annotations and open-to-multiple-choice conversions as if they were part of the benchmark documentation.</p>
+
+    <p><strong>What should be done to resolve this gap:</strong></p>
+    <ol>
+        <li>Replace the current example rows with exact archived benchmark items, preserving original item wording, assigned skill label, and final multiple-choice options.</li>
+        <li>If the exact released items cannot be disclosed, mark the table as synthetic in an appendix and move exact benchmark examples to a restricted artifact package.</li>
+        <li>Add a short appendix note describing the distractor-construction policy used to convert open items into multiple-choice items.</li>
+    </ol>
+
+    <p><strong>Paper sections affected:</strong> Section 4.2.2 and Table 2.</p>
+
+    <h2>2. Post hoc statistical-analysis gap</h2>
+
+    <p>The current main paper does not include the strongest secondary statistical analyses that could be derived from the archived experiment outputs. Under the assumption that all original LLM requests and responses were saved, the analyses below can be computed exactly from the existing experimental data without issuing any additional LLM calls.</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Analysis</th>
+                <th>Why it helps</th>
+                <th>What should be computed from archived outputs</th>
+                <th>Recommended placement in the paper</th>
+                <th>What should be added to the paper</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Profile-matched RMSE differences between prompting strategies</td>
+                <td>Quantifies how much better the combined prompt is than each ablation using the preserved profile-level outputs.</td>
+                <td>For each profile and grade, compute paired RMSE differences between combined and each ablation; then report mean difference, median difference, and exact bootstrap or permutation interval.</td>
+                <td>Best placement: Section 6.2, immediately after Figure 4, or as an appendix mini-figure.</td>
+                <td>Add exact paired contrasts between Combined and each ablation as a compact figure or table derived from archived outputs.</td>
+            </tr>
+            <tr>
+                <td>Retained-forgotten accuracy gap by model</td>
+                <td>Makes the separation between successful retention and successful forgetting easier to interpret than forgotten-skill accuracy alone.</td>
+                <td>For each model, compute retained-skill mean accuracy minus forgotten-skill mean accuracy over the preserved profile-level outputs, together with exact uncertainty intervals.</td>
+                <td>Best placement: Section 6.3, immediately after Figure 5 and Table 4.</td>
+                <td>Add exact model-wise retained-minus-forgotten gaps and intervals derived from archived outputs.</td>
+            </tr>
+            <tr>
+                <td>Variance decomposition over preserved outputs</td>
+                <td>Separates the contribution of model, prompt, grade, and skill status to overall controllability variation.</td>
+                <td>Fit a post hoc ANOVA-style or mixed-effects decomposition using archived per-profile outputs, with factors for model, prompt strategy, grade, and skill status.</td>
+                <td>Best placement: Section 7.1 or 7.2, where interpretation of model and prompt effects is discussed. Secondary option: appendix only.</td>
+                <td>Add one interpretive paragraph in Discussion supported by an appendix table reporting factor contributions or partial effect sizes.</td>
+            </tr>
+            <tr>
+                <td>Cross-skill influence heatmap</td>
+                <td>Directly operationalizes the cross-skill influence definition and makes collateral effects visible rather than inferred from correlations alone.</td>
+                <td>Compute the full matrix of skill-to-skill influence values using archived per-skill accuracy under each suppression profile, then aggregate by grade and optionally by model.</td>
+                <td>Best placement: Section 6.4, immediately after Figure 6.</td>
+                <td>Add a new heatmap figure showing direct effects on the diagonal and collateral effects off the diagonal, plus one paragraph interpreting whether suppression remains localized.</td>
+            </tr>
+            <tr>
+                <td>Profile-level score distribution figure</td>
+                <td>Shows whether controllability is consistent across profiles or driven by a small subset of easy cases.</td>
+                <td>For each model and prompt strategy, plot the distribution of profile-level RMSE or controllability scores across all enumerated profiles.</td>
+                <td>Best placement: Section 6.2 or 6.3 as an auxiliary figure.</td>
+                <td>Add violin plots, box plots, or ridge plots to show spread, skew, and overlap across strategies and models.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="warn">
+        None of the additions above should require re-querying any model if the original requests, responses, and parsed evaluation tables were preserved. They are post hoc analyses over existing experimental data only.
+    </div>
+
+    <p><strong>Recommended computation workflow for these additions:</strong></p>
+    <ol>
+        <li>Load the archived per-profile evaluation table with columns for <code>model</code>, <code>grade</code>, <code>prompt_strategy</code>, <code>profile_id</code>, <code>skill_id</code>, <code>target_state</code>, and <code>accuracy</code>.</li>
+        <li>Compute profile-level RMSE for each model, grade, prompt strategy, and profile.</li>
+        <li>For prompt comparisons, pair profiles within each grade and model, then compute Combined minus Few-Shot and Combined minus Rule-Based RMSE differences.</li>
+        <li>For retained-forgotten gaps, aggregate accuracy separately over skills with <code>target_state = 1</code> and <code>target_state = 0</code>, then subtract forgotten from retained within each model.</li>
+        <li>For cross-skill influence, use suppression profiles to compute per-skill changes relative to the perfect-student baseline and aggregate into influence matrices.</li>
+        <li>For variance decomposition, fit a post hoc linear or mixed-effects model using archived outputs, with factors for model, prompt strategy, grade, and skill status.</li>
+        <li>Write the exact results into the recommended sections or appendix figures, and store the full computation output in the artifact bundle or appendix tables.</li>
+    </ol>
+
+    <p><strong>Minimum archived data required for exact recomputation:</strong></p>
+    <ul>
+        <li>Prompt strategy used for each interaction</li>
+        <li>Model identifier for each interaction</li>
+        <li>Grade, profile ID, and target skill vector for each simulated student</li>
+        <li>Raw model request and raw model response, or a faithful archived parsed answer for each item</li>
+        <li>Item-to-skill mapping used during scoring</li>
+        <li>Per-item correctness after answer parsing</li>
+    </ul>
+
+    <p>If these six components exist in the archived experiment data, then the prompt-comparison contrasts, retained-forgotten gaps, cross-skill influence summaries, and variance-decomposition analyses are all recoverable exactly from the original experiment outputs.</p>
+
+    <h2>3. Reproducibility artifact gap</h2>
+
+    <p><strong>What is missing:</strong> the paper does not link an artifact bundle containing exact prompts, few-shot examples, scoring scripts, model identifiers, or the archived evaluation outputs used to generate the figures.</p>
+
+    <p><strong>What must be added to resolve this gap:</strong></p>
+    <ol>
+        <li>Create a public artifact package or supplement containing the exact rule-based, few-shot, and combined prompt templates.</li>
+        <li>Record exact model identifiers, API provider names, access dates, decoding parameters, and any parsing rules for invalid outputs.</li>
+        <li>Release archived evaluation tables at the profile level or, at minimum, provide model × grade × skill summary tables for all reported results.</li>
+        <li>Add a stable repository or DOI link in the paper's reproducibility section.</li>
+    </ol>
+
+    <p><strong>Paper sections affected:</strong> Sections 5.3, 7.5, 8, and the end-of-paper technical-note link.</p>
+
+    <h2>4. Benchmark-validity gap</h2>
+
+    <p><strong>What is missing:</strong> the current paper states that some items were replaced after repeated cross-model errors, but it does not provide an audit trail describing which items were replaced, why they were replaced, and which criteria were applied independently of the experimental hypotheses.</p>
+
+    <p><strong>What must be added to resolve this gap:</strong></p>
+    <ol>
+        <li>Create an item-audit table with columns such as <code>item_id</code>, <code>grade</code>, <code>original_skill</code>, <code>replacement_reason</code>, and <code>replacement_item_id</code>.</li>
+        <li>State whether replacement decisions were made before or after the final experimental comparisons were examined.</li>
+        <li>Move this audit table to an appendix or artifact package and reference it explicitly in the main text.</li>
+    </ol>
+
+    <p><strong>Paper sections affected:</strong> Section 4.2.3 and Section 7.4.</p>
+
+    <p><a href="index.html">Return to paper</a></p>
+</body>
+</html>

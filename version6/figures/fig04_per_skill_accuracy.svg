@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 350">
+  <defs>
+    <style>
+      .title { font-family: Arial, sans-serif; font-size: 13px; font-weight: bold; }
+      .label { font-family: Arial, sans-serif; font-size: 9px; }
+      .value { font-family: Arial, sans-serif; font-size: 8px; font-weight: bold; }
+      .axis-label { font-family: Arial, sans-serif; font-size: 10px; }
+    </style>
+  </defs>
+  <rect width="600" height="350" fill="white"/>
+  
+  <!-- Title -->
+  <text x="300" y="20" class="title" text-anchor="middle">Per-Skill Accuracy by Knowledge Vector (Grade 4)</text>
+  
+  <!-- Y-axis -->
+  <line x1="70" y1="50" x2="70" y2="280" stroke="#333" stroke-width="1"/>
+  <text x="35" y="165" class="axis-label" text-anchor="middle" transform="rotate(-90, 35, 165)">Accuracy</text>
+  
+  <!-- Y-axis labels -->
+  <text x="60" y="85" class="label" text-anchor="end">1.0</text>
+  <line x1="68" y1="82" x2="72" y2="82" stroke="#333"/>
+  <text x="60" y="138" class="label" text-anchor="end">0.5</text>
+  <line x1="68" y1="135" x2="72" y2="135" stroke="#333"/>
+  <text x="60" y="282" class="label" text-anchor="end">0.0</text>
+  
+  <!-- X-axis labels -->
+  <text x="125" y="295" class="label" text-anchor="middle">Perfect</text>
+  <text x="185" y="305" class="label" text-anchor="middle" font-size="7">k=[1,1,1,1]</text>
+  <text x="185" y="295" class="label" text-anchor="middle">All-forget</text>
+  <text x="185" y="305" class="label" text-anchor="middle" font-size="7">k=[0,0,0,0]</text>
+  <text x="275" y="295" class="label" text-anchor="middle">k=[0,0,0,1]</text>
+  <text x="355" y="295" class="label" text-anchor="middle">k=[1,0,0,1]</text>
+  <text x="435" y="295" class="label" text-anchor="middle">k=[1,0,1,0]</text>
+  <text x="515" y="295" class="label" text-anchor="middle">k=[1,1,0,0]</text>
+  
+  <!-- Grid lines -->
+  <line x1="70" y1="82" x2="570" y2="82" stroke="#eee" stroke-width="1"/>
+  <line x1="70" y1="135" x2="570" y2="135" stroke="#eee" stroke-width="1"/>
+  <line x1="70" y1="188" x2="570" y2="188" stroke="#eee" stroke-width="1"/>
+  <line x1="70" y1="241" x2="570" y2="241" stroke="#eee" stroke-width="1"/>
+  
+  <!-- Bars - Measurement & Data (row 1) -->
+  <rect x="90" y="70" width="30" height="13" fill="#2166ac" rx="2"/> <text x="105" y="80" fill="white" class="value">0.88</text>
+  <rect x="150" y="238" width="30" height="13" fill="#b2182b" rx="2"/> <text x="165" y="248" fill="white" class="value">0.04</text>
+  <rect x="240" y="238" width="30" height="13" fill="#b2182b" rx="2"/> <text x="255" y="248" fill="white" class="value">0.04</text>
+  <rect x="320" y="77" width="30" height="13" fill="#67a9cf" rx="2"/> <text x="335" y="87" fill="white" class="value">0.85</text>
+  <rect x="400" y="70" width="30" height="13" fill="#2166ac" rx="2"/> <text x="415" y="80" fill="white" class="value">0.88</text>
+  <rect x="480" y="77" width="30" height="13" fill="#67a9cf" rx="2"/> <text x="495" y="87" fill="white" class="value">0.85</text>
+  <text x="105" y="55" class="label" text-anchor="middle" font-size="8">M&amp;D</text>
+  
+  <!-- Bars - Number & Ops Base (row 2) -->
+  <rect x="90" y="103" width="30" height="13" fill="#2166ac" rx="2"/> <text x="105" y="113" fill="white" class="value">0.92</text>
+  <rect x="150" y="228" width="30" height="13" fill="#f4a582" rx="2"/> <text x="165" y="238" fill="black" class="value">0.12</text>
+  <rect x="240" y="238" width="30" height="13" fill="#b2182b" rx="2"/> <text x="255" y="248" fill="white" class="value">0.04</text>
+  <rect x="320" y="238" width="30" height="13" fill="#b2182b" rx="2"/> <text x="335" y="248" fill="white" class="value">0.04</text>
+  <rect x="400" y="228" width="30" height="13" fill="#f4a582" rx="2"/> <text x="415" y="238" fill="black" class="value">0.12</text>
+  <rect x="480" y="70" width="30" height="13" fill="#2166ac" rx="2"/> <text x="495" y="80" fill="white" class="value">0.92</text>
+  
+  <!-- Bars - Number & Ops Fractions (row 3) -->
+  <rect x="90" y="56" width="30" height="13" fill="#2166ac" rx="2"/> <text x="105" y="66" fill="white" class="value">1.00</text>
+  <rect x="150" y="248" width="30" height="13" fill="#b2182b" rx="2"/> <text x="165" y="258" fill="white" class="value">0.00</text>
+  <rect x="240" y="248" width="30" height="13" fill="#b2182b" rx="2"/> <text x="255" y="258" fill="white" class="value">0.00</text>
+  <rect x="320" y="248" width="30" height="13" fill="#b2182b" rx="2"/> <text x="335" y="258" fill="white" class="value">0.00</text>
+  <rect x="400" y="56" width="30" height="13" fill="#2166ac" rx="2"/> <text x="415" y="66" fill="white" class="value">1.00</text>
+  <rect x="480" y="248" width="30" height="13" fill="#b2182b" rx="2"/> <text x="495" y="258" fill="white" class="value">0.00</text>
+  
+  <!-- Bars - Operations & Algebraic (row 4) -->
+  <rect x="90" y="93" width="30" height="13" fill="#67a9cf" rx="2"/> <text x="105" y="103" fill="white" class="value">0.79</text>
+  <rect x="150" y="228" width="30" height="13" fill="#f4a582" rx="2"/> <text x="165" y="238" fill="black" class="value">0.12</text>
+  <rect x="240" y="93" width="30" height="13" fill="#67a9cf" rx="2"/> <text x="255" y="103" fill="white" class="value">0.79</text>
+  <rect x="320" y="93" width="30" height="13" fill="#67a9cf" rx="2"/> <text x="335" y="103" fill="white" class="value">0.79</text>
+  <rect x="400" y="221" width="30" height="13" fill="#f4a582" rx="2"/> <text x="415" y="231" fill="black" class="value">0.17</text>
+  <rect x="480" y="228" width="30" height="13" fill="#f4a582" rx="2"/> <text x="495" y="238" fill="black" class="value">0.12</text>
+  <text x="105" y="320" class="label" text-anchor="middle" font-size="8">O&amp;ALG</text>
+  
+  <!-- Legend -->
+  <rect x="400" y="320" width="12" height="10" fill="#2166ac"/> <text x="418" y="328" class="label">High (retained)</text>
+  <rect x="480" y="320" width="12" height="10" fill="#b2182b"/> <text x="498" y="328" class="label">Low (forgotten)</text>
+</svg>

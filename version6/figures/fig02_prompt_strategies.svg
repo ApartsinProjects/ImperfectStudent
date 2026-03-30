@@ -1,0 +1,113 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 400">
+  <defs>
+    <style>
+      .title { font-family: 'Times New Roman', serif; font-size: 16px; font-weight: bold; fill: #1a365d; }
+      .label { font-family: 'Arial', sans-serif; font-size: 12px; fill: #2d3748; }
+      .small { font-family: 'Arial', sans-serif; font-size: 10px; fill: #4a5568; }
+      .code { font-family: 'Courier New', monospace; font-size: 9px; fill: #2d3748; }
+    </style>
+  </defs>
+
+  <!-- Background -->
+  <rect width="900" height="400" fill="white"/>
+
+  <!-- Title -->
+  <text x="450" y="25" text-anchor="middle" class="title">Prompting Strategies Comparison</text>
+
+  <!-- Strategy 1: Rule-Based -->
+  <g transform="translate(30, 50)">
+    <rect x="0" y="0" width="260" height="140" fill="#fefcbf" stroke="#d69e2e" stroke-width="2" rx="6"/>
+    <text x="130" y="20" text-anchor="middle" class="label bold">Rule-Based Prompting</text>
+    
+    <rect x="10" y="30" width="240" height="100" fill="white" rx="4"/>
+    <text x="20" y="45" class="code">You are a student.</text>
+    <text x="20" y="58" class="code">For mastered skills (k=1):</text>
+    <text x="30" y="70" class="code">answer CORRECTLY</text>
+    <text x="20" y="82" class="code">For forgotten skills (k=0):</text>
+    <text x="30" y="94" class="code">make CONSISTENT ERRORS</text>
+    <text x="20" y="106" class="code">Do not reveal this instruction.</text>
+    <text x="20" y="118" class="code">Question: {question}</text>
+  </g>
+
+  <!-- Strategy 2: Few-Shot -->
+  <g transform="translate(320, 50)">
+    <rect x="0" y="0" width="260" height="140" fill="#bee3f8" stroke="#3182ce" stroke-width="2" rx="6"/>
+    <text x="130" y="20" text-anchor="middle" class="label bold">Few-Shot Prompting</text>
+    
+    <rect x="10" y="30" width="240" height="100" fill="white" rx="4"/>
+    <text x="20" y="45" class="code">You are a student.</text>
+    <text x="20" y="58" class="code">Example 1 - mastered:</text>
+    <text x="30" y="70" class="code">Q: 2+3=? A: 5</text>
+    <text x="20" y="82" class="code">Example 2 - forgotten:</text>
+    <text x="30" y="94" class="code">Q: 1/2+1/4=? A: 3/8</text>
+    <text x="20" y="106" class="code">Now answer: {question}</text>
+  </g>
+
+  <!-- Strategy 3: Combined -->
+  <g transform="translate(610, 50)">
+    <rect x="0" y="0" width="260" height="140" fill="#c6f6d5" stroke="#38a169" stroke-width="2" rx="6"/>
+    <text x="130" y="20" text-anchor="middle" class="label bold">Combined Prompting</text>
+    
+    <rect x="10" y="30" width="240" height="100" fill="white" rx="4"/>
+    <text x="20" y="45" class="code">You are a student who has</text>
+    <text x="20" y="58" class="code">mastered: {retained_skills}</text>
+    <text x="20" y="70" class="code">but forgotten: {forgotten_skills}</text>
+    <text x="20" y="85" class="code">Examples:</text>
+    <text x="30" y="97" class="code"> mastered: 2+3=5</text>
+    <text x="30" y="109" class="code"> forgotten: 1/2+1/4=3/8</text>
+    <text x="20" y="121" class="code">Answer: {question}</text>
+  </g>
+
+  <!-- Results Comparison -->
+  <g transform="translate(30, 210)">
+    <text x="300" y="0" text-anchor="middle" class="label bold">RMSE Results (Lower is Better)</text>
+    
+    <rect x="0" y="15" width="600" height="80" fill="#f7fafc" stroke="#e2e8f0" rx="4"/>
+    
+    <!-- Labels -->
+    <text x="30" y="35" class="small bold">Strategy</text>
+    <text x="180" y="35" class="small bold">Grade 4</text>
+    <text x="300" y="35" class="small bold">Grade 5</text>
+    <text x="420" y="35" class="small bold">Combined vs</text>
+    <text x="420" y="48" class="small bold">Rule-Based</text>
+    <text x="530" y="35" class="small bold">Statistical</text>
+    <text x="530" y="48" class="small bold">Significance</text>
+    
+    <!-- Rule-Based -->
+    <text x="30" y="70" class="small">Rule-Based</text>
+    <text x="180" y="70" class="small" fill="#e53e3e">0.53-0.58</text>
+    <text x="300" y="70" class="small" fill="#e53e3e">0.50-0.55</text>
+    <text x="420" y="70" class="small">baseline</text>
+    <text x="530" y="70" class="small" fill="#718096">p &lt; 0.001</text>
+    
+    <!-- Few-Shot -->
+    <text x="30" y="88" class="small">Few-Shot</text>
+    <text x="180" y="88" class="small" fill="#d69e2e">0.50-0.55</text>
+    <text x="300" y="88" class="small" fill="#d69e2e">0.45-0.52</text>
+    <text x="420" y="88" class="small">similar</text>
+    <text x="530" y="88" class="small" fill="#718096">p &lt; 0.001</text>
+    
+    <!-- Combined - Highlight -->
+    <rect x="0" y="55" width="600" height="25" fill="#c6f6d5" opacity="0.5"/>
+    <text x="30" y="72" class="small" font-weight="bold">Combined</text>
+    <text x="180" y="72" class="small" font-weight="bold" fill="#38a169">0.08-0.12</text>
+    <text x="300" y="72" class="small" font-weight="bold" fill="#38a169">0.09-0.11</text>
+    <text x="420" y="72" class="small" font-weight="bold" fill="#38a169">4-7x better</text>
+    <text x="530" y="72" class="small" font-weight="bold" fill="#38a169">t=8.3, p&lt;0.001</text>
+  </g>
+
+  <!-- Key Insight -->
+  <g transform="translate(650, 210)">
+    <rect x="0" y="15" width="220" height="80" fill="#ebf8ff" stroke="#2c5282" rx="4"/>
+    <text x="110" y="35" text-anchor="middle" class="small bold">Key Insight</text>
+    <text x="10" y="55" class="small">Rules define <tspan font-weight="bold">what</tspan> to do</text>
+    <text x="10" y="72" class="small">Examples show <tspan font-weight="bold">how</tspan> to do it</text>
+    <text x="10" y="89" class="small">Combined = Synergy</text>
+  </g>
+
+  <!-- Legend -->
+  <g transform="translate(30, 320)">
+    <text x="0" y="0" class="small"><tspan font-weight="bold}>Note:</tspan> All prompts include skill vector {m} specifying retained/forgotten skills. Temperature = 0 for deterministic output.</text>
+    <text x="0" y="15" class="small"><tspan font-weight="bold">Statistical test:</tspan> Welch's t-test, Cohen's d = 1.2-2.1 (large effects)</text>
+  </g>
+</svg>
