@@ -438,9 +438,51 @@
                 page-break-inside: avoid;
             }
         }
+        
+        /* Download button */
+        .download-btn {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            background: var(--primary);
+            color: white;
+            padding: 0.5rem 0.75rem;
+            border-radius: 6px;
+            font-family: var(--font-sans);
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            transition: all 0.2s ease;
+            z-index: 1000;
+        }
+        
+        .download-btn:hover {
+            background: var(--primary-light);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        
+        .download-btn svg {
+            width: 14px;
+            height: 14px;
+        }
     </style>
 </head>
 <body>
+
+<!-- Download Button -->
+<a href="ImperfectStudent.docx" class="download-btn" title="Download as Word document">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+        <polyline points="7 10 12 15 17 10"></polyline>
+        <line x1="12" y1="15" x2="12" y2="3"></line>
+    </svg>
+    Word
+</a>
 
 <!-- Title Page -->
 <div class="title-page">
