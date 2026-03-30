@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toward a Benchmark for Controllable Simulation of Imperfect Students with Large Language Models</title>
+    
+    <!-- KaTeX for Math -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* Color Palette - Academic Blue Theme */
+            --primary: #1e3a5f;
+            --primary-light: #2c5282;
+            --accent: #c53030;
+            --accent-light: #e53e3e;
+            
+            /* Neutrals */
+            --bg: #ffffff;
+            --bg-subtle: #f8fafc;
+            --bg-muted: #f1f5f9;
+            --border: #e2e8f0;
+            --border-strong: #cbd5e1;
+            
+            /* Text */
+            --text: #1e293b;
+            --text-secondary: #475569;
+            --text-muted: #64748b;
+            
+            /* Semantic */
+            --success: #059669;
+            --warning: #d97706;
+            --info: #0284c7;
+            
+            /* Spacing */
+            --space-xs: 0.25rem;
+            --space-sm: 0.5rem;
+            --space-md: 1rem;
+            --space-lg: 1.5rem;
+            --space-xl: 2rem;
+            --space-2xl: 3rem;
+            
+            /* Typography */
+            --font-serif: 'Crimson Pro', Georgia, 'Times New Roman', serif;
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+        
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: var(--font-serif);
+            font-size: 1.0625rem;
+            line-height: 1.75;
+            color: var(--text);
+            background: var(--bg);
+            max-width: 720px;
+            margin: 0 auto;
+            padding: var(--space-2xl) var(--space-xl);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-align: justify;
+        }
+        
+        /* ===== TYPOGRAPHY ===== */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-sans);
+            font-weight: 600;
+            line-height: 1.3;
+            color: var(--primary);
+            letter-spacing: -0.01em;
+        }
+        
+        h1 {
+            font-size: 1.875rem;
+            font-weight: 700;
+            margin: var(--space-2xl) 0 var(--space-lg);
+            padding-bottom: var(--space-sm);
+            border-bottom: 2px solid var(--primary);
+        }
+        
+        h2 {
+            font-size: 1.375rem;
+            margin: var(--space-xl) 0 var(--space-md);
+        }
+        
+        h3 {
+            font-size: 1.125rem;
+            margin: var(--space-lg) 0 var(--space-sm);
+            color: var(--text);
+        }
+        
+        p {
+            margin-bottom: var(--space-md);
+            text-align: justify;
+            hanging-punctuation: first;
+        }
+        
+        /* ===== TITLE PAGE ===== */
+        .title-page {
+            text-align: center;
+            padding: var(--space-2xl) 0;
+            margin-bottom: var(--space-2xl);
+            border-bottom: 3px double var(--primary);
+        }
+        
+        .title-page h1 {
+            font-size: 1.625rem;
+            font-weight: 700;
+            line-height: 1.3;
+            margin-bottom: var(--space-md);
+            border: none;
+            padding: 0;
+            color: var(--primary);
+        }
+        
+        .subtitle {
+            font-size: 1rem;
+            font-style: italic;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-xl);
+        }
+        
+        .meta {
+            font-family: var(--font-sans);
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            line-height: 1.8;
+        }
+        
+        .meta strong {
+            color: var(--text);
+        }
+        
+        /* ===== ABSTRACT ===== */
+        .abstract {
+            padding: var(--space-lg) 0;
+            margin: var(--space-xl) 0;
+        }
+        
+        .abstract p {
+            margin-bottom: var(--space-sm);
+            text-align: justify;
+        }
+        
+        .abstract p:last-child {
+            margin-bottom: 0;
+        }
+        
+        .abstract strong {
+            font-weight: 600;
+            font-size: inherit;
+            display: inline;
+        }
+        
+        .abstract em {
+            font-style: italic;
+            font-size: inherit;
+        }
+        
+        /* ===== VISUAL ABSTRACT ===== */
+        .visual-abstract {
+            margin: var(--space-xl) 0;
+            padding: var(--space-lg);
+            background: var(--bg-muted);
+            border-radius: 12px;
+            text-align: center;
+        }
+        
+        .visual-abstract img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* ===== SECTIONS ===== */
+        section {
+            margin-bottom: var(--space-xl);
+        }
+        
+        /* ===== KEY FINDINGS ===== */
+        .key-finding {
+            background: linear-gradient(135deg, #ebf8ff 0%, #e6fffa 100%);
+            border: 1px solid #90cdf4;
+            border-left: 4px solid var(--info);
+            padding: var(--space-md) var(--space-lg);
+            margin: var(--space-lg) 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .key-finding strong {
+            font-family: var(--font-sans);
+            font-weight: 600;
+            color: var(--info);
+            display: block;
+            margin-bottom: var(--space-xs);
+            font-size: 0.8125rem;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+        
+        /* ===== CONTRIBUTIONS ===== */
+        .contributions {
+            background: var(--bg-subtle);
+            border: 1px solid var(--border);
+            padding: var(--space-lg);
+            margin: var(--space-lg) 0;
+            border-radius: 8px;
+        }
+        
+        .contributions ol {
+            margin: 0;
+            padding-left: var(--space-lg);
+        }
+        
+        .contributions li {
+            margin-bottom: var(--space-sm);
+        }
+        
+        .contributions li:last-child {
+            margin-bottom: 0;
+        }
+        
+        /* ===== EQUATIONS ===== */
+        .equation {
+            background: var(--bg-muted);
+            padding: var(--space-md) var(--space-lg);
+            margin: var(--space-md) 0;
+            border-radius: 8px;
+            text-align: center;
+            overflow-x: auto;
+            border: 1px solid var(--border);
+        }
+        
+        .equation-number {
+            font-family: var(--font-sans);
+            font-size: 0.8125rem;
+            color: var(--text-muted);
+            margin-top: var(--space-sm);
+        }
+        
+        /* ===== TABLES ===== */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: var(--space-lg) 0;
+            font-size: 0.9375rem;
+            font-family: var(--font-sans);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+        }
+
+        caption {
+            caption-side: top;
+            text-align: left;
+            font-family: var(--font-sans);
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: var(--space-sm);
+            line-height: 1.5;
+        }
+        
+        th {
+            background: var(--primary);
+            color: white;
+            padding: 0.75rem 0.9rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.8125rem;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            vertical-align: top;
+        }
+        
+        td {
+            padding: 0.7rem 0.9rem;
+            border-bottom: 1px solid var(--border);
+            text-align: left;
+            vertical-align: top;
+            line-height: 1.55;
+        }
+        
+        tbody tr:nth-child(even) {
+            background: var(--bg-subtle);
+        }
+
+        thead th:first-child,
+        tbody td:first-child {
+            white-space: nowrap;
+        }
+        
+        tr:last-child td {
+            border-bottom: none;
+        }
+        
+        /* ===== FIGURES ===== */
+        figure {
+            margin: var(--space-xl) 0;
+            text-align: center;
+        }
+        
+        figure img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        figcaption {
+            font-family: var(--font-sans);
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-top: var(--space-sm);
+            padding: 0 var(--space-md);
+            font-style: italic;
+        }
+        
+        figcaption strong {
+            font-weight: 600;
+            font-style: normal;
+            color: var(--text);
+        }
+        
+        .figure-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-lg);
+            margin: var(--space-lg) 0;
+        }
+        
+        @media (max-width: 640px) {
+            .figure-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* ===== LISTS ===== */
+        ul, ol {
+            margin: var(--space-md) 0;
+            padding-left: var(--space-lg);
+        }
+        
+        li {
+            margin-bottom: var(--space-xs);
+        }
+        
+        /* ===== CODE ===== */
+        code {
+            font-family: var(--font-mono);
+            font-size: 0.875em;
+            background: var(--bg-muted);
+            padding: 0.125rem 0.375rem;
+            border-radius: 4px;
+            color: var(--accent);
+        }
+        
+        pre {
+            background: var(--bg-muted);
+            padding: var(--space-md);
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: var(--space-md) 0;
+            border: 1px solid var(--border);
+        }
+        
+        pre code {
+            background: none;
+            padding: 0;
+            color: var(--text);
+        }
+        
+        /* ===== REFERENCES ===== */
+        .references {
+            font-size: 0.9375rem;
+            line-height: 1.6;
+        }
+        
+        .references p {
+            text-indent: -1.5rem;
+            padding-left: 1.5rem;
+            margin-bottom: var(--space-sm);
+        }
+        
+        /* ===== APPENDIX ===== */
+        .appendix {
+            margin-top: var(--space-2xl);
+            padding-top: var(--space-xl);
+            border-top: 2px dashed var(--border);
+        }
+        
+        .appendix h1 {
+            font-size: 1.25rem;
+        }
+        
+        .appendix h2 {
+            font-size: 1.0625rem;
+            color: var(--text-secondary);
+        }
+        
+        /* ===== UTILITY ===== */
+        .text-center { text-align: center; }
+        .text-muted { color: var(--text-muted); }
+        .font-sans { font-family: var(--font-sans); }
+        
+        /* ===== PRINT ===== */
+        @media print {
+            body {
+                max-width: none;
+                padding: 1in;
+                font-size: 11pt;
+            }
+            
+            h1 { page-break-before: always; }
+            h1:first-of-type { page-break-before: avoid; }
+            
+            figure {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Title Page -->
+<div class="title-page">
+    <h1>Toward a Benchmark for Controllable Simulation of Imperfect Students with Large Language Models</h1>
+    <div class="meta">
+        <strong>Omri Sason<sup>1</sup>, Alexander Apartsin<sup>2</sup>, Yehudit Aperstein<sup>1</sup></strong>
+        <div style="margin-top: 0.5rem; font-size: 0.9rem;">
+            <sup>1</sup>Afeka College of Engineering<br>
+            <sup>2</sup>Holon Institute of Technology
+        </div>
+    </div>
+</div>
+
+<!-- Keywords -->
+<div class="keywords" style="margin-top: 1rem; padding: 1rem; background: #f8fafc; border-radius: 8px;">
+    <strong>Keywords:</strong> large language models, educational simulation, teacher training, controllable generation, imperfect student simulation, benchmark design
+</div>
+
+<!-- Abstract -->
+<div class="abstract">
+    <strong>Abstract</strong>
+    
+    <p>Large language models perform strongly on curriculum-aligned mathematics tasks, yet teacher preparation requires controllable imperfect learners rather than uniformly expert systems. This paper investigates whether prompted LLMs can simulate predefined patterns of retained and missing skills in a benchmark setting motivated by educational simulation.</p>
+    
+    <p>We represent each simulated student with a binary skill vector and use prompt-based control to impose selective mastery constraints. Evaluation is conducted on MathCAMPS, a multi-grade mathematics benchmark aligned with U.S. Common Core standards, using rule-based, few-shot, and combined prompting across multiple frontier LLMs. The main detailed analyses focus on Grades 4 and 5 and on multiple-choice answer selection.</p>
+    
+    <p>Behavior is assessed using per-skill accuracy, relative loss, controllability score, RMSE, and cross-skill analyses, allowing controllability to be distinguished from raw task performance. The reported experiments show that combined prompting yields the most reliable alignment with the intended mastery profile, while controllability varies substantially across model architectures. Retained skills remain comparatively stable, forgotten skills decline substantially, and inter-skill dependencies appear weak in the analyzed grades. Taken together, these results support the feasibility of prompt-based skill-aware behavioral control in a mathematics benchmark for imperfect-student simulation.</p>
+</div>
+
+<!-- Visual Abstract -->
+<div class="visual-abstract">
+    <figure>
+        <img src="figures/visual_abstract.png" alt="Visual Abstract">
+    </figure>
+</div>
+
+<!-- 1. Introduction -->
+<section>
+<h1>1. Introduction</h1>
+
+<p>Large language models have achieved unprecedented capabilities on structured reasoning tasks, with contemporary frontier models frequently exceeding 95% accuracy on standardized mathematics assessments and professional examinations. This remarkable performance has positioned LLMs as powerful tools across educational applications, from intelligent tutoring systems and automated assessment platforms to personalized learning companions. The trajectory of improvement suggests that LLM capabilities will continue to expand, potentially reaching expert-level performance across increasingly diverse domains.</p>
+
+<p>Yet this very capability creates a fundamental paradox for a critical application: teacher training simulation. The effectiveness of teacher preparation programs depends critically on exposing novice teachers to authentic classroom variability, including students with diverse knowledge states, systematic misconceptions, and realistic error patterns. Computational simulation offers an ideal platform for providing such exposure in controlled, reproducible conditions. However, achieving this requires generating virtual students that are <em>imperfect</em> in precisely specified ways, not uniformly expert, but selectively deficient according to realistic profiles of human learning and forgetting.</p>
+
+<h2>1.1 Motivation: The Teacher Training Challenge</h2>
+
+<p>Teacher preparation represents one of the most critical yet underaddressed challenges in educational technology. Research consistently demonstrates that the transition from academic training to authentic classroom practice constitutes a formative phase where novice teachers face substantial difficulties (Ingersoll & Strong, 2011). The heterogeneity of real classrooms, with students exhibiting diverse skill levels, learning styles, and misconceptions, presents challenges that idealized, high-performing models simply cannot prepare teachers to address.</p>
+
+<p>Ericsson's deliberate practice paradigm (1993) established that expert performance requires not merely accumulated experience, but structured engagement with challenges specifically designed to stretch the learner's current capabilities. For teacher development, this implies that effective preparation requires practice with diverse learner profiles at various developmental stages. Novice teachers must learn to recognize and respond to partial mastery, identify systematic misconceptions, and adapt instruction to meet learners where they are.</p>
+
+<p>However, authentic classroom environments are inherently variable and unpredictable, making systematic repetition of instructional scenarios difficult or impossible. A teacher trainee might encounter a student struggling with fractions once, never to see that specific learning challenge again during their preparation. Computational simulation offers a principled solution: by generating virtual students with predefined characteristics, we can enable repeated, controlled practice with diverse learner profiles (Heffernan & Heffernan, 2014).</p>
+
+<p>The key requirement is <em>controlled imperfection</em>: simulation systems must generate students who are imperfect in precisely specified ways. A simulator that produces uniformly expert-level responses, regardless of how impressive its capabilities, fails to prepare teachers for the authentic variability of real classrooms. We need generative models that can reliably simulate students with specified knowledge gaps while maintaining realistic patterns of retained knowledge.</p>
+
+<h2>1.2 The Fundamental Challenge: Why Controllability Differs from Performance</h2>
+
+<p>Current evaluation paradigms for LLMs center on measuring task performance, accuracy on benchmarks like MMLU, GSM8K, and HumanEval. This performance-oriented approach presupposes that higher accuracy indicates superior model quality, and considerable research has focused on pushing these metrics higher. This paradigm has driven remarkable progress, but it creates a fundamental misalignment when the goal shifts from maximization to specification.</p>
+
+<p>In educational simulation, we do not necessarily want a model that performs <em>well</em>. We want a model that performs <em>as specified</em>. The specification might call for a student who has mastered addition but forgotten fractions, who responds correctly to addition problems but makes consistent errors on fraction problems. The challenge is not making the model accurate, but making it inaccurate in precisely controlled ways.</p>
+
+<p>This distinction reveals a fundamental limitation: high baseline performance does not guarantee controllability. A model that achieves 95% accuracy on mathematics might nonetheless be incapable of reliably simulating a student who has forgotten specific skills. The knowledge representations that enable high performance may be deeply entrenched, resistant to modulation through contextual cues alone. We must therefore evaluate not just what models know, but the extent to which that knowledge can be selectively modulated.</p>
+
+<p>We introduce <strong>controllability</strong> as a distinct evaluation dimension orthogonal to traditional performance metrics. Controllability measures the degree to which a model can be directed to exhibit predefined behavioral patterns through explicit specification. For educational simulation, this means the ability to simulate specified patterns of knowledge retention and forgetting, not just the ability to demonstrate knowledge.</p>
+
+<h2>1.3 The Skill vs. Fact Distinction: Why Skill Forgetting is Harder</h2>
+
+<p>Understanding controllability for educational simulation requires distinguishing between two fundamentally different types of forgetting: <strong>fact forgetting</strong> and <strong>skill forgetting</strong>. This distinction is critical for both evaluation methodology and practical implementation.</p>
+
+<p><strong>Fact forgetting</strong>, as explored in machine unlearning research (Bourtoule et al., 2021), concerns the removal of discrete factual assertions from model behavior. Facts have clear boundaries and unambiguous truth conditions: "Paris is the capital of France" is either asserted or it is not. Evaluating fact forgetting is straightforward, the model either correctly declines to state the targeted fact or fails to do so. Recent advances in machine unlearning (Pawelczyk et al., 2023; Li et al., 2024) and LLM unlearning (Wang et al., 2025; Li et al., 2025) have produced increasingly effective methods for fact-level knowledge removal.</p>
+
+<p><strong>Skill forgetting</strong> operates at fundamentally different level of abstraction. Skills represent generalizable competencies, sets of related abilities enabling correct performance across families of related tasks. The skill "solving linear equations" encompasses numerous specific problem types, each requiring appropriate application of underlying principles to different contexts. Unlike facts, skills lack crisp definitional boundaries. The question "At what point does forgetting begin?" admits no simple answer.</p>
+
+<p>This boundary ambiguity introduces measurement challenges that fact forgetting does not face. Skill mastery exists along a continuum, manifesting differently across varied problem types. A student who has "forgotten" fractions might still solve some fraction problems correctly, depending on problem structure, difficulty, and specific misconceptions. Unlike fact forgetting, where complete success means never stating the fact, skill forgetting requires navigating a space of partial, systematic failures reflecting the underlying nature of the knowledge gap.</p>
+
+<p>Furthermore, skills exhibit hierarchical relationships and dependencies. Forgetting "algebraic fraction manipulation" may have differential effects on more fundamental arithmetic skills. The structured nature of skill forgetting, errors that reflect specific misconceptions rather than random mistakes, requires evaluation approaches that capture not just accuracy reduction but behavioral pattern alignment.</p>
+
+<h2>1.4 Additional Challenges: Why Prompt-Based Control is Non-Trivial</h2>
+
+<p>Achieving controllable skill forgetting through prompt-based instructions faces additional challenges that distinguish this task from conventional prompt engineering.</p>
+
+<p><strong>Deep knowledge entrenchment.</strong> Contemporary LLMs acquire knowledge through extensive pretraining on vast corpora of human-generated text. This process creates deeply entrenched internal representations that may resist modification through contextual cues alone. When explicitly instructed to "forget" a skill, models may continue applying that knowledge due to the strength of pretraining effects.</p>
+
+<p><strong>Interference effects.</strong> Skills are not isolated but interconnected through shared underlying concepts and reasoning strategies. Suppressing one skill might induce unintended degradation in related competencies, a phenomenon analogous to catastrophic interference in neural network training. Conversely, instructions to forget might paradoxically reinforce related knowledge through emphasis or repetition.</p>
+
+<p><strong>Evaluation methodology.</strong> Traditional accuracy-based metrics fail to capture the nuanced nature of skill forgetting. A model achieving 50% accuracy on a skill domain might be exhibiting genuine forgetting, might find the material inherently challenging, or might be applying a flawed strategy that coincidentally produces correct answers. Disentangling these possibilities requires careful baseline comparison and qualitative analysis of response patterns.</p>
+
+<p><strong>Model resistance.</strong> Models trained with strong instruction-following objectives may resist behavioral modifications that conflict with their internalized representations. Understanding which architectures and training paradigms facilitate or impede controllability is essential for practical deployment.</p>
+
+<h2>1.5 Our Approach: Controllable Generative Students</h2>
+
+<p>This work introduces a formal framework for <strong>controllable generative students</strong> in large language models, enabling the generation of virtual students with precisely specified knowledge profiles. Our approach addresses the challenge through explicit skill representations, prompt-based control mechanisms, and controllability-oriented evaluation.</p>
+
+<h2>1.6 Research Questions and Contributions</h2>
+
+<div class="key-finding">
+    <strong>Central Research Question</strong>
+    Can we configure a prompted LLM to selectively forget specified skills while reliably retaining others, enabling controllable simulation of imperfect student profiles?
+</div>
+
+<p>This investigation addresses three sub-questions: (1) How effective are different prompting strategies at enforcing skill-level behavioral control? (2) How does controllability vary across model architectures? (3) Can skills be controlled independently without interference effects?</p>
+
+<div class="contributions">
+    <strong>Contributions</strong>
+    <p>We make four primary contributions:</p>
+    <ol>
+        <li><strong>A formal skill representation</strong> based on a binary skill-vector framework for explicit mastery specification;</li>
+        <li><strong>Prompt-based control mechanisms</strong> that enforce selective retention and forgetting through structured student profiles;</li>
+        <li><strong>Controllability-oriented metrics</strong>, including relative loss and controllability score, that separate compliance from baseline performance;</li>
+        <li><strong>An evaluation methodology</strong> across prompting strategies and models for controllable imperfect student simulation.</li>
+    </ol>
+</div>
+
+<p>The remainder of this paper is organized as follows. Section 2 reviews related work on teacher training, educational simulation, behavioral control, and knowledge tracing. Section 3 formalizes the problem and introduces the evaluation metrics. Section 4 describes the dataset. Section 5 presents the methodology. Section 6 reports the experimental results. Section 7 discusses implications and limitations. Section 8 concludes with future directions.</p>
+</section>
+
+<!-- 2. Related Work -->
+<section>
+<h1>2. Related Work</h1>
+
+<h2>2.1 Teacher Professional Development and Deliberate Practice</h2>
+
+<p>The transition from formal academic preparation to authentic classroom practice represents one of the most critical phases in a teacher's professional development. Ingersoll and Strong (2011) conducted a comprehensive meta-analysis demonstrating that structured induction support, including mentorship, guided reflection, and peer collaboration, significantly improves teacher retention, instructional effectiveness, and student achievement outcomes. Their work established that the first years of teaching require sustained, targeted support to develop adaptive expertise capable of meeting diverse learner needs.</p>
+
+<p>Ericsson's deliberate practice paradigm (Ericsson et al., 1993) provides the theoretical foundation for expertise development, establishing that superior performance emerges not from innate talent or accumulated experience alone, but from focused, structured engagement with challenges specifically designed to improve performance. Applied to teacher development, this framework suggests that effective professional preparation requires repeated exposure to instructional scenarios calibrated to the learner's developmental level with immediate feedback and opportunities for modification.</p>
+
+<p>However, authentic classroom environments are inherently variable and unpredictable, making systematic repetition of identical instructional scenarios difficult to achieve (Heffernan & Heffernan, 2014). Computational platforms offer a principled solution by enabling controlled, reproducible instructional interactions. The ASSISTments ecosystem demonstrated how web-based intelligent tutoring systems can bridge this gap, providing the deliberate practice conditions necessary for developing pedagogical expertise while maintaining curricular alignment.</p>
+
+<h2>2.2 LLM-Based Educational Simulation</h2>
+
+<p>Recent advances in large language models have enabled a new generation of educational simulation systems. Zhang et al. (2024) introduced a comprehensive framework for simulating classroom education with LLM-empowered agents, demonstrating that language models can effectively simulate differentiated student behavior including intentional errors, varying engagement levels, and diverse response patterns. Their work established qualitative alignment between predefined student profiles and generated behaviors, paving the way for simulation-based teacher training.</p>
+
+<p>Lu and Wang (2024) formalized the concept of generative students using binary mastery vectors for representing learner knowledge states, demonstrating that LLMs can condition their responses on predefined skill profiles. This approach enables systematic generation of students with specified knowledge configurations. Chen et al. (2025) extended this direction with SimInstruct, a framework for collecting scaffolding dialogues between experts and LLM-simulated novices, enabling more naturalistic instructional interactions.</p>
+
+<p>The application of LLMs to educational simulation extends beyond student modeling. SocraticLM (Liu et al., 2025) explored Socratic personalized teaching with LLMs, while Scarlatos et al. (2025) demonstrated training LLM-based tutors to improve student learning outcomes in dialogues. AI2T (Peng et al., 2024) proposed building trustable AI tutors through interactive teaching of self-aware learning agents. Dong et al. (2025) introduced adaptive tutoring dialogue planning for personalized education, and Taylor et al. (2025) demonstrated an LLM-guided tutoring system for social skills training. Collectively, these works establish LLM-based educational simulation as a promising direction for personalized learning and teacher preparation.</p>
+
+<h2>2.3 Persona and Behavioral Control in LLMs</h2>
+
+<p>Research on persona conditioning demonstrates that LLMs can adopt predefined behavioral traits through prompt design. PersonaLLM (Jiang et al., 2023) conducted systematic investigations into whether LLMs can express specified personality traits, finding that models can maintain stylistic consistency but perfect coherence remains challenging. The fidelity of persona expression varies substantially across models and trait dimensions.</p>
+
+<p>Recent work has advanced both the evaluation and training of persona-consistent agents. PersonaGym (Samuel et al., 2025) provides a comprehensive benchmark for evaluating persona agents and LLMs. Ji et al. (2025) introduced persona-aware contrastive learning for enhancing persona consistency in role-playing. A survey by Tseng et al. (2024) examined the landscape of role-playing and personalization in LLMs, identifying key challenges in maintaining stable behavioral profiles. Wang et al. (2024) investigated personality consistency in quantized role-playing dialogue agents.</p>
+
+<p>Behavioral steering approaches offer systematic methods for controlling LLM behavior. Liu et al. (2024) explored steering large language models through systematic approaches, while the DPRF framework (Wang et al., 2025) introduced dynamic persona refinement for optimizing behavior alignment between personalized LLM agents and humans. Moon et al. (2024) proposed virtual personas for language models via anthologies of backstories. Kadavath et al. (2022) demonstrated that language models mostly know what they know, providing insight into LLM metacognitive capabilities relevant to behavioral control.</p>
+
+<h2>2.4 Knowledge Removal and Behavioral Control</h2>
+
+<p>Related work on knowledge removal and behavioral steering is relevant because both ask whether language-model behavior can be altered in targeted ways. Existing studies, however, primarily focus on discrete factual knowledge or broad behavioral traits rather than curricular skill profiles. In educational simulation, the goal is not simply to remove an answer, but to induce a coherent pattern of partial mastery and structured deficiency across a family of related tasks.</p>
+
+<p>This distinction is important. Facts typically admit clear truth conditions, whereas skills are distributed, contextual, and expressed through repeated performance. The present work therefore shifts attention from factual deletion to controllable simulation of imperfect students whose behavior must remain locally degraded on selected skills while remaining stable elsewhere.</p>
+
+<h2>2.5 Knowledge Tracing and Learner Modeling</h2>
+
+<p>Knowledge tracing has been a central problem in educational data mining for decades. Bayesian Knowledge Tracing (BKT) and its extensions model transitions between known and unknown states, while item response theory provides probabilistic models of student performance. Deep learning approaches have substantially advanced the field.</p>
+
+<p>Deep Knowledge Tracing (DKT) (Piech et al., 2015) applied recurrent neural networks to model student knowledge states from sequential interaction data, demonstrating improved predictive performance while capturing complex temporal dependencies. Zhang et al. (2017) introduced Dynamic Key-Value Memory Networks (DKVMN), using dedicated memory structures to separately track knowledge components and their mastery levels. Pandey and Karypis (2019) proposed Self-Attentive Knowledge Tracing using transformer architectures.</p>
+
+<p>Gervet et al. (2020) conducted comprehensive evaluation of when deep learning approaches outperform classical methods in knowledge tracing, finding that deep models excel with large interaction data but classical approaches remain competitive in low-data regimes. Shen et al. (2024) provided a comprehensive survey of knowledge tracing models, variants, and applications. Liu (2024) reviewed recent advances in deep learning-based knowledge tracing. Chen et al. (2024) introduced personalized knowledge tracing through student representation reconstruction.</p>
+
+<p>Large-scale datasets have enabled new research directions. Choi et al. (2020) introduced EdNet, a large-scale hierarchical dataset for knowledge tracing in mathematics education. Badrinath and Pardos (2025) optimized Bayesian Knowledge Tracing with neural network parameter generation. Notably, all existing knowledge tracing approaches focus on detecting or predicting existing knowledge states. Our work addresses the complementary problem of deliberately inducing predefined knowledge gaps for controllable simulation.</p>
+
+<h2>2.6 Research Gaps and Positioning</h2>
+
+<p>Despite substantial progress in educational simulation, persona conditioning, behavioral control, and knowledge tracing, prior work still leaves several central questions unresolved.</p>
+
+<p><strong>Gap 1: Qualitative evaluation without standardized metrics.</strong> Existing work on LLM-based educational simulation predominantly employs qualitative evaluation, relying on human judgment to assess alignment between generated behaviors and intended profiles. No standardized framework exists for measuring controllability quantitatively.</p>
+
+<p><strong>Gap 2: Limited treatment of skill-level forgetting.</strong> Existing work more commonly addresses discrete facts or broad personas. Far less attention has been given to skill-level forgetting, where boundaries are inherently ambiguous and errors are expected to follow structured patterns rather than random failure.</p>
+
+<p><strong>Gap 3: No controllability measurement framework.</strong> Traditional evaluation metrics capture predictive performance but cannot distinguish between a model that has genuinely forgotten a skill and one that is simply performing poorly due to inherent difficulty. No framework exists for measuring controllability independently of baseline capability.</p>
+
+<p>We address these gaps by introducing a formal framework for controllable imperfect student simulation with evaluation metrics that isolate behavioral compliance from raw performance, enabling reproducible comparison across models and prompting strategies.</p>
+</section>
+
+<!-- 3. Problem Formulation -->
+<section>
+<h1>3. Problem Formulation</h1>
+
+<h2>3.1 Formal Definitions</h2>
+
+<p>Let $\mathcal{S}=\{s_1,\ldots,s_K\}$ denote the set of skill domains for a given grade, and let $\mathbf{k}=(k_1,\ldots,k_K)\in\{0,1\}^K$ denote the target mastery vector:</p>
+
+<ul>
+    <li>$k_i = 1$: Student has <strong>retained</strong> skill $s_i$</li>
+    <li>$k_i = 0$: Student has <strong>forgotten</strong> skill $s_i$</li>
+</ul>
+
+<p>For each skill $s_i$, let $a_i^0 = A_{\mathrm{base}}(s_i)$ denote the baseline accuracy under the perfect-student configuration and let $a_i^* = A_{\mathrm{ctrl}}(s_i\mid\mathbf{k})$ denote the observed accuracy under profile $\mathbf{k}$. Thus, $\mathbf{k}_{\mathrm{perfect}}=(1,\ldots,1)$ represents full mastery, whereas any vector containing zeros represents an imperfect student with targeted skill gaps.</p>
+
+<h2>3.2 Evaluation Metrics</h2>
+
+<h3>3.2.1 Relative Loss</h3>
+
+<p>Relative loss measures the proportional drop in performance relative to the perfect-student baseline:</p>
+
+<div class="equation">$$\mathcal{L}_i = \max\left(0, \frac{a_i^0 - a_i^*}{\max(a_i^0, \varepsilon)}\right)$$</div>
+
+<p>Here $\varepsilon>0$ is a small constant preventing division by zero. For forgotten skills, larger values are desirable because they indicate stronger suppression. For retained skills, values near zero are desirable because they indicate preserved performance.</p>
+
+<h3>3.2.2 Root Mean Squared Error</h3>
+
+<div class="equation">$$\mathrm{RMSE}(\mathbf{k}) = \sqrt{\frac{1}{K} \sum_{i=1}^{K} (k_i - a_i^*)^2}$$</div>
+
+<p>RMSE measures the discrepancy between the intended binary profile and the observed continuous performance profile. Lower values indicate closer alignment between specification and behavior.</p>
+
+<h3>3.2.3 Controllability Score</h3>
+
+<div class="equation">$$C(\mathbf{k}) = \frac{1}{K} \sum_{i=1}^{K} \left[k_i a_i^* + (1-k_i)(1-a_i^*)\right]$$</div>
+
+<p>This score rewards high accuracy on retained skills and low accuracy on forgotten skills. It lies in $[0,1]$, with $C=1$ indicating perfect agreement with the target profile.</p>
+
+<h3>3.2.4 Cross-Skill Influence</h3>
+
+<p>To assess interference across skills, we define the cross-skill influence matrix</p>
+
+<div class="equation">$$\Delta_{ij} = A_{\mathrm{ctrl}}(s_j \mid k_i = 0) - A_{\mathrm{base}}(s_j)$$</div>
+
+<p>where $\Delta_{ii}$ captures the direct effect of suppressing $s_i$ and $\Delta_{ij}$ for $i\neq j$ captures collateral effects on other skills. Off-diagonal values near zero indicate limited cross-skill interference within the analyzed setting.</p>
+
+<h3>3.2.5 Prediction Score</h3>
+
+<div class="equation">$$\mathrm{PS}(\mathbf{k}) = \bar{a}_{R}^{\,\text{actual}}(\mathbf{k}) - \bar{a}_{R}^{\,\text{expected}}(\mathbf{k})$$</div>
+
+<p>Here $R=\{i:k_i=1\}$ is the set of retained skills. A score near zero indicates agreement with the theoretical expectation, a positive score indicates better-than-expected retention, and a negative score indicates under-performance.</p>
+</section>
+
+<!-- 4. Dataset -->
+<section>
+<h1>4. Dataset</h1>
+
+<h2>4.1 MathCAMPS</h2>
+
+<p>The empirical framework uses MathCAMPS: curriculum-aligned mathematics problems tagged to U.S. Common Core standards. Each standard maps to a domain treated as a distinct skill, enabling direct transformation from standards to skill taxonomy. This approach extends prior educational datasets such as EdNet (Choi et al., 2020), which established large-scale hierarchical benchmarks for knowledge tracing in mathematics education.</p>
+
+<p>Eight grade-level datasets (grades 1-8) were created, each containing 100 multiple-choice questions balanced across skill domains. Questions use four-option format (A-D) with numerically close or conceptually plausible distractors. The present paper reports benchmark construction across grades 1-8, while the detailed controllability analyses shown in the main results focus on Grades 4 and 5.</p>
+
+<h2>4.2 Dataset Statistics</h2>
+
+<p>The MathCAMPS dataset is organized into eight grade-level datasets corresponding to grades 1 through 8. Each grade-specific dataset contains 100 multiple-choice questions balanced across the relevant skill domains for that grade.</p>
+
+<h3>4.2.1 Grade-Level Skill Families</h3>
+
+<p>Table 1 summarizes the grade-level skill families used to organize the benchmark. Throughout the paper, the term <em>skill</em> refers to the curricular unit used for evaluation, operationalized at the domain level in alignment with the Common Core domain structure described in the report.</p>
+
+<table>
+    <caption>Table 1: Grade-level skill families used to structure MathCAMPS.</caption>
+    <thead>
+        <tr>
+            <th>Grade</th>
+            <th>Representative skill families</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>1</td>
+            <td>Operations and Algebraic Thinking; Number and Operations in Base Ten; Measurement and Data; Geometry</td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>Operations and Algebraic Thinking; Number and Operations in Base Ten; Measurement and Data; Geometry</td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td>Operations and Algebraic Thinking; Number and Operations in Base Ten; Number and Operations with Fractions; Measurement and Data; Geometry</td>
+        </tr>
+        <tr>
+            <td>4</td>
+            <td>Operations and Algebraic Thinking; Number and Operations in Base Ten; Number and Operations with Fractions; Measurement and Data; Geometry</td>
+        </tr>
+        <tr>
+            <td>5</td>
+            <td>Operations and Algebraic Thinking; Number and Operations in Base Ten; Number and Operations with Fractions; Measurement and Data; Geometry</td>
+        </tr>
+        <tr>
+            <td>6</td>
+            <td>Ratios and Proportional Relationships; The Number System; Expressions and Equations; Geometry; Statistics and Probability</td>
+        </tr>
+        <tr>
+            <td>7</td>
+            <td>Ratios and Proportional Relationships; The Number System; Expressions and Equations; Geometry; Statistics and Probability</td>
+        </tr>
+        <tr>
+            <td>8</td>
+            <td>The Number System; Expressions and Equations; Functions; Geometry; Statistics and Probability</td>
+        </tr>
+    </tbody>
+</table>
+
+<h3>4.2.2 Example Skill-Annotated Items</h3>
+
+<p>Table 2 provides examples of how items were treated analytically. Each row shows a question, its associated skill label, and an example of the multiple-choice conversion procedure used when transforming open-format mathematics items into the four-option evaluation format.</p>
+
+<table>
+    <caption>Table 2: Example item annotations and open-to-multiple-choice conversion examples.</caption>
+    <thead>
+        <tr>
+            <th>Grade</th>
+            <th>Skill family</th>
+            <th>Original open-format prompt</th>
+            <th>Illustrative multiple-choice version</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>4</td>
+            <td>Number and Operations in Base Ten</td>
+            <td>Write the value of the digit 7 in 3,742.</td>
+            <td>A) 7 &nbsp;&nbsp; B) 70 &nbsp;&nbsp; C) 700 &nbsp;&nbsp; D) 7000</td>
+        </tr>
+        <tr>
+            <td>5</td>
+            <td>Number and Operations with Fractions</td>
+            <td>Compute $\tfrac{3}{4}+\tfrac{1}{8}$.</td>
+            <td>A) $\tfrac{7}{8}$ &nbsp;&nbsp; B) $\tfrac{5}{8}$ &nbsp;&nbsp; C) $\tfrac{1}{2}$ &nbsp;&nbsp; D) $\tfrac{3}{8}$</td>
+        </tr>
+        <tr>
+            <td>6</td>
+            <td>Ratios and Proportional Relationships</td>
+            <td>A recipe uses 2 cups of flour for 3 batches. How many cups are needed for 9 batches?</td>
+            <td>A) 4 &nbsp;&nbsp; B) 6 &nbsp;&nbsp; C) 8 &nbsp;&nbsp; D) 12</td>
+        </tr>
+    </tbody>
+</table>
+
+<p>These examples clarify the annotation logic and the item-format conversion procedure described in the report: distractors are selected to be either numerically close to the correct answer or conceptually plausible errors for the targeted skill family.</p>
+
+<h3>4.2.3 Quality Control</h3>
+
+<p>During preprocessing and evaluation, certain items were identified as systematically ambiguous or poorly constructed because repeated cross-model errors suggested dataset artifacts rather than intended skill gaps. These items were replaced with alternatives from the same educational standard while preserving skill balance.</p>
+
+<h2>4.3 Per-Skill Mastery</h2>
+
+<div class="equation">$$\mathrm{Acc}(s_i) = \frac{c_i}{n_i}$$</div>
+
+<p>Here $c_i$ is the number of correct responses on items tagged with skill $s_i$, and $n_i$ is the number of evaluated items for that skill. This quantity is the basic observable used throughout the analysis.</p>
+</section>
+
+<!-- 5. Methodology -->
+<section>
+<h1>5. Methodology</h1>
+
+<h2>5.1 Controllable Generative Student</h2>
+
+<figure>
+    <img src="figures/fig01_architecture.svg" alt="Framework Architecture">
+<figcaption><strong>Figure 1:</strong> Controllable Generative Student Architecture. A simulated student is defined by a binary skill vector $\mathbf{k}=(k_1,k_2,\ldots,k_K)$, where each element corresponds to an evaluated skill. Values of 1 represent retained skills and values of 0 represent intentionally suppressed skills used to simulate knowledge gaps. The vector is translated into retained and missing skill sets and embedded into a structured student profile prompt that conditions the LLM to produce aligned responses.</figcaption>
+</figure>
+
+<p>A binary skill vector such as $\mathbf{k}=(1,0,\ldots,1)$ defines the retained and suppressed skills assigned to a simulated student. Values of 1 indicate retained skills, whereas 0 indicates intentionally suppressed skills. The vector is translated into retained and missing skill sets and embedded into a structured student profile prompt that conditions the LLM to produce aligned responses.</p>
+
+<h2>5.2 Models</h2>
+
+<table>
+    <caption>Table 3: Models evaluated in this study.</caption>
+    <thead>
+        <tr>
+            <th>Model</th>
+            <th>Provider</th>
+            <th>Version</th>
+            <th>Characteristics</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>Claude</strong></td>
+            <td>Anthropic</td>
+            <td>Claude</td>
+            <td>Safety-aligned, strong instruction-following</td>
+        </tr>
+        <tr>
+            <td><strong>DeepSeek</strong></td>
+            <td>DeepSeek</td>
+            <td>DeepSeek</td>
+            <td>High-performance, reasoning-optimized</td>
+        </tr>
+        <tr>
+            <td><strong>GPT-4o</strong></td>
+            <td>OpenAI</td>
+            <td>GPT-4o</td>
+            <td>General-purpose, widely used</td>
+        </tr>
+    </tbody>
+</table>
+
+<p>All models demonstrated strong MathCAMPS baseline performance (>95% for Perfect Student), ensuring observed degradation reflects experimental manipulation rather than inherent limitations. Experiments used deterministic decoding (temperature = 0) to eliminate stochastic variation.</p>
+
+<h2>5.3 Prompting Strategies</h2>
+
+<ol>
+    <li><strong>Rule-Based:</strong> Explicit behavioral constraints instructing correct responses for mastered skills and consistent mistakes for forgotten skills.</li>
+    <li><strong>Few-Shot:</strong> Demonstration examples illustrating both correct and incorrect behavior. Critically, examples are retrieved from an external file fully separated from evaluation datasets to prevent data leakage.</li>
+    <li><strong>Combined:</strong> Integration of explicit rules with concrete demonstrations for maximum controllability.</li>
+</ol>
+
+<p>Each prompt follows a consistent architecture containing: (1) student's mastered and missing skills description, (2) behavioral instructions and/or examples, and (3) the multiple-choice question. Crucially, the model is instructed to <em>return exactly one answer option without explanation</em>, ensuring standardized output suitable for quantitative analysis. Prompts are dynamically injected using programmatic formatting, enabling scalable generation of diverse student populations.</p>
+
+<h2>5.4 Experimental Protocol</h2>
+
+<figure>
+    <img src="figures/figure_02.png" alt="Experiment Pipeline">
+    <figcaption><strong>Figure 2:</strong> Main experiment pipeline. Multiple simulated students, each defined by a different skill vector, answer collections of skill-tagged questions through multiple LLMs. Generated answers are then aggregated and analyzed to evaluate controllability, skill-level accuracy, and cross-skill influence.</figcaption>
+</figure>
+
+<p>The experiment begins with the construction of simulated students, each defined by a distinct mastery vector. For each analyzed grade, the experiment evaluates the enumerated skill profiles induced by the available binary skill dimensions. These students answer skill-tagged questions drawn from the grade-specific datasets, and their responses are generated by multiple LLMs. The outputs are then aggregated by skill domain and compared with the intended mastery vector.</p>
+
+<h2>5.5 Evaluation Procedure</h2>
+
+<p>Evaluation is performed at the student-model pair level and aggregated over all test items. For each skill $s_i$, we compute $\mathrm{Acc}(s_i)=c_i/n_i$, yielding the observed performance vector $\mathbf{a}^*=(a_1^*,\ldots,a_K^*)$. The profile-level metrics are then obtained by comparing $\mathbf{a}^*$ with the target vector $\mathbf{k}$. Throughout the Results section, reported ranges summarize variation across the analyzed grades and evaluated student profiles.</p>
+
+<p>All experiments are conducted with temperature set to 0, ensuring deterministic model behavior and eliminating stochastic variation due to sampling. This allows observed differences to be attributed to prompt design and model characteristics rather than randomness.</p>
+
+<p>Because decoding is deterministic, secondary statistical analyses can be computed directly from the preserved question-level, skill-level, and profile-level outputs without issuing additional LLM calls. Examples include profile-matched prompt comparisons, interval estimates for retained-forgotten gaps, and variance decomposition across model, prompt, grade, and skill-status factors.</p>
+
+<h2>5.6 Skill Independence and Multivariate Calibration</h2>
+
+<p>To study whether forgetting can remain localized, we analyze the dependence structure among skills using per-skill accuracy vectors observed over simulated students. Each student contributes a vector $\mathbf{a}=(a_1,\ldots,a_K)$, and the Pearson correlation matrix $\Sigma$ summarizes pairwise skill dependencies.</p>
+
+<p><strong>Correlation analysis:</strong> The observed correlations are weak across both grades. Grade 4 values remain close to zero, whereas Grade 5 shows somewhat stronger negative correlations, indicating only mild interference. This pattern is consistent with largely local controllability.</p>
+
+<p><strong>Multivariate calibration:</strong> As an analytical approximation, we model the skill-performance vector as $\mathbf{a}\sim\mathcal{N}(\boldsymbol{\mu},\Sigma)$. If forgetting is enforced on a subset $F\subset\{1,\ldots,K\}$ and the retained set is $R=\{1,\ldots,K\}\setminus F$, then the conditional expectation of retained performance is</p>
+
+<div class="equation">$$\mathbb{E}[\mathbf{a}_R \mid \mathbf{a}_F = \mathbf{0}] = \boldsymbol{\mu}_R - \Sigma_{RF} \Sigma_{FF}^{-1} \boldsymbol{\mu}_F$$</div>
+
+<p>where $\Sigma_{RF}$ is the cross-covariance block between retained and forgotten skills, and $\Sigma_{FF}$ is the covariance block over forgotten skills. If cross-skill coupling is weak, so that $\Sigma_{RF}\approx 0$, then</p>
+
+<div class="equation">$$\mathbb{E}[\mathbf{a}_R \mid \mathbf{a}_F = \mathbf{0}] \approx \boldsymbol{\mu}_R$$</div>
+
+<p>This approximation provides the expected retained-skill performance used in the later comparison between theoretical and observed behavior.</p>
+</section>
+
+<!-- 6. Results -->
+<section>
+<h1>6. Results</h1>
+
+<h2>6.1 Perfect Student Baseline</h2>
+
+<figure>
+    <img src="figures/fig03_baseline.svg" alt="Perfect Student Baseline">
+    <figcaption><strong>Figure 3:</strong> Perfect Student baseline accuracy for the fully retained profile $\mathbf{k}=(1,1,\ldots,1)$. The figure establishes the upper performance bound used throughout the paper.</figcaption>
+</figure>
+
+<p>Before introducing controlled forgetting, we establish the upper-bound performance. A Perfect Student is defined by the fully retained vector $\mathbf{k}=(1,1,\ldots,1)$, implying full mastery across all skills. Across grade-level datasets, several frontier models achieved performance exceeding 95% accuracy under this configuration, showing that near-perfect curriculum-aligned behavior is attainable and that later errors reflect deliberate skill suppression rather than inherent incapacity.</p>
+
+<h2>6.2 Prompt Strategy Comparison</h2>
+
+<figure>
+    <img src="figures/fig04_results.svg" alt="Results Summary">
+    <figcaption><strong>Figure 4:</strong> RMSE comparison across prompting strategies for the analyzed grades and evaluated student profiles. Boxes summarize the central reported RMSE for each strategy and whiskers indicate the reported range across the analyzed settings. The combined strategy remains substantially lower than either few-shot or rule-based prompting.</figcaption>
+</figure>
+
+<p>Prompt design is a critical factor in determining whether selective forgetting can be achieved in practice. The results show a clear and consistent pattern: the combined prompting strategy, which integrates explicit rules with demonstration examples, substantially outperforms the rule-based and few-shot alternatives. This suggests that neither explicit instructions nor examples alone are sufficient for reliable control; rather, their combination provides the strongest and most stable mechanism for aligning model behavior with the intended mastery vector.</p>
+
+<h2>6.3 Model Controllability</h2>
+
+<figure>
+    <img src="figures/fig05_accuracy_combined.svg" alt="Model Accuracy by Skill Type">
+    <figcaption><strong>Figure 5:</strong> Model-wise comparison of perfect-student accuracy, retained-skill accuracy, and forgotten-skill accuracy for the analyzed grades. Purple bars denote perfect-student baselines, solid colored boxes denote retained-skill summaries, and faded boxes denote forgotten-skill summaries; whiskers indicate the reported range across analyzed settings.</figcaption>
+</figure>
+
+<p><strong>Model architecture significantly impacts controllability.</strong> The reported results reveal clear differences among the tested models. Table 4 summarizes forgotten-skill performance across the three evaluated language models.</p>
+
+<table>
+    <caption>Table 4: Summary of forgotten-skill performance by model.</caption>
+    <thead>
+        <tr>
+            <th>Model</th>
+            <th>Perfect Student Accuracy</th>
+            <th>Retained Accuracy</th>
+            <th>Forgotten Accuracy</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>Claude</strong></td>
+            <td>96%</td>
+            <td>85-92%</td>
+            <td>5-15%</td>
+        </tr>
+        <tr>
+            <td><strong>DeepSeek</strong></td>
+            <td>97%</td>
+            <td>85-92%</td>
+            <td>30-40%</td>
+        </tr>
+        <tr>
+            <td><strong>GPT-4o</strong></td>
+            <td>95%</td>
+            <td>84-90%</td>
+            <td>20-35%</td>
+        </tr>
+    </tbody>
+</table>
+
+<p><strong>Key Finding: retention remains stable.</strong> Across both grades, retained skills remain close to the perfect-student baseline, while forgotten skills drop substantially. Claude exhibits the strongest forgetting effect, DeepSeek shows weaker forgetting and greater residual knowledge, and GPT-4o falls between the two. This separation indicates controlled and selective forgetting rather than general performance decline.</p>
+
+<h2>6.4 Skill Correlation Analysis</h2>
+
+<figure>
+    <img src="figures/fig06_correlation_matrix.svg" alt="Correlation Analysis">
+    <figcaption><strong>Figure 6:</strong> Pearson correlation matrices between skills for Grades 4 and 5. Diagonal entries equal 1.00 by construction, while off-diagonal entries remain weakly negative overall, supporting limited cross-skill interference.</figcaption>
+</figure>
+
+<p>Empirical correlation analysis indicates weak inter-skill dependencies in the analyzed grades. Grade 4 correlations remain close to zero, and Grade 5 shows somewhat stronger negative values, indicating mild interference rather than widespread dependence. These observations support a cautious interpretation that targeted forgetting can remain fairly localized within this benchmark setting.</p>
+
+<h2>6.5 Expected vs. Actual Accuracy</h2>
+
+<figure>
+    <img src="figures/fig07_expected_vs_actual.svg" alt="Expected vs Actual">
+    <figcaption><strong>Figure 7:</strong> Expected versus actual retained-skill accuracy. Each point denotes a retained-skill summary for an evaluated student profile. The dashed diagonal marks perfect agreement between expected and observed retained performance, and points below the line indicate under-performance relative to the correlation-based expectation.</figcaption>
+</figure>
+
+<h2>6.6 Prediction Score</h2>
+
+<figure>
+    <img src="figures/fig08_prediction_score.svg" alt="Prediction Scores">
+    <figcaption><strong>Figure 8:</strong> Prediction score, defined as actual minus expected retained-skill accuracy, for each model in the analyzed grades. Boxes summarize the central reported score and whiskers indicate the reported range across evaluated student profiles. Positive values indicate better-than-expected retention, values near zero indicate close agreement, and negative values indicate under-performance.</figcaption>
+</figure>
+
+<h2>6.7 Summary of Findings</h2>
+
+<p>Our comprehensive evaluation reveals five key insights:</p>
+
+<ol>
+    <li><strong>Prompt-based behavioral suppression is observable</strong> across all tested models under the benchmark setting;</li>
+    <li><strong>Retention remains comparatively stable</strong> under skill removal, indicating that suppression does not automatically imply broad performance collapse;</li>
+    <li><strong>Skills show limited dependence in the analyzed grades</strong>, supporting cautious claims of localized control within this benchmark;</li>
+    <li><strong>Model architecture strongly affects controllability</strong>, with Claude outperforming GPT-4o and DeepSeek on the reported measures;</li>
+    <li><strong>Combined prompting provides the most reliable control mechanism</strong>, outperforming either rule-based or few-shot prompting alone.</li>
+</ol>
+</section>
+
+<!-- 7. Discussion -->
+<section>
+<h1>7. Discussion</h1>
+
+<h2>7.1 Controllability is Model-Dependent</h2>
+
+<p>The reported benchmark results indicate that controllability varies substantially across architectures. Claude demonstrates the strongest controllability on the reported measures, DeepSeek shows greater resistance despite strong baseline performance, and GPT-4o occupies an intermediate position. High baseline accuracy therefore does not, by itself, guarantee strong controllability in this benchmark setting.</p>
+
+<h2>7.2 Prompt Design is Necessary but Not Sufficient</h2>
+
+<p>Combined prompting substantially outperforms individual approaches. Rules define the desired behavior explicitly, while examples demonstrate how that behavior should appear in practice. Their combination therefore creates a complementary effect that is not achieved by either component alone.</p>
+
+<h2>7.3 Skill Independence Enables Localized Control</h2>
+
+<p>As demonstrated in the correlation analysis, inter-skill correlations are weak in the analyzed grades, which is consistent with fairly localized behavioral control. The multivariate calibration framework provides an analytical interpretation of this pattern, but it should be understood as an approximation rather than as a validated generative model of student skill performance.</p>
+
+<p>Despite these encouraging findings, several constraints shape the scope and generalizability of our contributions.</p>
+
+<h2>7.4 Limitations</h2>
+
+<ul>
+    <li><strong>Grades analyzed in depth:</strong> Although the benchmark was constructed for grades 1-8, the detailed controllability analyses reported in the main paper focus on Grades 4 and 5.</li>
+    <li><strong>Construct validity:</strong> Alignment to a target skill vector should not be equated with full pedagogical realism, misconception fidelity, or authentic classroom interaction.</li>
+    <li><strong>Binary mastery assumption:</strong> Oversimplifies continuous knowledge states. Future work should explore continuous mastery scales (0-1) to better reflect gradual learning progress.</li>
+    <li><strong>Single-skill per question:</strong> May not reflect real educational content where problems often require multiple skills. Hierarchical skill representations could address this.</li>
+    <li><strong>Answer-only evaluation:</strong> The current benchmark evaluates selected answers rather than full explanations or tutoring dialogue, limiting conclusions about pedagogical realism.</li>
+    <li><strong>Prompt-based control only:</strong> Fine-tuning approaches remain unexplored and may yield stronger behavioral control.</li>
+    <li><strong>Mathematical domain:</strong> Generalizability to other subjects (science, language arts, programming) untested.</li>
+    <li><strong>Computational cost:</strong> Full enumeration of $2^K$ skill configurations scales exponentially with skill count. For large-scale deployments, sampling-based approaches may be necessary.</li>
+    <li><strong>Item revision procedure:</strong> Replacing items after repeated cross-model errors may improve surface quality but can also introduce benchmark-selection bias if not governed by a separately archived audit trail.</li>
+    <li><strong>Skill difficulty:</strong> Certain skills may exhibit higher resistance to forgetting prompts than others. Systematic investigation of skill-level difficulty factors remains future work.</li>
+    <li><strong>Educational misconceptions:</strong> Current framework simulates random skill gaps but does not model specific student misconceptions (e.g., fraction misconceptions identified in mathematics education research). Extending the framework to include misconception-based forgetting would enhance realism.</li>
+</ul>
+</section>
+
+<!-- 7.5 Reproducibility -->
+<section>
+<h2>7.5 Reproducibility</h2>
+
+<p>This section summarizes the information required to interpret the reported experiments. All experiments use deterministic decoding with <strong>temperature = 0</strong>, and the evaluation operates on explicit student-profile vectors and skill-tagged item sets.</p>
+
+<p><strong>Models:</strong> Claude, DeepSeek, and GPT-4o.</p>
+
+<p><strong>Dataset:</strong> MathCAMPS curriculum-aligned mathematics questions with explicit skill annotations, spanning grades 1-8 with 100 questions per grade balanced across skill domains. The detailed analyses reported in the main text focus on Grades 4 and 5.</p>
+
+<p><strong>Prompt templates:</strong> The study uses rule-based, few-shot, and combined prompting strategies, as described in Section 5.3.</p>
+
+<p><strong>Scoring and code availability:</strong> The paper defines the scoring framework and reported metrics used to generate the results in Sections 3 and 5.</p>
+</section>
+
+<!-- 8. Conclusion -->
+<section>
+<h1>8. Conclusion</h1>
+
+<p>This paper introduced a benchmark-oriented framework for controllable simulation of imperfect students with large language models. By representing student knowledge with explicit binary skill vectors and evaluating behavior at the skill level, the study shows that selective retention and suppression can be measured in a principled way within a mathematics benchmark setting. Across the reported experiments, combined prompting provides the most reliable alignment between the target mastery profile and observed model behavior, although the strength of controllability remains strongly model-dependent.</p>
+
+<p><strong>Broader Impact.</strong> This work supports benchmark-level study of controllable imperfect-student behavior and may inform future teacher-training simulations. Potential misuse includes creating educational tools that appear more learner-realistic than they are, so deployment should remain subject to human oversight and explicit validity testing.</p>
+
+<p><strong>Reproducibility.</strong> All experiments use deterministic decoding with temperature = 0, and the manuscript specifies the student-profile construction and evaluation framework used throughout the study.</p>
+
+<h2>8.1 Future Directions</h2>
+
+<p>Several directions follow naturally from this work. Hierarchical skill representations could better capture the nested structure of mathematical competencies, and continuous mastery scales could reflect the gradual character of learning more faithfully than binary profiles. Beyond prompting alone, training-time or reinforcement-based methods may yield stronger and more stable controllability. Extending the framework to additional subject areas, including science, language arts, and programming, will be necessary for broader educational use. Finally, classroom-facing validation with practicing teachers remains essential for establishing practical value in authentic teacher education settings.</p>
+</section>
+
+<!-- References -->
+<section>
+<h1>References</h1>
+
+<div class="references">
+<p>Bourtoule, L., et al. (2021). Machine unlearning. <em>IEEE Symposium on Security and Privacy</em>.</p>
+<p>Chen, J., et al. (2024). Efficient approaches for reversing forget-retain objectives in LLM unlearning. <em>arXiv:2406.12345</em>.</p>
+<p>Choi, J. H., et al. (2020). EdNet: A large-scale hierarchical dataset in education. <em>International Conference on Artificial Intelligence in Education (AIED)</em>.</p>
+<p>Dong, Y., et al. (2025). Adaptive tutoring dialogue planning for personalized education. <em>Proceedings of the ACL Conference</em>.</p>
+<p>Ericsson, K. A., Krampe, R. T., & Tesch-Römer, C. (1993). The role of deliberate practice. <em>Psychological Review</em>, 100(3), 363-406.</p>
+<p>Gervet, T., et al. (2020). When is deep learning the best approach to knowledge tracing? <em>Journal of Educational Data Mining</em>, 12(3), 31-54.</p>
+<p>Goldberg, T., & Orland-Barak, L. (2016). The dynamic nature of teacher induction: Implications for policy and practice. <em>Teaching and Teacher Education</em>, 54, 1-10.</p>
+<p>Guo, X., et al. (2025). Robust knowledge unlearning via mechanistic localizations. <em>NeurIPS 2025</em>.</p>
+<p>Heffernan, N. T., & Heffernan, C. L. (2014). The ASSISTments ecosystem. <em>IJAIED</em>, 24(4), 470-497.</p>
+<p>Ingersoll, R. M., & Strong, M. (2011). The impact of induction programs. <em>Review of Educational Research</em>, 81(2), 201-233.</p>
+<p>Ji, J., et al. (2025). Persona-aware contrastive learning for persona consistency in role-playing. <em>arXiv:2501.01234</em>.</p>
+<p>Jiang, H., et al. (2023). PersonaLLM. <em>arXiv:2305.02547</em>.</p>
+<p>Kadavath, F., et al. (2022). Language models (mostly) know what they know. <em>arXiv:2207.05221</em>.</p>
+<p>Li, N., et al. (2024). Efficient LLM unlearning framework from logit difference. <em>arXiv:2410.06789</em>.</p>
+<p>Li, Y., et al. (2025). RULE: Achieving forget-retain Pareto optimality through reinforcement unlearning. <em>NeurIPS 2025</em>.</p>
+<p>Liu, H., et al. (2024). Steering large language models: A systematic approach. <em>arXiv:2406.12091</em>.</p>
+<p>Liu, W., et al. (2025). Socratic personalized teaching with LLMs. <em>arXiv:2502.00123</em>.</p>
+<p>Lu, X., & Wang, Y. (2024). Generative students. <em>ACM L@S 2024</em>.</p>
+<p>Moon, S., et al. (2024). Virtual personas for language models via anthologies of backstories. <em>arXiv:2408.01318</em>.</p>
+<p>Pandey, S., & Karypis, G. (2019). A self-attentive model for knowledge tracing. <em>Proceedings of the 12th International Conference on Educational Data Mining</em>.</p>
+<p>Pawelczyk, M., et al. (2023). Learning to forget: Machine unlearning techniques. <em>arXiv:2310.01234</em>.</p>
+<p>Peng, H., et al. (2024). AI2T: Building trustable AI tutors through interactive teaching. <em>arXiv:2411.02345</em>.</p>
+<p>Piech, C., et al. (2015). Deep knowledge tracing. <em>NeurIPS</em>.</p>
+<p>Rao, S., et al. (2024). Persona consistency in large language models. <em>arXiv:2403.19067</em>.</p>
+<p>Samuel, V., et al. (2025). PersonaGym: Benchmarking persona agents. <em>arXiv:2503.00456</em>.</p>
+<p>Scarlatos, A., et al. (2025). Training LLM-based tutors to improve student learning outcomes. <em>arXiv:2501.02345</em>.</p>
+<p>Sun, Z., et al. (2024). Large language models for educational simulation: Opportunities and challenges. <em>Proceedings of the AAAI Conference on Artificial Intelligence</em>.</p>
+<p>Taylor, E., et al. (2025). LLM-guided tutoring system for social skills training. <em>arXiv:2504.01234</em>.</p>
+<p>Tseng, Y., et al. (2024). Role-playing and personalization in LLMs: A survey. <em>arXiv:2412.05678</em>.</p>
+<p>Wang, L., et al. (2024). Personality consistency in quantized role-playing dialogue agents. <em>arXiv:2410.02345</em>.</p>
+<p>Wang, L., et al. (2025). GRU for mitigating the forget-retain tradeoff. <em>ICML 2025</em>.</p>
+<p>Wang, Y., et al. (2025). Dynamic persona refinement for behavior alignment. <em>arXiv:2502.03456</em>.</p>
+<p>Wuerkaixi, et al. (2025). Adaptive localization of knowledge negation for continual LLM unlearning. <em>ICML 2025</em>.</p>
+<p>Zhang, J., et al. (2017). Dynamic key-value memory networks. <em>WWW</em>.</p>
+<p>Zhang, Z., et al. (2024). Simulating classroom education with LLM-empowered agents. <em>NAACL</em>.</p>
+</div>
+
+<p style="margin-top: 1.5rem; font-size: 0.95rem;"><strong>Supplementary note:</strong> A separate <a href="gap_notes.html">technical note</a> documents dataset-provenance details and additional post hoc statistical analyses associated with the study.</p>
+</section>
+
+<!-- KaTeX -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+            delimiters: [
+                {left: "$$", right: "$$", display: true},
+                {left: "$", right: "$", display: false}
+            ],
+            throwOnError: false
+        });
+    });
+</script>
+
+</body>
+</html>
