@@ -1,0 +1,18 @@
+# Requirements for Fig2Data skill
+# Install with: pip install -r requirements.txt
+
+# Core dependencies
+opencv-python>=4.8.0
+opencv-python-headless>=4.8.0
+numpy>=1.24.0
+Pillow>=10.0.0
+
+# OCR (optional but recommended)
+easyocr>=1.7.0
+
+# Alternative OCR (requires Tesseract installed separately)
+# pytesseract>=0.3.10
+
+# For table extraction (optional)
+# img2table>=0.0.12
+# pymupdf>=1.19.0
