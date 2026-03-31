@@ -16,6 +16,7 @@ Extract tabular experimental data from images of charts, plots, and figures in r
 ### 1. EasyOCR
 - **Purpose**: Optical Character Recognition to extract text from images
 - **Install**: `pip install easyocr`
+- **Dependencies**: PyTorch (torch, torchvision)
 - **Usage**: 
   ```python
   import easyocr
@@ -55,11 +56,35 @@ Extract tabular experimental data from images of charts, plots, and figures in r
   width, height = img.size
   ```
 
-### 5. img2table
-- **Purpose**: Extract tables from images/PDFs
-- **Install**: `pip install img2table`
-- **Requires**: Tesseract OCR or AWS Textract
-- **Cons**: Not ideal for charts (designed for data tables)
+### 5. Scikit-image
+- **Purpose**: Advanced image processing
+- **Install**: `pip install scikit-image`
+- **Usage**: For edge detection, morphology, etc.
+
+### 6. Matplotlib
+- **Purpose**: Visualization and plotting
+- **Install**: `pip install matplotlib`
+- **Usage**: For debugging, visualizing detection results
+
+### 7. Plotly
+- **Purpose**: Interactive visualization
+- **Install**: `pip install plotly`
+- **Usage**: For creating interactive charts from extracted data
+
+### 8. ImageIO
+- **Purpose**: Image I/O operations
+- **Install**: `pip install imageio`
+- **Usage**: Reading/writing various image formats
+
+### 9. pdf2image
+- **Purpose**: Convert PDF pages to images
+- **Install**: `pip install pdf2image`
+- **Usage**: For extracting figures from PDF documents
+
+### 10. PyTorch (torch, torchvision)
+- **Purpose**: Deep learning backend for EasyOCR
+- **Install**: `pip install torch torchvision`
+- **Note**: Automatically installed as EasyOCR dependency
 
 ---
 
