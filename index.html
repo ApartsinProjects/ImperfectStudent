@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Deployment copy for GitHub Pages. Do not edit directly; sync from paper_v6_final.html. -->
+<!-- Source of truth manuscript HTML. Edit this file, then sync/copy to index.html for GitHub Pages. -->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -116,10 +116,32 @@
         
         /* ===== TITLE PAGE ===== */
         .title-page {
+            position: relative;
             text-align: center;
             padding: var(--space-2xl) 0;
             margin-bottom: var(--space-2xl);
             border-bottom: 3px double var(--primary);
+        }
+
+        .doc-download {
+            position: absolute;
+            top: 0;
+            right: 0;
+            font-family: var(--font-sans);
+            font-size: 0.8125rem;
+            font-weight: 600;
+            color: white;
+            background: var(--primary);
+            text-decoration: none;
+            padding: 0.6rem 0.9rem;
+            border-radius: 999px;
+            box-shadow: 0 6px 14px rgba(28, 61, 90, 0.18);
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .doc-download:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 18px rgba(28, 61, 90, 0.22);
         }
         
         .title-page h1 {
@@ -436,12 +458,21 @@
                 page-break-inside: avoid;
             }
         }
+
+        @media (max-width: 640px) {
+            .doc-download {
+                position: static;
+                display: inline-block;
+                margin-bottom: var(--space-lg);
+            }
+        }
     </style>
 </head>
 <body>
 
 <!-- Title Page -->
 <div class="title-page">
+    <a class="doc-download" href="ImperfectStudent_manuscript_v6.docx">Download MS Word Version</a>
     <h1>Toward a Benchmark for Controllable Simulation of Imperfect Students with Large Language Models</h1>
     <div class="meta">
         <strong>Omri Sason<sup>1</sup>, Alexander Apartsin<sup>2</sup>, Yehudit Aperstein<sup>1</sup></strong>
