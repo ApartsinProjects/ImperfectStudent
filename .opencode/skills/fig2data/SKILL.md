@@ -66,7 +66,12 @@ Extract tabular experimental data from images of charts, plots, and figures in r
 - **Install**: `pip install matplotlib`
 - **Usage**: For debugging, visualizing detection results
 
-### 7. Plotly
+### 7. Seaborn
+- **Purpose**: Statistical data visualization
+- **Install**: `pip install seaborn`
+- **Usage**: Creating publication-quality charts from extracted data
+
+### 8. Plotly
 - **Purpose**: Interactive visualization
 - **Install**: `pip install plotly`
 - **Usage**: For creating interactive charts from extracted data
