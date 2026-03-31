@@ -207,10 +207,10 @@ def build_reference_doc(output_path: Path, profile_name: str) -> None:
         image_caption,
         config["font_family"],
         config["caption_font_size"],
-        italic=False,
-        alignment=WD_ALIGN_PARAGRAPH.LEFT,
+        italic=True,
+        alignment=WD_ALIGN_PARAGRAPH.CENTER,
         line_spacing=1.0,
-        space_before=3,
+        space_before=4,
         space_after=6,
     )
 
@@ -219,10 +219,10 @@ def build_reference_doc(output_path: Path, profile_name: str) -> None:
         table_caption,
         config["font_family"],
         config["caption_font_size"],
-        italic=False,
-        alignment=WD_ALIGN_PARAGRAPH.LEFT,
+        italic=True,
+        alignment=WD_ALIGN_PARAGRAPH.CENTER,
         line_spacing=1.0,
-        space_before=6,
+        space_before=8,
         space_after=3,
         keep_with_next=True,
     )
@@ -243,9 +243,7 @@ def build_reference_doc(output_path: Path, profile_name: str) -> None:
         reference_entry,
         config["font_family"],
         config["reference_font_size"],
-        alignment=WD_ALIGN_PARAGRAPH.LEFT,
-        left_indent=Inches(0.24),
-        first_line_indent=Inches(-0.24),
+        alignment=WD_ALIGN_PARAGRAPH.JUSTIFY,
         line_spacing=1.0,
         space_after=2,
     )

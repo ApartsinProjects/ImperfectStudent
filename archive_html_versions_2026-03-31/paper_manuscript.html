@@ -390,8 +390,6 @@
         }
         
         .references p {
-            text-indent: -1.5rem;
-            padding-left: 1.5rem;
             margin: 0 0 0.6rem 0;
         }
 
@@ -853,6 +851,11 @@
 
 <h2>6.2 Experimental Protocol and Scope</h2>
 
+<figure>
+    <img src="figures/figure_02.png" alt="Experiment Pipeline">
+    <figcaption><strong>Figure 2:</strong> Main experiment pipeline. Multiple simulated students, each defined by a different skill vector, answer collections of skill-tagged questions through multiple LLMs. Generated answers are then aggregated and analyzed to evaluate controllability, skill-level accuracy, and cross-skill influence.</figcaption>
+</figure>
+
 <p>The experimental workflow has four stages. First, each model is evaluated in a perfect-student condition to establish that the benchmark is solvable without induced forgetting. Second, binary mastery vectors are injected into the prompt to define imperfect students with specific retained and missing skills. Third, the same profiles are tested under instruction-only, example-only, and hybrid prompting to measure how strongly prompt design affects controllability. Fourth, outputs are aggregated into profile-level and skill-level metrics, including RMSE to the target profile, retained-versus-forgotten performance, forgotten-skill heatmaps, and cross-skill correlation summaries.</p>
 
 <p>The benchmark construction spans grades 1-8, but the detailed controllability analysis reported here focuses on Grades 4 and 5. These grades provide a compact yet nontrivial testbed for exhaustive profile enumeration: Grade 4 supports a four-skill analysis, and Grade 5 supports a three-skill comparative analysis in the preserved results. This keeps the profile space small enough to inspect systematically while still testing whether forgetting can remain selective rather than globally degrading performance. The paper therefore reports an in-depth main-text analysis on these grades rather than claiming uniform evidence across the full benchmark.</p>
@@ -880,13 +883,13 @@
     <li><strong>S5.3</strong>: Operations &amp; Algebraic</li>
 </ul>
 
-<p>Across the two grades, the detailed analysis therefore covers 24 distinct target mastery profiles. Each profile corresponds to a different binary knowledge vector specifying which skills are retained and which are intentionally suppressed. The case-study visualization in Figure 5 shows six representative Grade-4 configurations for readability: the all-retained profile, the all-forgotten profile, and four mixed profiles that illustrate selective suppression patterns. The aggregate model comparisons and skill summaries, however, are computed over the full enumerated profile sets.</p>
+<p>Across the two grades, the detailed analysis therefore covers 24 distinct target mastery profiles. Each profile corresponds to a different binary knowledge vector specifying which skills are retained and which are intentionally suppressed. The case-study visualization in Figure 6 shows six representative Grade-4 configurations for readability: the all-retained profile, the all-forgotten profile, and four mixed profiles that illustrate selective suppression patterns. The aggregate model comparisons and skill summaries, however, are computed over the full enumerated profile sets.</p>
 
 <p>In the main result narrative, the hybrid condition receives the most attention because it is the only strategy that approaches the requested student profile reliably across both analyzed grades.</p>
 
 <p>Under exhaustive profile enumeration, the main two-grade hybrid comparison contains 16 Grade-4 profiles and 8 Grade-5 profiles. Evaluated across three models and 100 questions per grade, this corresponds to 7,200 model-question response events in the core comparison: $(16 \times 100 + 8 \times 100) \times 3 = 7{,}200$. This count refers only to the core hybrid analysis; the full study is larger once perfect-student baselines and prompt-strategy ablations are included.</p>
 
-<p>The figures in the Results section summarize this protocol at different levels. Figure 2 isolates prompt-design effects, Figures 3-4 establish the calibration story, Figure 5 shows selective control for representative profiles, Figure 6 compares suppression difficulty across skill families, and Figure 7 closes with the aggregate retained-versus-forgotten separation.</p>
+<p>The figures in the Results section summarize this protocol at different levels. Figure 3 isolates prompt-design effects, Figures 4-5 establish cross-skill calibration, Figure 6 shows selective control for representative profiles, Figure 7 compares suppression difficulty across skill families, and Figure 8 closes with the aggregate retained-versus-forgotten separation.</p>
 </section>
 
 <!-- 7. Results -->
@@ -899,7 +902,7 @@
 
 <figure>
     <img src="figures/fig03_prompt_rmse.png" alt="RMSE by prompt strategy for Grades 4 and 5">
-    <figcaption><strong>Figure 2:</strong> Prompting-strategy ablation for Grades 4 and 5. Hybrid prompting dramatically reduces RMSE relative to either instruction-only or example-only prompting, indicating that explicit constraints and demonstrations are both needed to realize the target mastery profile. The dashed line marks a chance-level error reference under a binary target profile.</figcaption>
+    <figcaption><strong>Figure 3:</strong> Prompting-strategy ablation for Grades 4 and 5. Hybrid prompting dramatically reduces RMSE relative to either instruction-only or example-only prompting, indicating that explicit constraints and demonstrations are both needed to realize the target mastery profile. The dashed line marks chance-level error under a binary target profile, included as a visual reference for poor alignment.</figcaption>
 </figure>
 
 <p>The pattern is consistent across both analyzed grades. The hybrid strategy reaches RMSE values of 0.08 in Grade 4 and 0.12 in Grade 5, whereas example-only and instruction-only prompting remain in the 0.46-0.59 range. Because RMSE measures the average mismatch between the requested binary mastery vector and the observed skill-accuracy profile, this gap means that hybrid prompting produces answers much closer to the intended retained-forgotten pattern. Prompt design is therefore not a cosmetic detail in this setting, but a first-order determinant of controllability.</p>
@@ -908,32 +911,32 @@
 
 <figure>
     <img src="figures/fig07_skill_correlation.png" alt="Skill correlation matrices for Grades 4 and 5">
-    <figcaption><strong>Figure 3:</strong> Skill-correlation matrices for the analyzed grades. Off-diagonal correlations remain weak, with Grade 4 clustered around -0.10 and Grade 5 ranging from -0.10 to -0.24. This supports the calibration assumption that targeted suppression can remain mostly localized rather than inducing broad failure across the skill set.</figcaption>
+    <figcaption><strong>Figure 4:</strong> Skill-correlation matrices for the analyzed grades. Off-diagonal correlations remain weak, with Grade 4 clustered around -0.10 and Grade 5 ranging from -0.10 to -0.24. This supports a cautious interpretation that targeted forgetting can remain mostly localized rather than inducing broad failure across the skill set.</figcaption>
 </figure>
 
 <p>We next ask whether the benchmark structure itself permits localized control. Figure 4 shows that cross-skill dependencies remain weak across both analyzed grades. The Grade-4 matrix is nearly uniform away from the diagonal, and even Grade 5 shows only mild negative coupling. In practical terms, the benchmark does not behave as if forgetting one skill automatically drags all other skills down with it. That said, the Grade-5 correlations are somewhat stronger than those in Grade 4, so the paper should frame independence as an empirical tendency in the analyzed setting, not as a guaranteed property of arbitrary skill taxonomies.</p>
 
 <figure>
     <img src="figures/fig08_prediction_score.png" alt="Prediction score summary across analyzed grades">
-    <figcaption><strong>Figure 4:</strong> Prediction score by model and grade, defined as actual minus expected retained-skill accuracy. Values near zero indicate close agreement with the calibration target, positive values indicate stronger-than-expected retained-skill preservation, and negative values indicate unintended degradation.</figcaption>
+    <figcaption><strong>Figure 5:</strong> Prediction score by model and grade. Higher values indicate stronger retained-skill preservation relative to the calibration target, whereas negative values indicate unintended degradation.</figcaption>
 </figure>
 
-<p>The calibration view summarizes the expected-versus-observed retained-skill comparison at the model level. Using the multivariate calibration procedure from Section 5.3, Figure 4 places the Grade-4 mean prediction score at +0.08 for Claude, +0.04 for DeepSeek, and -0.04 for GPT-4o. The Grade-5 panel is more favorable overall, with all three models moving into positive territory at +0.15 for Claude, +0.20 for DeepSeek, and +0.14 for GPT-4o. In concrete terms, positive values indicate that retained skills were preserved slightly better than the calibration model predicted after targeted forgetting, whereas the negative GPT-4o value in Grade 4 indicates retained-skill degradation beyond that expectation. Together, Figures 3 and 4 show that weak cross-skill coupling does not automatically guarantee faithful retained-skill preservation; models still differ substantially in how closely they realize the calibration target.</p>
+<p>The calibration view summarizes the expected-versus-observed retained-skill comparison at the model level. Figure 5 places the Grade-4 mean prediction score at +0.08 for Claude, +0.04 for DeepSeek, and -0.04 for GPT-4o. The Grade-5 panel is more favorable overall, with all three models moving into positive territory at +0.15 for Claude, +0.20 for DeepSeek, and +0.14 for GPT-4o. In concrete terms, positive values indicate that retained skills were preserved slightly better than the calibration model predicted after targeted forgetting, whereas the negative GPT-4o value in Grade 4 indicates retained-skill degradation beyond that expectation. Together, Figures 4 and 5 show that weak cross-skill coupling does not automatically guarantee faithful retained-skill preservation; models still differ substantially in how closely they realize the calibration target.</p>
 
 <h2>7.3 Profile-Level Selective Control</h2>
 
 <figure>
     <img src="figures/fig04_profile_case_study.png" alt="Claude Grade 4 profile-level controllability heatmap">
-    <figcaption><strong>Figure 5:</strong> Grade-4 case study for Claude showing requested target mastery (top strip) and observed skill accuracy (bottom heatmap) across six representative knowledge-vector configurations. Cells near 1.00 align with retained targets, whereas cells near 0.00 align with forgotten targets. The figure highlights that profile-level control is selective rather than globally degrading.</figcaption>
+    <figcaption><strong>Figure 6:</strong> Grade-4 case study for Claude showing requested target mastery (top strip) and observed skill accuracy (bottom heatmap) across six knowledge-vector configurations. Cells near 1.00 align with retained targets, whereas cells near 0.00 align with forgotten targets. The figure highlights that profile-level control is selective rather than globally degrading.</figcaption>
 </figure>
 
-<p>With the prompt strategy and calibration conditions established, Figure 5 makes the controllability phenomenon concrete at the profile level. Moving from the perfect profile to the all-forgotten profile collapses all four measured skills, while mixed profiles suppress only the intended dimensions. For example, the profile [1,0,0,1] preserves S4.1 (0.85) and S4.4 (0.79) while sharply reducing the two targeted intermediate skills. This is the clearest single-figure demonstration that the system is not merely becoming weaker overall; it is following the requested profile structure at the skill level.</p>
+<p>With the prompt strategy and calibration conditions established, Figure 6 makes the controllability phenomenon concrete at the profile level. Moving from the perfect profile to the all-forgotten profile collapses all four measured skills, while mixed profiles suppress only the intended dimensions. For example, the profile [1,0,0,1] preserves S4.1 (0.85) and S4.4 (0.79) while sharply reducing the two targeted intermediate skills. This is the clearest single-figure demonstration that the system is not merely becoming weaker overall; it is following structured instructions at the skill level.</p>
 
 <h2>7.4 Which Skills Resist Suppression?</h2>
 
 <figure>
     <img src="figures/fig06_forgotten_heatmap.png" alt="Forgotten skill suppression heatmaps for Grades 4 and 5">
-    <figcaption><strong>Figure 6:</strong> Forgotten-skill accuracy by model and domain. Lower values indicate stronger suppression when a skill is designated as missing in the target profile. Claude consistently occupies the lowest range, whereas DeepSeek retains substantial residual performance and GPT-4o shows a mixed pattern that depends on the skill family.</figcaption>
+    <figcaption><strong>Figure 7:</strong> Forgotten-skill accuracy by model and domain. Lower values indicate stronger suppression. Claude consistently occupies the lowest range, whereas DeepSeek retains substantial residual performance and GPT-4o shows a mixed pattern that depends on the skill family.</figcaption>
 </figure>
 
 <p>The domain-level view reveals where controllability succeeds and where it weakens. Claude is uniformly low across both grades, including a complete collapse to 0.00 on S4.3. DeepSeek remains substantially higher in every Grade-5 skill and on S4.2. GPT-4o is more uneven: it suppresses some domains strongly but remains relatively high on S4.3 (0.38) and S5.2 (0.31). These differences suggest that the controllability problem is shaped by both architecture and skill family rather than by a single global "obedience" factor.</p>
@@ -942,22 +945,22 @@
 
 <figure>
     <img src="figures/fig05_retained_vs_forgotten.png" alt="Retained versus forgotten performance by model and grade">
-    <figcaption><strong>Figure 7:</strong> Relative retained-skill and forgotten-skill performance by model for Grades 4 and 5. Values are normalized to each model's perfect-student baseline, and the dashed vertical reference marks 100% of that baseline. Larger gaps indicate stronger selective forgetting with limited collateral damage to retained skills.</figcaption>
+    <figcaption><strong>Figure 8:</strong> Relative retained-skill and forgotten-skill performance by model for Grades 4 and 5. Values are normalized to each model's perfect-student baseline, and the dashed vertical reference marks 100% of that baseline. Larger gaps indicate stronger selective forgetting with limited collateral damage to retained skills.</figcaption>
 </figure>
 
-<p>The final aggregate comparison brings the main practical result into focus. Figure 7 shows a clear separation between retained and forgotten skills for every model. Claude shows the largest gap in both grades, reaching 7.6% forgotten-skill performance in Grade 4 and 16.2% in Grade 5 while keeping retained skills near baseline. DeepSeek and GPT-4o also separate retained from forgotten skills, but much less sharply. The Grade-5 retained value above 100% for DeepSeek reflects normalization against the perfect-student baseline for that same model and grade: it means the retained-skill condition slightly exceeded the measured baseline on that aggregate ratio, not that the system surpassed the underlying task definition.</p>
+<p>The final aggregate comparison brings the main practical result into focus. Figure 8 shows a clear separation between retained and forgotten skills for every model. Claude shows the largest gap in both grades, reaching 7.6% forgotten-skill performance in Grade 4 and 16.2% in Grade 5 while keeping retained skills near baseline. DeepSeek and GPT-4o also separate retained from forgotten skills, but much less sharply. The Grade-5 retained value above 100% for DeepSeek reflects normalization against the perfect-student baseline for that same model and grade: it means the retained-skill condition slightly exceeded the measured baseline on that aggregate ratio, not that the system surpassed the underlying task definition.</p>
 
 <h2>7.6 Summary of Findings</h2>
 
-<p>Taken together, Figures 2-7 support six main empirical conclusions:</p>
+<p>Taken together, Figures 3-8 support six main empirical conclusions:</p>
 
 <ol>
-    <li><strong>Hybrid prompting is necessary for controllability:</strong> the RMSE gap in Figure 2 shows that neither instruction-only nor example-only prompting is sufficient for close alignment to the target profile.</li>
-    <li><strong>Cross-skill interference remains limited in the analyzed grades:</strong> Figure 3 shows weak off-diagonal correlations, supporting the claim that forgetting is mostly localized within this benchmark.</li>
-    <li><strong>Retained-skill calibration remains model-dependent:</strong> Figure 4 shows that Claude and DeepSeek track the retained-skill expectation more closely, while GPT-4o exhibits larger calibration error, especially under the harder Grade-4 setting.</li>
-    <li><strong>Selective control is visible at the profile level:</strong> Figure 5 shows that targeted skills can collapse while untargeted skills remain comparatively intact within the same simulated student profile.</li>
-    <li><strong>Suppression difficulty is skill-dependent:</strong> Figure 6 shows that some domains, especially number-operation and fraction-related skills, are harder to suppress for certain models.</li>
-    <li><strong>Retention is substantially more stable than forgetting:</strong> Figure 7 shows large retained-forgotten gaps for all models, with the strongest separation achieved by Claude.</li>
+    <li><strong>Hybrid prompting is necessary for controllability:</strong> the RMSE gap in Figure 3 shows that neither instruction-only nor example-only prompting is sufficient for close alignment to the target profile.</li>
+    <li><strong>Cross-skill interference remains limited in the analyzed grades:</strong> Figure 4 shows weak off-diagonal correlations, supporting the claim that forgetting is mostly localized within this benchmark.</li>
+    <li><strong>Retained-skill calibration remains model-dependent:</strong> Figure 5 shows that Claude and DeepSeek track the retained-skill expectation more closely, while GPT-4o exhibits larger calibration error, especially under the harder Grade-4 setting.</li>
+    <li><strong>Selective control is visible at the profile level:</strong> Figure 6 shows that targeted skills can collapse while untargeted skills remain comparatively intact within the same simulated student profile.</li>
+    <li><strong>Suppression difficulty is skill-dependent:</strong> Figure 7 shows that some domains, especially number-operation and fraction-related skills, are harder to suppress for certain models.</li>
+    <li><strong>Retention is substantially more stable than forgetting:</strong> Figure 8 shows large retained-forgotten gaps for all models, with the strongest separation achieved by Claude.</li>
 </ol>
 </section>
 

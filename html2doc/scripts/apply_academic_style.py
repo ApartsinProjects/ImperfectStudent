@@ -58,6 +58,10 @@ PROFILES = {
         "table_rule_dark": "4F6272",
         "table_rule_mid": "9FB0C2",
         "table_rule_light": "D9E1E8",
+        "equation_space_before": 4,
+        "equation_space_after": 4,
+        "table_space_before_caption": 8,
+        "table_space_after": 8,
     },
     "review-manuscript": {
         "font_family": "Times New Roman",
@@ -77,6 +81,10 @@ PROFILES = {
         "table_rule_dark": "4F6272",
         "table_rule_mid": "9FB0C2",
         "table_rule_light": "D9E1E8",
+        "equation_space_before": 6,
+        "equation_space_after": 6,
+        "table_space_before_caption": 8,
+        "table_space_after": 8,
     },
 }
 
@@ -135,6 +143,16 @@ def format_section_footer(section, config):
     add_page_number_run(paragraph, config)
 
 
+def set_spacing(paragraph, *, before=None, after=None, line_spacing=None):
+    pf = paragraph.paragraph_format
+    if before is not None:
+        pf.space_before = Pt(before)
+    if after is not None:
+        pf.space_after = Pt(after)
+    if line_spacing is not None:
+        pf.line_spacing = line_spacing
+
+
 def set_paragraph_flag(paragraph, tag_name, val="1"):
     ppr = paragraph._element.get_or_add_pPr()
     tag = ppr.find(qn(f"w:{tag_name}"))
@@ -173,10 +191,10 @@ def set_table_border(table, config):
 
     border("top", "single", 10, config["table_rule_dark"])
     border("bottom", "single", 10, config["table_rule_dark"])
-    border("insideH", "single", 4, config["table_rule_light"])
-    border("left", "nil", 0, "000000")
-    border("right", "nil", 0, "000000")
-    border("insideV", "nil", 0, "000000")
+    border("insideH", "single", 5, config["table_rule_mid"])
+    border("left", "single", 6, config["table_rule_mid"])
+    border("right", "single", 6, config["table_rule_mid"])
+    border("insideV", "single", 5, config["table_rule_light"])
 
     tbl_pr.append(tbl_borders)
 
@@ -220,7 +238,7 @@ def set_cell_shading(cell, fill):
     shd.set(qn("w:fill"), fill)
 
 
-def set_cell_border(cell, bottom_color=None, bottom_size=6):
+def set_cell_border(cell, config, bottom_color=None, bottom_size=6):
     tc_pr = cell._tc.get_or_add_tcPr()
     tc_borders = tc_pr.find(qn("w:tcBorders"))
     if tc_borders is None:
@@ -232,7 +250,9 @@ def set_cell_border(cell, bottom_color=None, bottom_size=6):
         if edge is None:
             edge = OxmlElement(f"w:{side}")
             tc_borders.append(edge)
-        edge.set(qn("w:val"), "nil")
+        edge.set(qn("w:val"), "single")
+        edge.set(qn("w:sz"), "4")
+        edge.set(qn("w:color"), config["table_rule_light"])
 
     bottom = tc_borders.find(qn("w:bottom"))
     if bottom is None:
@@ -273,17 +293,15 @@ def detect_column_alignments(table):
     return alignments
 
 
-def format_table_cell(cell, config, *, is_header=False, alignment=WD_PARAGRAPH_ALIGNMENT.LEFT,
+def format_table_cell(cell, config, *, is_header=False, alignment=WD_PARAGRAPH_ALIGNMENT.CENTER,
                       bottom_color=None, bottom_size=4):
     if is_header:
         set_cell_shading(cell, config["table_header_fill"])
-    set_cell_border(cell, bottom_color=bottom_color, bottom_size=bottom_size)
+    set_cell_border(cell, config, bottom_color=bottom_color, bottom_size=bottom_size)
 
     for para in cell.paragraphs:
         para.alignment = alignment
-        para.paragraph_format.space_before = Pt(0)
-        para.paragraph_format.space_after = Pt(1)
-        para.paragraph_format.line_spacing = 1.0
+        set_spacing(para, before=0, after=1, line_spacing=1.0)
         apply_pagination_controls(para, widow=True, keep_with_next=False, keep_together=True)
         for run in para.runs:
             run.font.name = config["font_family"]
@@ -297,6 +315,40 @@ def has_drawing(element):
         if "drawing" in elem.tag.lower():
             return True
     return False
+
+
+def has_display_math(paragraph):
+    xml = paragraph._element.xml
+    return "<m:oMathPara" in xml or ("<m:oMath" in xml and not paragraph.text.strip())
+
+
+def previous_block_is_table(paragraph):
+    prev = paragraph._element.getprevious()
+    return prev is not None and prev.tag == qn("w:tbl")
+
+
+def emphasize_caption_label(paragraph):
+    text = paragraph.text.strip()
+    match = re.match(r"^((Figure|Table)\s+\d+:)(\s*)(.*)$", text)
+    if not match:
+        return
+
+    label, _, spacer, rest = match.groups()
+    clear_paragraph(paragraph)
+
+    run = paragraph.add_run(label)
+    run.bold = True
+    run.italic = True
+
+    if spacer:
+        spacer_run = paragraph.add_run(spacer)
+        spacer_run.bold = False
+        spacer_run.italic = True
+
+    if rest:
+        rest_run = paragraph.add_run(rest)
+        rest_run.bold = False
+        rest_run.italic = True
 
 
 def is_numbered_section_heading(text):
@@ -364,15 +416,15 @@ def configure_base_styles(doc, config):
     styles["Compact"].paragraph_format.space_after = Pt(2)
 
     styles["Image Caption"].font.size = Pt(config["caption_font_size"])
-    styles["Image Caption"].paragraph_format.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
+    styles["Image Caption"].paragraph_format.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
     styles["Image Caption"].paragraph_format.line_spacing = 1.0
-    styles["Image Caption"].paragraph_format.space_before = Pt(3)
+    styles["Image Caption"].paragraph_format.space_before = Pt(4)
     styles["Image Caption"].paragraph_format.space_after = Pt(6)
 
     styles["Table Caption"].font.size = Pt(config["caption_font_size"])
-    styles["Table Caption"].paragraph_format.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
+    styles["Table Caption"].paragraph_format.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
     styles["Table Caption"].paragraph_format.line_spacing = 1.0
-    styles["Table Caption"].paragraph_format.space_before = Pt(6)
+    styles["Table Caption"].paragraph_format.space_before = Pt(config["table_space_before_caption"])
     styles["Table Caption"].paragraph_format.space_after = Pt(3)
 
     styles["Abstract Label"].font.size = Pt(config["body_font_size"])
@@ -385,9 +437,9 @@ def configure_base_styles(doc, config):
     styles["Keywords"].paragraph_format.space_after = Pt(4)
 
     styles["Reference Entry"].font.size = Pt(config["reference_font_size"])
-    styles["Reference Entry"].paragraph_format.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
-    styles["Reference Entry"].paragraph_format.left_indent = Inches(0.24)
-    styles["Reference Entry"].paragraph_format.first_line_indent = Inches(-0.24)
+    styles["Reference Entry"].paragraph_format.alignment = WD_PARAGRAPH_ALIGNMENT.JUSTIFY
+    styles["Reference Entry"].paragraph_format.left_indent = Inches(0)
+    styles["Reference Entry"].paragraph_format.first_line_indent = Inches(0)
     styles["Reference Entry"].paragraph_format.line_spacing = 1.0
     styles["Reference Entry"].paragraph_format.space_after = Pt(2)
 
@@ -540,7 +592,14 @@ def apply_academic_formatting(doc, profile="camera-ready-generic", table_width=1
 
         if is_caption:
             para.style = doc.styles["Table Caption"] if is_table_caption else doc.styles["Image Caption"]
-            para.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
+            para.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+            emphasize_caption_label(para)
+            set_spacing(
+                para,
+                before=config["table_space_before_caption"] if is_table_caption else 4,
+                after=3 if is_table_caption else 6,
+                line_spacing=1.0,
+            )
             apply_pagination_controls(
                 para,
                 widow=True,
@@ -556,6 +615,8 @@ def apply_academic_formatting(doc, profile="camera-ready-generic", table_width=1
         if style_name == "Compact":
             para.style = doc.styles["Compact"]
             para.alignment = WD_PARAGRAPH_ALIGNMENT.JUSTIFY
+            if previous_block_is_table(para):
+                set_spacing(para, before=config["table_space_after"])
             apply_pagination_controls(para, widow=True, keep_with_next=False, keep_together=False)
             text_count += 1
             continue
@@ -566,6 +627,19 @@ def apply_academic_formatting(doc, profile="camera-ready-generic", table_width=1
             para.style = doc.styles["Body Text"]
 
         para.alignment = WD_PARAGRAPH_ALIGNMENT.JUSTIFY
+        if has_display_math(para):
+            set_spacing(
+                para,
+                before=config["equation_space_before"],
+                after=config["equation_space_after"],
+                line_spacing=1.0,
+            )
+            para.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+            apply_pagination_controls(para, widow=True, keep_with_next=False, keep_together=True)
+            text_count += 1
+            continue
+        if previous_block_is_table(para):
+            set_spacing(para, before=config["table_space_after"])
         apply_pagination_controls(para, widow=True, keep_with_next=False, keep_together=False)
         text_count += 1
 
@@ -579,7 +653,6 @@ def apply_academic_formatting(doc, profile="camera-ready-generic", table_width=1
         set_table_layout(table)
         set_table_border(table, config)
 
-        col_alignments = detect_column_alignments(table)
         last_row_idx = len(table.rows) - 1
 
         if table.rows:
@@ -588,7 +661,7 @@ def apply_academic_formatting(doc, profile="camera-ready-generic", table_width=1
                     cell,
                     config,
                     is_header=True,
-                    alignment=col_alignments[col_idx],
+                    alignment=WD_PARAGRAPH_ALIGNMENT.CENTER,
                     bottom_color=config["table_rule_mid"],
                     bottom_size=8,
                 )
@@ -600,7 +673,7 @@ def apply_academic_formatting(doc, profile="camera-ready-generic", table_width=1
                         cell,
                         config,
                         is_header=False,
-                        alignment=col_alignments[col_idx],
+                        alignment=WD_PARAGRAPH_ALIGNMENT.CENTER,
                         bottom_color=bottom_color,
                         bottom_size=4,
                     )
