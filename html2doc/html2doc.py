@@ -87,6 +87,12 @@ def main():
         action='store_true',
         help='Keep intermediate files'
     )
+    parser.add_argument(
+        '--profile',
+        default='camera-ready-generic',
+        choices=['camera-ready-generic', 'review-manuscript'],
+        help='Formatting profile for DOCX conversion'
+    )
     
     args = parser.parse_args()
     
@@ -118,14 +124,14 @@ def main():
     # Stage 2: MathML to DOCX
     docx_file = f"{input_basename}_converted.docx"
     if not run_command(
-        f'python html2doc/scripts/convert_to_docx.py --input "{mathml_file}" --output "{docx_file}"',
+        f'python html2doc/scripts/convert_to_docx.py --input "{mathml_file}" --output "{docx_file}" --profile "{args.profile}"',
         "Stage 2: Converting to DOCX with native equations"
     ):
         sys.exit(1)
     
     # Stage 3: Apply academic formatting
     if not run_command(
-        f'python html2doc/scripts/apply_academic_style.py --input "{docx_file}" --output "{output_file}"',
+        f'python html2doc/scripts/apply_academic_style.py --input "{docx_file}" --output "{output_file}" --profile "{args.profile}"',
         "Stage 3: Applying academic formatting"
     ):
         sys.exit(1)

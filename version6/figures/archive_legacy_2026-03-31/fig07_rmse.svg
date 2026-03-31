@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 280">
+  <defs>
+    <style>
+      .title { font-family: Arial, sans-serif; font-size: 14px; font-weight: bold; }
+      .label { font-family: Arial, sans-serif; font-size: 10px; }
+      .value { font-family: Arial, sans-serif; font-size: 9px; font-weight: bold; text-anchor: middle; }
+    </style>
+  </defs>
+  <rect width="600" height="280" fill="white"/>
+  
+  <!-- Title -->
+  <text x="300" y="20" class="title" text-anchor="middle">RMSE by Prompt Strategy</text>
+  
+  <!-- Y-axis -->
+  <line x1="80" y1="40" x2="80" y2="220" stroke="#333" stroke-width="1"/>
+  <text x="45" y="130" class="label" text-anchor="middle" transform="rotate(-90, 45, 130)">RMSE</text>
+  <text x="70" y="48" class="label" text-anchor="end">0.6</text>
+  <text x="70" y="88" class="label" text-anchor="end">0.4</text>
+  <text x="70" y="128" class="label" text-anchor="end">0.2</text>
+  <text x="70" y="220" class="label" text-anchor="end">0.0</text>
+  <line x1="78" y1="45" x2="82" y2="45" stroke="#333"/>
+  <line x1="78" y1="85" x2="82" y2="85" stroke="#333"/>
+  <line x1="78" y1="125" x2="82" y2="125" stroke="#333"/>
+  <line x1="78" y1="165" x2="82" y2="165" stroke="#333"/>
+  <line x1="78" y1="205" x2="82" y2="205" stroke="#333"/>
+  <line x1="80" y1="45" x2="560" y2="45" stroke="#eee"/>
+  <line x1="80" y1="85" x2="560" y2="85" stroke="#eee"/>
+  <line x1="80" y1="125" x2="560" y2="125" stroke="#eee"/>
+  <line x1="80" y1="165" x2="560" y2="165" stroke="#eee"/>
+  
+  <!-- Reference line at 0.25 -->
+  <line x1="80" y1="128" x2="560" y2="128" stroke="#666" stroke-width="2" stroke-dasharray="5,5"/>
+  <text x="565" y="132" class="label" font-size="8">ref</text>
+  
+  <!-- Grade 4 bars -->
+  <text x="180" y="35" class="label" text-anchor="middle" font-weight="bold">Grade 4</text>
+  
+  <!-- Combined -->
+  <rect x="120" y="200" width="40" height="8" fill="#a1d99b" rx="2"/>
+  <text x="140" y="225" class="value">0.08</text>
+  <text x="140" y="242" class="label" text-anchor="middle" font-size="8">Combined</text>
+  
+  <!-- Few-shot -->
+  <rect x="190" y="98" width="40" height="8" fill="#fcbba1" rx="2"/>
+  <text x="210" y="120" class="value">0.46</text>
+  <text x="210" y="242" class="label" text-anchor="middle" font-size="8">Few-shot</text>
+  
+  <!-- Rule-based -->
+  <rect x="190" y="93" width="40" height="8" fill="#fc9272" rx="2"/>
+  <text x="210" y="115" class="value">0.49</text>
+  <text x="280" y="242" class="label" text-anchor="middle" font-size="8">Rule-based</text>
+  
+  <!-- Grade 5 bars -->
+  <text x="450" y="35" class="label" text-anchor="middle" font-weight="bold">Grade 5</text>
+  
+  <!-- Combined -->
+  <rect x="390" y="192" width="40" height="8" fill="#a1d99b" rx="2"/>
+  <text x="410" y="220" class="value">0.12</text>
+  <text x="410" y="242" class="label" text-anchor="middle" font-size="8">Combined</text>
+  
+  <!-- Few-shot -->
+  <rect x="460" y="65" width="40" height="8" fill="#fc9272" rx="2"/>
+  <text x="480" y="90" class="value">0.58</text>
+  <text x="480" y="242" class="label" text-anchor="middle" font-size="8">Few-shot</text>
+  
+  <!-- Rule-based -->
+  <rect x="460" y="60" width="40" height="8" fill="#fb6a4a" rx="2"/>
+  <text x="480" y="85" class="value">0.59</text>
+  <text x="550" y="242" class="label" text-anchor="middle" font-size="8">Rule-based</text>
+  
+  <!-- X-axis -->
+  <line x1="80" y1="220" x2="560" y2="220" stroke="#333" stroke-width="1"/>
+  
+  <!-- Legend -->
+  <rect x="300" y="255" width="12" height="10" fill="#a1d99b"/>
+  <text x="318" y="264" class="label">Low RMSE (best)</text>
+  <rect x="390" y="255" width="12" height="10" fill="#fcbba1"/>
+  <text x="408" y="264" class="label">Medium</text>
+  <rect x="460" y="255" width="12" height="10" fill="#fb6a4a"/>
+  <text x="478" y="264" class="label">High RMSE (worst)</text>
+</svg>

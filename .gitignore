@@ -1,0 +1,6 @@
+node_modules/
+.pytest_cache/
+.opencode/skills/
+~$*
+archive_unused_2026-03-31/
+html2doc_backup_2026-03-31_1240/
