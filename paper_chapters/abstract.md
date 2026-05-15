@@ -1,4 +1,4 @@
-**Authors:** Omer Sasson, Alexander Apartsin, Yehuda Aperstein
+**Authors:** Omir Sasson, Yehudit Aperstein, Alexander Apartsin
 
 # Abstract
 

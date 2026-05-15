@@ -2,7 +2,7 @@
 
 **Toward a Benchmark for Controllable Simulation of Imperfect Students with Large Language Models**
 
-Omer Sasson · Alexander Apartsin · Yehuda Aperstein
+Omir Sasson · Yehudit Aperstein · Alexander Apartsin
 
 [Draft paper](https://apartsinprojects.github.io/ImperfectStudent/) · [BibTeX](#citation)
 
@@ -120,7 +120,7 @@ ImperfectStudent/
 @article{sasson2026imperfectstudent,
   title   = {Toward a Benchmark for Controllable Simulation of Imperfect Students
              with Large Language Models},
-  author  = {Sasson, Omer and Apartsin, Alexander and Aperstein, Yehuda},
+  author  = {Sasson, Omir and Aperstein, Yehudit and Apartsin, Alexander},
   year    = {2026},
   url     = {https://apartsinprojects.github.io/ImperfectStudent/}
 }
